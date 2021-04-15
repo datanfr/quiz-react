@@ -27,9 +27,9 @@ const Questions: React.FC = () => {
       </swipe-card> */}
             </div>
             <div className={cx("container", "buttons")}>
-                <div className={cx("container", "buttons")} data-value="{'importance': 1, 'pour': -1}">Contre</div>
-                <div className={cx("container", "buttons")} data-value="{'importance': 0, 'pour': 0}">OSEF</div>
-                <div className={cx("container", "buttons")} data-value="{'importance': 1, 'pour': 1}">Pour</div>
+                <div className={cx("container", "button")} data-value="{'importance': 1, 'pour': -1}">Contre</div>
+                <div className={cx("container", "button")} data-value="{'importance': 0, 'pour': 0}">OSEF</div>
+                <div className={cx("container", "button")} data-value="{'importance': 1, 'pour': 1}">Pour</div>
             </div>
         </div>
     );
