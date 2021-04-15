@@ -19,6 +19,8 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
+import Questions from "./pages/Questions"
+
 /* Theme variables */
 import './theme/variables.css';
 
@@ -28,6 +30,9 @@ const App: React.FC = () => (
       <IonRouterOutlet>
         <Route exact path="/home">
           <Home />
+        </Route>
+        <Route exact path="/questions">
+          <Questions />
         </Route>
         <Route exact path="/">
           <Redirect to="/home" />
