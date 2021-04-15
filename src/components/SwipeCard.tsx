@@ -1,18 +1,23 @@
 import classNames from 'classnames/bind';
 import React, { PureComponent, ReactNode } from 'react';
-import classes from './Component.module.css';
+import classes from './SwipeCard.module.css';
 
 let cx = classNames.bind(classes);
 
-interface Props<T> {
-  onSwipe: (e: React.TouchEvent<HTMLDivElement>, side: String, card: T) => void,
-  cards: [T],
-  children: (elem: SwipeCard<T>, card: T) => ReactNode;
+export type Card = {
+  titre: string,
+  content: string
+}
+
+interface Props {
+  onSwipe: (e: React.TouchEvent<HTMLDivElement>, side: String, card: Card) => void,
+  cards: Card[],
+  children: (elem: SwipeCard, card: Card) => ReactNode;
 }
 
 interface State { count: number }
 
-class SwipeCard<T> extends PureComponent<Props<T>, State> {
+class SwipeCard extends PureComponent<Props, State> {
 
   startEvent: React.TouchEvent<HTMLDivElement> | null = null;
 
@@ -30,9 +35,10 @@ class SwipeCard<T> extends PureComponent<Props<T>, State> {
 
   speed = 0;
   currentCard = 0;
+  
   ref: React.RefObject<HTMLElement>;
 
-  constructor(props: Props<T>) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       count: 0
@@ -42,17 +48,16 @@ class SwipeCard<T> extends PureComponent<Props<T>, State> {
 
   render() {
     const { cards, onSwipe, ...remains } = this.props
-    return cards.map(x => <div v-for="card in cards" key="card.titre" className="swipe-card"
+    return cards.map(x => <div className={cx("swipe-card")} key={x.titre}
       onTouchStart={e => this.fingerAdded(e)}
       onTouchMove={e => this.moving(e)}
       onTouchEnd={e => this.fingerRemoved(e)}
       onTransitionEnd={e => this.reset(e)}>
-        {this.props.children(this, x)}
-      </div>)
+      {this.props.children(this, x)}
+    </div>)
   }
 
   fingerAdded(e: React.TouchEvent<HTMLDivElement>) {
-    e.preventDefault();
     this.startEvent = e;
     if (e.currentTarget != null) {
       e.currentTarget.style.transition = `none`;
@@ -79,27 +84,25 @@ class SwipeCard<T> extends PureComponent<Props<T>, State> {
   }
 
   fingerRemoved(e: React.TouchEvent<HTMLDivElement>) {
-    if (e.target != null && e.target instanceof HTMLElement && this.startEvent != null) {
-      const target = e.target.closest('.swipe-card');
-      if (target != null && target instanceof HTMLElement) {
-        const deltaThreshold = 0.60
-        const speedThreshold = 0.9
-        const confirmation = this.current.deltaX / target.clientWidth;
-        const speedSign = this.speed > 0 ? 1 : -1
-        const finalAnimationPos = target.clientWidth * 2 * speedSign
-        const angle = finalAnimationPos * 0.05;
-        if (
-          //confirmation < deltaThreshold && confirmation > -deltaThreshold &&
-          this.speed < speedThreshold && this.speed > -speedThreshold
-        ) {
-          target.style.transition = `transform ${0.3}s ease`;
-          target.style.transform = `translateX(${0}px) rotate(${0}deg)`;
-        } else {
-          target.style.transition = `transform ${1 / Math.abs(this.speed)}s ease`;
-          target.style.transform = `translateX(${finalAnimationPos}px) rotate(${angle}deg)`;
-          this.props.onSwipe(e, speedSign > 0 ? "right" : "left", this.props.cards[this.currentCard])
-          this.currentCard++;
-        }
+    const target = e.currentTarget;
+    if (target != null) {
+      const deltaThreshold = 0.60
+      const speedThreshold = 0.9
+      const confirmation = this.current.deltaX / target.clientWidth;
+      const speedSign = this.speed > 0 ? 1 : -1
+      const finalAnimationPos = target.clientWidth * 2 * speedSign
+      const angle = finalAnimationPos * 0.05;
+      if (
+        //confirmation < deltaThreshold && confirmation > -deltaThreshold &&
+        this.speed < speedThreshold && this.speed > -speedThreshold
+      ) {
+        target.style.transition = `transform ${0.3}s ease`;
+        target.style.transform = `translateX(${0}px) rotate(${0}deg)`;
+      } else {
+        target.style.transition = `transform ${1 / Math.abs(this.speed)}s ease`;
+        target.style.transform = `translateX(${finalAnimationPos}px) rotate(${angle}deg)`;
+        this.props.onSwipe(e, speedSign > 0 ? "right" : "left", this.props.cards[this.currentCard])
+        this.currentCard++;
       }
     }
     console.log({ fingerRemoved: e });
@@ -107,12 +110,10 @@ class SwipeCard<T> extends PureComponent<Props<T>, State> {
 
   reset(e: React.TransitionEvent<HTMLDivElement>) {
     console.log("aniamtion end")
-    if (e.target != null && e.target instanceof HTMLElement && this.startEvent != null) {
-      const target = e.target.closest('.swipe-card');
-      if (target != null && target instanceof HTMLElement) {
-        target.style.transition = `none`;
-        target.style.transform = `translateX(${0}px) rotate(${0}deg)`;
-      }
+    const target = e.currentTarget
+    if (target != null) {
+      target.style.transition = `none`;
+      target.style.transform = `translateX(${0}px) rotate(${0}deg)`;
     }
   }
 
