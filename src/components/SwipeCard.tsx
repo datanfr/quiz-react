@@ -4,15 +4,10 @@ import classes from './SwipeCard.module.css';
 
 let cx = classNames.bind(classes);
 
-export type Card = {
-  titre: string,
-  content: string
-}
-
 interface Props {
-  onSwipe: (e: React.TouchEvent<HTMLDivElement>, side: String, card: Card) => void,
-  cards: Card[],
-  children: (elem: SwipeCard, card: Card) => ReactNode;
+  onSwipe: (e: React.TouchEvent<HTMLDivElement>, side: "left" | "right") => void,
+  children: ReactNode;
+  className?: string;
 }
 
 interface State { count: number }
@@ -35,7 +30,7 @@ class SwipeCard extends PureComponent<Props, State> {
 
   speed = 0;
   currentCard = 0;
-  
+
   ref: React.RefObject<HTMLElement>;
 
   constructor(props: Props) {
@@ -47,14 +42,14 @@ class SwipeCard extends PureComponent<Props, State> {
   }
 
   render() {
-    const { cards, onSwipe, ...remains } = this.props
-    return cards.map(x => <div className={cx("swipe-card")} key={x.titre}
+    const {onSwipe, className, ...remains } = this.props
+    return <div className={cx("swipe-card", className)}
       onTouchStart={e => this.fingerAdded(e)}
       onTouchMove={e => this.moving(e)}
       onTouchEnd={e => this.fingerRemoved(e)}
       onTransitionEnd={e => this.reset(e)}>
-      {this.props.children(this, x)}
-    </div>)
+      {this.props.children}
+    </div>
   }
 
   fingerAdded(e: React.TouchEvent<HTMLDivElement>) {
@@ -101,7 +96,7 @@ class SwipeCard extends PureComponent<Props, State> {
       } else {
         target.style.transition = `transform ${1 / Math.abs(this.speed)}s ease`;
         target.style.transform = `translateX(${finalAnimationPos}px) rotate(${angle}deg)`;
-        this.props.onSwipe(e, speedSign > 0 ? "right" : "left", this.props.cards[this.currentCard])
+        this.props.onSwipe(e, speedSign > 0 ? "right" : "left")
         this.currentCard++;
       }
     }
