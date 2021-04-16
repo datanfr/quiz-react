@@ -30,18 +30,27 @@ function onSwipe(e: React.TouchEvent<HTMLDivElement> | null, side: String, card:
     }
 }
 
+function resetLastCard() {
+    const lastCard = cards.slice().reverse().find(x => x.swiped)//Find last swiped
+    delete lastCard?.swiped
+    lastCard && lastCard.ref && lastCard.ref.current?.reset()
+}
+
+
 function swipeTopCard(side: Side) {
-    const topCard = cards.find(x => !x.swiped)
+    const topCard = cards.find(x => !x.swiped)//Find first unswipped card
     console.log({simulateSwipe: side, topCard})
     topCard && topCard.ref && topCard.ref.current?.swipe(side)
 }
+
+Object.assign((window as any), {cards, resetLastCard, swipeTopCard});
 
 const Questions: React.FC = () => {
     console.log(classes)
     return (
         <div className={cx("container", "page")}>
             <div className={cx("container", "back-button")}>
-                <FontAwesomeIcon icon={faChevronLeft} />
+                <FontAwesomeIcon icon={faChevronLeft} onClick={() => resetLastCard()}/>
             </div>
             <div className={cx("container", "title")}>Environnement</div>
             <div className={cx("container", "cards")}>

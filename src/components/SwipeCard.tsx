@@ -183,15 +183,14 @@ class SwipeCard extends PureComponent<Props, State> {
         const angle = finalAnimationPos * 0.05;
         target.style.transform = `translateX(${finalAnimationPos}px) rotate(${angle}deg)`;
       }
-    }  else if (["up", "down"].includes(side) && target != null) {
+    } else if (["up", "down"].includes(side) && target != null) {
       const sign = side === "down" ? 1 : -1
-      const finalAnimationPos = target.clientWidth * 2 * sign
+      const finalAnimationPos = target.clientWidth * 3 * sign
       if (this.props.enableSwipe?.includes(side)) {
         this.props.onSwipe(null, side)
         this.swiped = true;
         target.style.transition = `transform 0.3s ease`;
-        const angle = finalAnimationPos * 0.05;
-        target.style.transform = `translateY(${finalAnimationPos}px) rotate(${angle}deg)`;
+        target.style.transform = `translateY(${finalAnimationPos}px)`;
       }
     } else {
       console.warn("Swipe action called before ref initialized")
@@ -199,14 +198,17 @@ class SwipeCard extends PureComponent<Props, State> {
   }
 
 
-  reset(target: HTMLDivElement) {
-    target.style.transition = `transform ${0.3}s ease`;
-    target.style.transform = `translateX(${0}px) rotate(${0}deg)`;
+  reset(target: HTMLDivElement | null = null) {
+    target = target || this.ref.current
+    if (target) {
+      target.style.transition = `transform ${0.3}s ease`;
+      target.style.transform = `translateX(${0}px) rotate(${0}deg)`;
+    }
   }
 
   hide(e: React.TransitionEvent<HTMLDivElement>) {
     //console.log("aniamtion end")
-    this.swiped && this.setState({ show: false });
+    //this.swiped && this.setState({ show: false });
   }
 
 
