@@ -56,7 +56,7 @@ class SwipeCard extends PureComponent<Props, State> {
     if (e.currentTarget != null) {
       e.currentTarget.style.transition = `none`;
     }
-    console.log({ fingerAdded: e });
+    //console.log({ fingerAdded: e });
   }
 
   moving(e: React.TouchEvent<HTMLDivElement>) {
@@ -84,10 +84,10 @@ class SwipeCard extends PureComponent<Props, State> {
       const speedThreshold = 0.9
       const posSwipeTriggered = Math.abs(this.current.deltaX) / target.clientWidth > deltaThreshold
       const speedSwipeTriggered = Math.abs(this.speed) > speedThreshold
-      console.log({
-        deltaX: this.current.deltaX, width: target.clientWidth, speed: this.speed,
-        deltaXSign: Math.sign(this.current.deltaX), speedSign: Math.sign(this.speed)
-      })
+      // console.log({
+      //   deltaX: this.current.deltaX, width: target.clientWidth, speed: this.speed,
+      //   deltaXSign: Math.sign(this.current.deltaX), speedSign: Math.sign(this.speed)
+      // })
   
       if ((posSwipeTriggered  || speedSwipeTriggered) /*&& Math.sign(this.current.deltaX) === Math.sign(this.speed)*/) {
         //Swipe
@@ -113,11 +113,11 @@ class SwipeCard extends PureComponent<Props, State> {
         target.style.transform = `translateX(${0}px) rotate(${0}deg)`;
       }
     }
-    console.log({ fingerRemoved: e });
+    //console.log({ fingerRemoved: e });
   }
 
   reset(e: React.TransitionEvent<HTMLDivElement>) {
-    console.log("aniamtion end")
+    //console.log("aniamtion end")
     this.swiped && this.setState({show: false});
   }
 

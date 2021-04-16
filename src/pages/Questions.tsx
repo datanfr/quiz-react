@@ -9,18 +9,22 @@ import { Fragment } from 'react';
 let cx = classNames.bind(classes);
 
 type Card = {
-    titre:string,
+    titre:string
     content:string
+    swiped?:string
 }
 
-const cards = [
+const cards : Card[] = [
     { "titre": "environnement (1/6)", "content": "coucou" },
     { "titre": "environnement (2/6)", "content": "hola" },
     { "titre": "environnement (3/6)", "content": "hello" }
 ]
 
 function onSwipe(e: React.TouchEvent<HTMLDivElement>, side: String, card : Card) {
-    console.log(Object.assign(card, {swipe: side}))
+    Object.assign(card, {swiped: side})
+    if (cards.every(x => x.swiped)) {
+        console.log("All card swiped !", cards)
+    }
 }
 
 const Questions: React.FC = () => {
