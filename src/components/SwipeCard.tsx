@@ -27,6 +27,7 @@ class SwipeCard extends PureComponent<Props, State> {
 
   speed = 0;
   currentCard = 0;
+  swiped = false;
 
   ref: React.RefObject<HTMLElement>;
 
@@ -90,6 +91,7 @@ class SwipeCard extends PureComponent<Props, State> {
   
       if ((posSwipeTriggered  || speedSwipeTriggered) /*&& Math.sign(this.current.deltaX) === Math.sign(this.speed)*/) {
         //Swipe
+        this.swiped = true;
         let finalAnimationPos;
         if (posSwipeTriggered) {
           const sign = Math.sign(this.current.deltaX)
@@ -116,7 +118,7 @@ class SwipeCard extends PureComponent<Props, State> {
 
   reset(e: React.TransitionEvent<HTMLDivElement>) {
     console.log("aniamtion end")
-    this.setState({show: false});
+    this.swiped && this.setState({show: false});
   }
 
 
