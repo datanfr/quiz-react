@@ -20,7 +20,7 @@ const cards = [
 ]
 
 function onSwipe(e: React.TouchEvent<HTMLDivElement>, side: String, card : Card) {
-    console.log("swiped on " + side, card)
+    console.log(Object.assign(card, {swipe: side}))
 }
 
 const Questions: React.FC = () => {
@@ -32,11 +32,13 @@ const Questions: React.FC = () => {
             </div>
             <div className={cx("container", "title")}>Environnement</div>
             <div className={cx("container", "cards")}>
+                <div className={cx("card-stack")}>
                 { cards.map(card => <SwipeCard className={cx("card")} key={card.titre} onSwipe={(e, side) => onSwipe(e, side, card)}>
                         {card.titre}<br />
                         Hello i'm swipe card content<br />
                         {card.content}<br />
                 </SwipeCard>)}
+                </div>
             </div>
             <div className={cx("container", "buttons")}>
                 <div className={cx("container", "button")} data-value="{'importance': 1, 'pour': -1}">Contre</div>
