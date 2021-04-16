@@ -1,16 +1,13 @@
 import classNames from 'classnames/bind';
 import React, { PureComponent, ReactNode } from 'react';
-import classes from './SwipeCard.module.css';
 
-let cx = classNames.bind(classes);
-
-interface Props {
-  onSwipe: (e: React.TouchEvent<HTMLDivElement>, side: "left" | "right") => void,
-  children: ReactNode;
-  className?: string;
+type Props = {
+  onSwipe: (e: React.TouchEvent<HTMLDivElement>, side: "left" | "right") => void
+  children: ReactNode
+  [x: string]: any
 }
 
-interface State { count: number }
+interface State { count: number, show: boolean }
 
 class SwipeCard extends PureComponent<Props, State> {
 
@@ -36,14 +33,15 @@ class SwipeCard extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      count: 0
+      count: 0,
+      show: true
     }
     this.ref = React.createRef<HTMLElement>()
   }
 
   render() {
-    const {onSwipe, className, ...remains } = this.props
-    return <div className={cx("swipe-card", className)}
+    const {onSwipe, ...remains } = this.props
+    return this.state.show && <div {...remains}
       onTouchStart={e => this.fingerAdded(e)}
       onTouchMove={e => this.moving(e)}
       onTouchEnd={e => this.fingerRemoved(e)}
@@ -83,21 +81,34 @@ class SwipeCard extends PureComponent<Props, State> {
     if (target != null) {
       const deltaThreshold = 0.60
       const speedThreshold = 0.9
-      const confirmation = this.current.deltaX / target.clientWidth;
-      const speedSign = this.speed > 0 ? 1 : -1
-      const finalAnimationPos = target.clientWidth * 2 * speedSign
-      const angle = finalAnimationPos * 0.05;
-      if (
-        //confirmation < deltaThreshold && confirmation > -deltaThreshold &&
-        this.speed < speedThreshold && this.speed > -speedThreshold
-      ) {
+      const posSwipeTriggered = Math.abs(this.current.deltaX) / target.clientWidth > deltaThreshold
+      const speedSwipeTriggered = Math.abs(this.speed) > speedThreshold
+      console.log({
+        deltaX: this.current.deltaX, width: target.clientWidth, speed: this.speed,
+        deltaXSign: Math.sign(this.current.deltaX), speedSign: Math.sign(this.speed)
+      })
+  
+      if ((posSwipeTriggered  || speedSwipeTriggered) /*&& Math.sign(this.current.deltaX) === Math.sign(this.speed)*/) {
+        //Swipe
+        let finalAnimationPos;
+        if (posSwipeTriggered) {
+          const sign = Math.sign(this.current.deltaX)
+          finalAnimationPos = target.clientWidth * 2 * sign
+          this.props.onSwipe(e, sign > 0 ? "right" : "left")
+          target.style.transition = `transform 0.3s ease`;
+        } else {
+          const sign = Math.sign(this.speed);
+          finalAnimationPos = target.clientWidth * 2 * sign
+          this.props.onSwipe(e, sign > 0 ? "right" : "left")
+          target.style.transition = `transform ${1 / Math.abs(this.speed)}s ease`;
+        }
+        const angle = finalAnimationPos * 0.05;
+        target.style.transform = `translateX(${finalAnimationPos}px) rotate(${angle}deg)`;
+        this.currentCard++;
+      } else {
+        //Reset to original position
         target.style.transition = `transform ${0.3}s ease`;
         target.style.transform = `translateX(${0}px) rotate(${0}deg)`;
-      } else {
-        target.style.transition = `transform ${1 / Math.abs(this.speed)}s ease`;
-        target.style.transform = `translateX(${finalAnimationPos}px) rotate(${angle}deg)`;
-        this.props.onSwipe(e, speedSign > 0 ? "right" : "left")
-        this.currentCard++;
       }
     }
     console.log({ fingerRemoved: e });
@@ -105,11 +116,7 @@ class SwipeCard extends PureComponent<Props, State> {
 
   reset(e: React.TransitionEvent<HTMLDivElement>) {
     console.log("aniamtion end")
-    const target = e.currentTarget
-    if (target != null) {
-      target.style.transition = `none`;
-      target.style.transform = `translateX(${0}px) rotate(${0}deg)`;
-    }
+    this.setState({show: false});
   }
 
 

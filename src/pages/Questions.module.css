@@ -3,7 +3,7 @@
     padding: 10px;
   }
 
-  .page.container {
+  .page {
     flex-direction: column;
     position: absolute;
     top: 0;
@@ -13,14 +13,14 @@
     max-width: 400px;
   }
 
-  .buttons.container {
+  .buttons {
     justify-content: space-evenly;
     flex-grow: 1;
     align-content: center;
     align-items: center;
   }
 
-  .button.container {
+  .button {
     background-color: #FFCC00;
     border-radius: 50%;
     width: 50px;
@@ -30,11 +30,17 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   }
 
-  .swipe-card {
-    flex-grow: 1;
-  }
-
-  .swipe-card-content.container {
+  /* see https://css-tricks.com/how-to-stack-elements-in-css/ */
+  .cards {
     /* height: 500px; */
     flex-grow: 5;
+    position: relative;
+  }
+
+  .card {
+    background-color: rgba(0,0,0,0.90);
+    border: 1px solid rgba(0,125,255,0.90);
+    position: absolute;
+    width: 300px;
+    height: 500px;
   }

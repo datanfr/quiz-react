@@ -31,8 +31,8 @@ const Questions: React.FC = () => {
                 <FontAwesomeIcon icon={faChevronLeft} />
             </div>
             <div className={cx("container", "title")}>Environnement</div>
-            <div className={cx("container", "swipe-card-content")}>
-                { cards.map(card => <SwipeCard onSwipe={(e, side) => onSwipe(e, side, card)}>
+            <div className={cx("container", "cards")}>
+                { cards.map(card => <SwipeCard className={cx("card")} key={card.titre} onSwipe={(e, side) => onSwipe(e, side, card)}>
                         {card.titre}<br />
                         Hello i'm swipe card content<br />
                         {card.content}<br />
