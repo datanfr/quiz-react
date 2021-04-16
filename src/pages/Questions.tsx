@@ -9,19 +9,19 @@ import { Fragment } from 'react';
 let cx = classNames.bind(classes);
 
 type Card = {
-    titre:string
-    content:string
-    swiped?:string
+    titre: string
+    content: string
+    swiped?: string
 }
 
-const cards : Card[] = [
+const cards: Card[] = [
     { "titre": "environnement (1/6)", "content": "coucou" },
     { "titre": "environnement (2/6)", "content": "hola" },
     { "titre": "environnement (3/6)", "content": "hello" }
 ]
 
-function onSwipe(e: React.TouchEvent<HTMLDivElement>, side: String, card : Card) {
-    Object.assign(card, {swiped: side})
+function onSwipe(e: React.TouchEvent<HTMLDivElement>, side: String, card: Card) {
+    Object.assign(card, { swiped: side })
     if (cards.every(x => x.swiped)) {
         console.log("All card swiped !", cards)
     }
@@ -37,11 +37,16 @@ const Questions: React.FC = () => {
             <div className={cx("container", "title")}>Environnement</div>
             <div className={cx("container", "cards")}>
                 <div className={cx("card-stack")}>
-                { cards.map(card => <SwipeCard className={cx("card")} key={card.titre} onSwipe={(e, side) => onSwipe(e, side, card)}>
+                    {cards.map(card => <SwipeCard
+                        enableSwipe={['right', 'left', 'up']}
+                        className={cx("card")}
+                        key={card.titre}
+                        onSwipe={(e, side) => onSwipe(e, side, card)}
+                    >
                         {card.titre}<br />
                         Hello i'm swipe card content<br />
                         {card.content}<br />
-                </SwipeCard>)}
+                    </SwipeCard>)}
                 </div>
             </div>
             <div className={cx("container", "buttons")}>

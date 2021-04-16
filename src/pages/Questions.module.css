@@ -42,6 +42,7 @@
     position: relative;
     width: 250px;
     height: 400px;
+    perspective: 500px;
   }
 
   .card {

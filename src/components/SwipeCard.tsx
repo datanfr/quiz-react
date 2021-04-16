@@ -1,10 +1,13 @@
 import classNames from 'classnames/bind';
 import React, { PureComponent, ReactNode } from 'react';
 
+type Side = "left" | "right" | "up" | "down"
+
 type Props = {
-  onSwipe: (e: React.TouchEvent<HTMLDivElement>, side: "left" | "right" | "up" | "down") => void
+  onSwipe: (e: React.TouchEvent<HTMLDivElement>, side: Side) => void
   children: ReactNode
   [x: string]: any
+  enableSwipe?: Side[]
 }
 
 interface State { count: number, show: boolean }
@@ -43,12 +46,12 @@ class SwipeCard extends PureComponent<Props, State> {
   }
 
   render() {
-    const { onSwipe, ...remains } = this.props
+    const { onSwipe, enableSwipe, ...remains } = this.props
     return this.state.show && <div {...remains}
       onTouchStart={e => this.fingerAdded(e)}
       onTouchMove={e => this.moving(e)}
       onTouchEnd={e => this.fingerRemoved(e)}
-      onTransitionEnd={e => this.reset(e)}>
+      onTransitionEnd={e => this.hide(e)}>
       {this.props.children}
     </div>
   }
@@ -66,12 +69,13 @@ class SwipeCard extends PureComponent<Props, State> {
       const time = performance.now()
       const deltaX = e.touches[0].clientX - this.startEvent.touches[0].clientX;
       const deltaY = e.touches[0].clientY - this.startEvent.touches[0].clientY;
-      const angle = deltaX * 0.05;
+      const angleX = deltaX * 0.05;
+      const angleY = deltaY * 0.05;
       const confirmation = deltaX / e.currentTarget.clientWidth;
       this.speedX = (deltaX - this.previous.deltaX) / (time - this.previous.time)//In pixel per millisecond
       this.speedY = (deltaY - this.previous.deltaY) / (time - this.previous.time)//In pixel per millisecond
       //console.log({speed: this.speed});
-      const tranform = `translate(${Math.round(deltaX)}px, ${Math.round(deltaY)}px) rotate(${angle}deg)`;
+      const tranform = `translate(${Math.round(deltaX)}px, ${Math.round(deltaY)}px) rotateZ(${angleX}deg) rotateX(${-angleY}deg)`;
       //console.log({ tranform });
       e.currentTarget.style.transform = tranform;
       this.previous = this.current
@@ -95,55 +99,81 @@ class SwipeCard extends PureComponent<Props, State> {
 
       if ((posSwipeTriggered || speedSwipeTriggered) /*&& Math.sign(this.current.deltaX) === Math.sign(this.speed)*/) {
         //Swipe
-        this.swiped = true;
-        let finalAnimationPos;
         console.log(this.current)
         if (posSwipeTriggered) {
           if (Math.abs(this.current.deltaX) / target.clientWidth > Math.abs(this.current.deltaY / target.clientHeight)) {
             //X prevail
             const sign = Math.sign(this.current.deltaX)
-            finalAnimationPos = target.clientWidth * 2 * sign
-            this.props.onSwipe(e, sign > 0 ? "right" : "left")
-            target.style.transition = `transform 0.3s ease`;
-            const angle = finalAnimationPos * 0.05;
-            target.style.transform = `translateX(${finalAnimationPos}px) rotate(${angle}deg)`;
+            const finalAnimationPos = target.clientWidth * 2 * sign;
+            const side = sign > 0 ? "right" : "left"
+            if (this.props.enableSwipe?.includes(side)) {
+              this.props.onSwipe(e, side)
+              this.swiped = true;
+              target.style.transition = `transform 0.3s ease`;
+              const angle = finalAnimationPos * 0.05;
+              target.style.transform = `translateX(${finalAnimationPos}px) rotate(${angle}deg)`;
+            } else {
+              this.reset(target)
+            }
           } else {
             //Y prevail
             const sign = Math.sign(this.current.deltaY)
-            finalAnimationPos = target.clientHeight * 2 * sign
-            this.props.onSwipe(e, sign > 0 ? "down" : "up")
-            target.style.transition = `transform 0.3s ease`;
-            const angle = finalAnimationPos * 0.05;
-            target.style.transform = `translateY(${finalAnimationPos}px) rotate(${angle}deg)`;
+            const finalAnimationPos = target.clientHeight * 2 * sign
+            const side = sign > 0 ? "down" : "up"
+            if (this.props.enableSwipe?.includes(side)) {
+              this.props.onSwipe(e, side)
+              this.swiped = true;
+              target.style.transition = `transform 0.3s ease`;
+              const angle = finalAnimationPos * 0.05;
+              target.style.transform = `translateY(${finalAnimationPos}px) rotate(${angle}deg)`;
+            } else {
+              this.reset(target)
+            }
           }
         } else {
           if (Math.abs(this.speedX) > Math.abs(this.speedY)) {
             //X prevail
             const sign = Math.sign(this.speedX);
-            finalAnimationPos = target.clientWidth * 2 * sign
-            this.props.onSwipe(e, sign > 0 ? "right" : "left")
-            target.style.transition = `transform ${1 / Math.abs(this.speedX)}s ease`;
-            target.style.transform = `translateX(${finalAnimationPos}px)`;
+            const finalAnimationPos = target.clientWidth * 2 * sign
+            const side = sign > 0 ? "right" : "left"
+            if (this.props.enableSwipe?.includes(side)) {
+              this.props.onSwipe(e, side)
+              this.swiped = true;
+              target.style.transition = `transform ${1 / Math.abs(this.speedX)}s ease`;
+              target.style.transform = `translateX(${finalAnimationPos}px)`;
+            } else {
+              this.reset(target)
+            }
           } else {
             //Y prevail
             // console.log({this.speedY})
             const sign = Math.sign(this.speedY);
-            finalAnimationPos = target.clientHeight * 2 * sign
-            this.props.onSwipe(e, sign > 0 ? "down" : "up")
-            target.style.transition = `transform ${1 / Math.abs(this.speedY)}s ease`;
-            target.style.transform = `translateY(${finalAnimationPos}px)`;
+            const finalAnimationPos = target.clientHeight * 2 * sign
+            const side = sign > 0 ? "down" : "up"
+            if (this.props.enableSwipe?.includes(side)) {
+              this.props.onSwipe(e, side)
+              this.swiped = true;
+              target.style.transition = `transform ${1 / Math.abs(this.speedY)}s ease`;
+              target.style.transform = `translateY(${finalAnimationPos}px)`;
+            } else {
+              this.reset(target)
+            }
           }
         }
       } else {
         //Reset to original position
-        target.style.transition = `transform ${0.3}s ease`;
-        target.style.transform = `translateX(${0}px) rotate(${0}deg)`;
+        this.reset(target)
       }
     }
     //console.log({ fingerRemoved: e });
   }
 
-  reset(e: React.TransitionEvent<HTMLDivElement>) {
+  reset(target: HTMLDivElement) {
+    target.style.transition = `transform ${0.3}s ease`;
+    target.style.transform = `translateX(${0}px) rotate(${0}deg)`;
+  }
+
+  hide(e: React.TransitionEvent<HTMLDivElement>) {
     //console.log("aniamtion end")
     this.swiped && this.setState({ show: false });
   }
