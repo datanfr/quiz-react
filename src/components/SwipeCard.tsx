@@ -6,6 +6,7 @@ export type Side = "left" | "right" | "up" | "down"
 type Props = {
   /* 'e' may be null if swipe simulate with swipe(side) method */
   onSwipe: (e: React.TouchEvent<HTMLDivElement> | null, side: Side) => void
+  onAboutToSwipe: (e: React.TouchEvent<HTMLDivElement> | null, side: Side, coef:number) => void
   children: ReactNode
   [x: string]: any
   enableSwipe?: Side[]

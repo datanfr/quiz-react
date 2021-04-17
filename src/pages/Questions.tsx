@@ -8,25 +8,55 @@ import React, { Fragment } from 'react';
 
 let cx = classNames.bind(classes);
 
+type Choice = "pour" | "contre" | "osef"
+
 type Card = {
     titre: string
     content: string
     swiped?: string
-    ref?: React.RefObject<SwipeCard>
+    ref?: React.RefObject<SwipeCard>,
+    stamps: Record<Choice, React.RefObject<HTMLDivElement>>
+}
+
+function createStampsRef() : Record<Choice, React.RefObject<HTMLDivElement>> {
+    return {
+        ["pour"]: React.createRef(),
+        ["contre"]: React.createRef(),
+        ["osef"]: React.createRef()
+    }
 }
 
 const cards: Card[] = [
-    { "titre": "environnement (1/6)", "content": "coucou", ref: React.createRef() },
-    { "titre": "environnement (2/6)", "content": "hola", ref: React.createRef() },
-    { "titre": "environnement (3/6)", "content": "hello", ref: React.createRef() }
+    { "titre": "environnement (1/6)", "content": "coucou", ref: React.createRef(), stamps: createStampsRef() },
+    { "titre": "environnement (2/6)", "content": "hola", ref: React.createRef(), stamps: createStampsRef() },
+    { "titre": "environnement (3/6)", "content": "hello", ref: React.createRef(), stamps: createStampsRef() }
 ];
 
 (window as any).cards = cards
 
-function onSwipe(e: React.TouchEvent<HTMLDivElement> | null, side: String, card: Card) {
+function onSwipe(e: React.TouchEvent<HTMLDivElement> | null, side: Side, card: Card) {
     Object.assign(card, { swiped: side })
     if (cards.every(x => x.swiped)) {
         console.log("All card swiped !", cards)
+    }
+}
+
+const sideToChoice: Record<Side, Choice | null> = {
+    "right": "pour",
+    "left": "contre",
+    "up": "osef",
+    "down": null
+};
+
+function onAboutToSwipe(e: React.TouchEvent<HTMLDivElement> | null, side: Side, card: Card, coef: number) {
+    Object.assign(card, { swiped: side })
+    const choice = sideToChoice[side]
+    if (choice != null) {
+        const targetStamp = card.stamps[choice].current
+        if (targetStamp) targetStamp.style.visibility = Math.round(coef).toString();
+        if (cards.every(x => x.swiped)) {
+            console.log("All card swiped !", cards)
+        }
     }
 }
 
@@ -59,29 +89,33 @@ const Questions: React.FC = () => {
                         key={card.titre}
                         ref={card.ref}
                         onSwipe={(e, side) => onSwipe(e, side, card)}
+                        onAboutToSwipe={(e, side, coef) => onAboutToSwipe(e, side, card, coef)}
                     >
                         <div className={cx('card-content')}>
                             {card.titre}<br />
                             Hello i'm swipe card content<br />
                             {card.content}<br />
                         </div>
-                        <div className={cx('card-stamp', 'stamp-right')}>
+                        <div ref={card.stamps.pour} className={cx('card-stamp', 'stamp-right')}>
                             <div style={{
                                 color: "green",
-                                fontSize:"3em",
-                                transform: "translate(5px, 200px) rotate(35deg)", border: "5px solid green", borderRadius: "15px"}}>POUR</div>
+                                fontSize: "3em",
+                                transform: "translate(5px, 200px) rotate(35deg)", border: "5px solid green", borderRadius: "15px"
+                            }}>POUR</div>
                         </div>
-                        <div className={cx('card-stamp', 'stamp-left')}>
+                        <div ref={card.stamps.contre} className={cx('card-stamp', 'stamp-left')}>
                             <div style={{
                                 color: "red",
-                                fontSize:"2em",
-                                transform: "translate(113px, 283px) rotate(-35deg)", border: "5px solid red", borderRadius: "15px"}}>CONTRE</div>
+                                fontSize: "2em",
+                                transform: "translate(113px, 283px) rotate(-35deg)", border: "5px solid red", borderRadius: "15px"
+                            }}>CONTRE</div>
                         </div>
-                        <div className={cx('card-stamp', 'stamp-up')}>
+                        <div ref={card.stamps.osef} className={cx('card-stamp')}>
                             <div style={{
                                 color: "grey",
-                                fontSize:"3em",
-                                transform: "translate(52px, 297px) rotate(-9deg)", border: "5px solid grey", borderRadius: "15px"}}>OSEF</div>
+                                fontSize: "3em",
+                                transform: "translate(52px, 297px) rotate(-9deg)", border: "5px solid grey", borderRadius: "15px"
+                            }}>OSEF</div>
                         </div>
                     </SwipeCard>)}
                 </div>
