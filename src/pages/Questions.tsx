@@ -13,7 +13,11 @@ import { initialize } from 'workbox-google-analytics';
 let cx = classNames.bind(classes);
 
 let cards: Card[] = []
-
+cards = [
+    { "titre": "environnement (1/6)", "content": "coucou", ref: React.createRef() },
+    { "titre": "environnement (2/6)", "content": "hola", ref: React.createRef() },
+    { "titre": "environnement (3/6)", "content": "hello", ref: React.createRef() }
+];
 const init = async() => {
     cards = await Api.getCards('environnement', 5);
 }
