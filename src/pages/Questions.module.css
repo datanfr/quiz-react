@@ -52,3 +52,13 @@
     width: 250px;
     height: 400px;
   }
+
+  .card-content {
+    position: absolute;
+    width: 250px;
+    height: 400px;
+  }
+
+  .card-stamp {
+    position: absolute;
+  }

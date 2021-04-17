@@ -36,21 +36,19 @@ function resetLastCard() {
     lastCard && lastCard.ref && lastCard.ref.current?.reset()
 }
 
-
 function swipeTopCard(side: Side) {
     const topCard = cards.find(x => !x.swiped)//Find first unswipped card
-    console.log({simulateSwipe: side, topCard})
+    console.log({ simulateSwipe: side, topCard })
     topCard && topCard.ref && topCard.ref.current?.swipe(side)
 }
 
-Object.assign((window as any), {cards, resetLastCard, swipeTopCard});
+Object.assign((window as any), { cards, resetLastCard, swipeTopCard });
 
 const Questions: React.FC = () => {
-    console.log(classes)
     return (
         <div className={cx("container", "page")}>
             <div className={cx("container", "back-button")}>
-                <FontAwesomeIcon icon={faChevronLeft} onClick={() => resetLastCard()}/>
+                <FontAwesomeIcon icon={faChevronLeft} onClick={() => resetLastCard()} />
             </div>
             <div className={cx("container", "title")}>Environnement</div>
             <div className={cx("container", "cards")}>
@@ -62,9 +60,29 @@ const Questions: React.FC = () => {
                         ref={card.ref}
                         onSwipe={(e, side) => onSwipe(e, side, card)}
                     >
-                        {card.titre}<br />
-                        Hello i'm swipe card content<br />
-                        {card.content}<br />
+                        <div className={cx('card-content')}>
+                            {card.titre}<br />
+                            Hello i'm swipe card content<br />
+                            {card.content}<br />
+                        </div>
+                        <div className={cx('card-stamp', 'stamp-right')}>
+                            <div style={{
+                                color: "green",
+                                fontSize:"3em",
+                                transform: "translate(5px, 200px) rotate(35deg)", border: "5px solid green", borderRadius: "15px"}}>POUR</div>
+                        </div>
+                        <div className={cx('card-stamp', 'stamp-left')}>
+                            <div style={{
+                                color: "red",
+                                fontSize:"2em",
+                                transform: "translate(113px, 283px) rotate(-35deg)", border: "5px solid red", borderRadius: "15px"}}>CONTRE</div>
+                        </div>
+                        <div className={cx('card-stamp', 'stamp-up')}>
+                            <div style={{
+                                color: "grey",
+                                fontSize:"3em",
+                                transform: "translate(52px, 297px) rotate(-9deg)", border: "5px solid grey", borderRadius: "15px"}}>OSEF</div>
+                        </div>
                     </SwipeCard>)}
                 </div>
             </div>
