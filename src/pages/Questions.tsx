@@ -5,25 +5,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import SwipeCard, { Side } from "../components/SwipeCard"
 import React, { Fragment } from 'react';
+import Api from '../Api';
+import Card from "../models/Card";
+import { initialize } from 'workbox-google-analytics';
+
 
 let cx = classNames.bind(classes);
 
-type Card = {
-    titre: string
-    content: string
-    swiped?: string
-    ref?: React.RefObject<SwipeCard>
+let cards: Card[] = []
+
+const init = async() => {
+    cards = await Api.getCards('environnement', 5);
 }
 
-const cards: Card[] = [
-    { "titre": "environnement (1/6)", "content": "coucou", ref: React.createRef() },
-    { "titre": "environnement (2/6)", "content": "hola", ref: React.createRef() },
-    { "titre": "environnement (3/6)", "content": "hello", ref: React.createRef() }
-];
+init();
 
 (window as any).cards = cards
 
 function onSwipe(e: React.TouchEvent<HTMLDivElement> | null, side: String, card: Card) {
+    init()
     Object.assign(card, { swiped: side })
     if (cards.every(x => x.swiped)) {
         console.log("All card swiped !", cards)
@@ -39,18 +39,18 @@ function resetLastCard() {
 
 function swipeTopCard(side: Side) {
     const topCard = cards.find(x => !x.swiped)//Find first unswipped card
-    console.log({simulateSwipe: side, topCard})
+    console.log({ simulateSwipe: side, topCard })
     topCard && topCard.ref && topCard.ref.current?.swipe(side)
 }
 
-Object.assign((window as any), {cards, resetLastCard, swipeTopCard});
+Object.assign((window as any), { cards, resetLastCard, swipeTopCard });
 
 const Questions: React.FC = () => {
     console.log(classes)
     return (
         <div className={cx("container", "page")}>
             <div className={cx("container", "back-button")}>
-                <FontAwesomeIcon icon={faChevronLeft} onClick={() => resetLastCard()}/>
+                <FontAwesomeIcon icon={faChevronLeft} onClick={() => resetLastCard()} />
             </div>
             <div className={cx("container", "title")}>Environnement</div>
             <div className={cx("container", "cards")}>
