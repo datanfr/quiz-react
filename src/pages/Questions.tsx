@@ -5,14 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import SwipeCard, { Side, SwipeDetection } from "../components/SwipeCard"
 import React, { Fragment } from 'react';
+import Api from '../Api';
+import { initialize } from 'workbox-google-analytics';
 
-let cx = classNames.bind(classes);
+export type Choice = "pour" | "contre" | "osef"
 
-type Choice = "pour" | "contre" | "osef"
-
-type Card = {
-    titre: string
-    content: string
+export type Card = {
+    apiData: any
     swiped?: string
     ref?: React.RefObject<SwipeCard>,
     stamps: Record<Choice, React.RefObject<HTMLDivElement>>
@@ -26,15 +25,22 @@ function createStampsRef() : Record<Choice, React.RefObject<HTMLDivElement>> {
     }
 }
 
-const cards: Card[] = [
-    { "titre": "environnement (1/6)", "content": "coucou", ref: React.createRef(), stamps: createStampsRef() },
-    { "titre": "environnement (2/6)", "content": "hola", ref: React.createRef(), stamps: createStampsRef() },
-    { "titre": "environnement (3/6)", "content": "hello", ref: React.createRef(), stamps: createStampsRef() }
-];
+let cx = classNames.bind(classes);
+ 
+let cards: Card[] = []
+
+const init = async() => {
+    cards = await (await Api.getCards('environnement', 5)).map(apiData => ({
+        apiData, ref: React.createRef(), stamps: createStampsRef()
+    }))
+}
+
+//init();
 
 (window as any).cards = cards
 
 function onSwipe(e: React.TouchEvent<HTMLDivElement> | null, side: Side, card: Card) {
+    init()
     Object.assign(card, { swiped: side })
     if (cards.every(x => x.swiped)) {
         console.log("All card swiped !", cards)
@@ -95,16 +101,16 @@ const Questions: React.FC = () => {
                     {cards.slice().reverse().map(card => <SwipeCard
                         enableSwipe={['right', 'left', 'up']}
                         className={cx("card")}
-                        key={card.titre}
+                        key={card.apiData.titre}
                         ref={card.ref}
                         onSwipe={(e, side) => onSwipe(e, side, card)}
                         onAboutToSwipe={(e, swipe) => onAboutToSwipe(e, swipe, card)}
                         onReset={() => onReset(card)}
                     >
                         <div className={cx('card-content')}>
-                            {card.titre}<br />
+                            {card.apiData}<br />
                             Hello i'm swipe card content<br />
-                            {card.content}<br />
+                            {card.apiData}<br />
                         </div>
                         <div ref={card.stamps.pour} className={cx('card-stamp', 'stamp-right')}>
                             <div style={{
