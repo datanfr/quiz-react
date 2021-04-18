@@ -9,7 +9,8 @@ export type SwipeDetection = {certainty: number, side : Side, detectionMethod : 
 type Props = {
   /* 'e' may be null if swipe simulate with swipe(side) method */
   onSwipe: (e: React.TouchEvent<HTMLDivElement> | null, side: Side) => void
-  onAboutToSwipe: (e: React.TouchEvent<HTMLDivElement> | null, side: Side, coef: number) => void
+  onAboutToSwipe?: (e: React.TouchEvent<HTMLDivElement> | null, swipe : SwipeDetection) => void
+  onReset?: () => void
   children: ReactNode
   [x: string]: any
   enableSwipe?: Side[]
@@ -56,7 +57,7 @@ class SwipeCard extends PureComponent<Props, State> {
   }
 
   render() {
-    const { onSwipe, enableSwipe, ...remains } = this.props
+    const { onSwipe, onAboutToSwipe, enableSwipe, ...remains } = this.props
     return this.state.show && <div {...remains}
       onTouchStart={e => this.fingerAdded(e)}
       onTouchMove={e => this.moving(e)}
@@ -86,6 +87,7 @@ class SwipeCard extends PureComponent<Props, State> {
       const angleY = deltaY * 0.05;
       const confirmation = deltaX / target.clientWidth;
       this.speedX = (deltaX - this.previous.deltaX) / (time - this.previous.time)//In pixel per millisecond
+      console.log(this.speedX)
       this.speedY = (deltaY - this.previous.deltaY) / (time - this.previous.time)//In pixel per millisecond
       const tranform = `translate(${Math.round(deltaX)}px, ${Math.round(deltaY)}px) rotateZ(${angleX}deg) rotateX(${-angleY}deg)`;
       target.style.transform = tranform;
@@ -109,23 +111,25 @@ class SwipeCard extends PureComponent<Props, State> {
         },
         {
           side: "right", detectionMethod: "speed",
-          certainty: Math.abs(this.speedX) / speedThreshold
+          certainty: this.speedX / speedThreshold
         },
         {
           side: "left", detectionMethod: "speed",
-          certainty: Math.abs(this.speedX) / -speedThreshold
+          certainty: this.speedX / -speedThreshold
         },
         {
           side: "up", detectionMethod: "speed",
-          certainty: Math.abs(this.speedY) / -speedThreshold
+          certainty: this.speedY / -speedThreshold
         },
         {
           side: "down", detectionMethod: "speed",
-          certainty: Math.abs(this.speedY) / speedThreshold
+          certainty: this.speedY / speedThreshold
         },
       ]
+      console.log(swipes)
       const bestMatch = maxBy(swipes, swipe => swipe.certainty)
-      console.log(bestMatch);
+      console.log(bestMatch)
+      if (bestMatch && this.props.onAboutToSwipe) this.props.onAboutToSwipe(e, bestMatch)
       this.previous = this.current
       this.current = { deltaX, deltaY, confirmation, time }
     }
@@ -241,6 +245,7 @@ class SwipeCard extends PureComponent<Props, State> {
       target.style.transition = `transform ${0.3}s ease`;
       target.style.transform = `translateX(${0}px) rotate(${0}deg)`;
     }
+    this.props.onReset && this.props.onReset()
   }
 
   hide(e: React.TransitionEvent<HTMLDivElement>) {

@@ -61,4 +61,5 @@
 
   .card-stamp {
     position: absolute;
+    opacity: 0;
   }

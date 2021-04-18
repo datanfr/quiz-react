@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 import classes from './Questions.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
-import SwipeCard, { Side } from "../components/SwipeCard"
+import SwipeCard, { Side, SwipeDetection } from "../components/SwipeCard"
 import React, { Fragment } from 'react';
 
 let cx = classNames.bind(classes);
@@ -48,16 +48,22 @@ const sideToChoice: Record<Side, Choice | null> = {
     "down": null
 };
 
-function onAboutToSwipe(e: React.TouchEvent<HTMLDivElement> | null, side: Side, card: Card, coef: number) {
-    Object.assign(card, { swiped: side })
-    const choice = sideToChoice[side]
+function onAboutToSwipe(e: React.TouchEvent<HTMLDivElement> | null, swipe: SwipeDetection, card: Card) {
+    const choice = sideToChoice[swipe.side]
+    if (card.stamps.contre.current) card.stamps.contre.current.style.opacity = "0";
+    if (card.stamps.pour.current) card.stamps.pour.current.style.opacity = "0";
+    if (card.stamps.osef.current) card.stamps.osef.current.style.opacity = "0";
     if (choice != null) {
         const targetStamp = card.stamps[choice].current
-        if (targetStamp) targetStamp.style.visibility = Math.round(coef).toString();
-        if (cards.every(x => x.swiped)) {
-            console.log("All card swiped !", cards)
-        }
+        //console.log(targetStamp)
+        if (targetStamp) targetStamp.style.opacity = swipe.certainty.toString();
     }
+}
+
+function onReset(card: Card) {
+    if (card.stamps.contre.current) card.stamps.contre.current.style.opacity = "0";
+    if (card.stamps.pour.current) card.stamps.pour.current.style.opacity = "0";
+    if (card.stamps.osef.current) card.stamps.osef.current.style.opacity = "0";
 }
 
 function resetLastCard() {
@@ -69,6 +75,9 @@ function resetLastCard() {
 function swipeTopCard(side: Side) {
     const topCard = cards.find(x => !x.swiped)//Find first unswipped card
     console.log({ simulateSwipe: side, topCard })
+    const choice = sideToChoice[side]
+    const stamp = choice && topCard?.stamps[choice].current
+    if (stamp) stamp.style.opacity = "1";
     topCard && topCard.ref && topCard.ref.current?.swipe(side)
 }
 
@@ -89,7 +98,8 @@ const Questions: React.FC = () => {
                         key={card.titre}
                         ref={card.ref}
                         onSwipe={(e, side) => onSwipe(e, side, card)}
-                        onAboutToSwipe={(e, side, coef) => onAboutToSwipe(e, side, card, coef)}
+                        onAboutToSwipe={(e, swipe) => onAboutToSwipe(e, swipe, card)}
+                        onReset={() => onReset(card)}
                     >
                         <div className={cx('card-content')}>
                             {card.titre}<br />
