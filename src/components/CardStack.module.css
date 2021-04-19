@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  padding: 10px;
+}
+  .card-stack {
+    position: relative;
+    width: 250px;
+    height: 400px;
+    perspective: 500px;
+  }
+
+  .card {
+    background-color: rgba(125, 125, 125, 0.836);
+    border: 1px solid rgba(0,125,255,0.90);
+    position: absolute;
+    width: 250px;
+    height: 400px;
+  }
+
+  .card-content {
+    position: absolute;
+    width: 250px;
+    height: 400px;
+  }
+
+  .card-stamp {
+    position: absolute;
+    opacity: 0;
+  }
