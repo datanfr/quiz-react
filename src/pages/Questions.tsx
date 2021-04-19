@@ -17,8 +17,8 @@ export type Card = {
     stamps: Record<Choice, React.RefObject<HTMLDivElement>>
 }
 
-interface Props {}
-interface State {cards:Card[]}
+interface Props { }
+interface State { cards: Card[] }
 
 let cx = classNames.bind(classes);
 
@@ -31,37 +31,68 @@ const sideToChoice: Record<Side, Choice | null> = {
 
 function createStampsRef(): Record<Choice, React.RefObject<HTMLDivElement>> {
     return {
-        ["pour"]: React.createRef(),
-        ["contre"]: React.createRef(),
-        ["osef"]: React.createRef()
+        ["pour"]: React.createRef<HTMLDivElement>(),
+        ["contre"]: React.createRef<HTMLDivElement>(),
+        ["osef"]: React.createRef<HTMLDivElement>()
     }
 }
 
-let cards: Card[] = []
-
 class Questions extends PureComponent<Props, State> {
 
-    constructor(props : Props) {
+    apiCall : Promise<any[]>
+
+    constructor(props: Props) {
         super(props)
-        Api.getCards('environnement', 5)
-            .then(this.handleApiResponse)
-            //.catch(this.handleApiError)
+        this.apiCall = Api.getCards('environnement', 5)
+        this.state = {
+            cards: []
+        }
     }
 
-    handleApiResponse(resp:any[]) {
-        const cards : Card[] = resp.map(apiData => ({
+    componentDidMount() {
+        this.apiCall
+            .then(
+                resp => this.handleApiResponse(resp),
+                e => this.handleApiError(e)
+            )
+    }
+
+    handleApiResponse(resp: any[]) {
+        const cards: Card[] = resp.map(apiData => ({
             apiData, ref: React.createRef(), stamps: createStampsRef()
         }))
-        this.setState({cards})
+        this.setState({ cards })
+    }
+
+    handleApiError(e: Error) {
+        console.log("Error caught putting fake cards data", e)
+        const cards = [
+            {
+                apiData: { "voteTitre": "environnement (1/6)", "description": "coucou" },
+                ref: React.createRef<SwipeCard>(),
+                stamps: createStampsRef()
+            },
+            {
+                apiData: { "voteTitre": "environnement (2/6)", "description": "hola" },
+                ref: React.createRef<SwipeCard>(),
+                stamps: createStampsRef()
+            },
+            {
+                apiData: { "voteTitre": "environnement (3/6)", "description": "hello" },
+                ref: React.createRef<SwipeCard>(),
+                stamps: createStampsRef()
+            }
+        ]
+        this.setState({ cards })
     }
 
     onSwipe(e: React.TouchEvent<HTMLDivElement> | null, side: Side, card: Card) {
         Object.assign(card, { swiped: side })
-        if (cards.every(x => x.swiped)) {
-            console.log("All card swiped !", cards)
+        if (this.state.cards.every(x => x.swiped)) {
+            console.log("All card swiped !", this.state.cards)
         }
     }
-    
+
     onAboutToSwipe(e: React.TouchEvent<HTMLDivElement> | null, swipe: SwipeDetection, card: Card) {
         const choice = sideToChoice[swipe.side]
         if (card.stamps.contre.current) card.stamps.contre.current.style.opacity = "0";
@@ -73,30 +104,31 @@ class Questions extends PureComponent<Props, State> {
             if (targetStamp) targetStamp.style.opacity = swipe.certainty.toString();
         }
     }
-    
+
     onReset(card: Card) {
         if (card.stamps.contre.current) card.stamps.contre.current.style.opacity = "0";
         if (card.stamps.pour.current) card.stamps.pour.current.style.opacity = "0";
         if (card.stamps.osef.current) card.stamps.osef.current.style.opacity = "0";
     }
-    
+
     resetLastCard() {
-        const lastCard = cards.slice().reverse().find(x => x.swiped)//Find last swiped
+        const lastCard = this.state.cards.slice().reverse().find(x => x.swiped)//Find last swiped
         delete lastCard?.swiped
         lastCard && lastCard.ref && lastCard.ref.current?.reset()
     }
-    
+
     swipeTopCard(side: Side) {
-        const topCard = cards.find(x => !x.swiped)//Find first unswipped card
+        const topCard = this.state.cards.find(x => !x.swiped)//Find first unswipped card
         console.log({ simulateSwipe: side, topCard })
         const choice = sideToChoice[side]
         const stamp = choice && topCard?.stamps[choice].current
         if (stamp) stamp.style.opacity = "1";
         topCard && topCard.ref && topCard.ref.current?.swipe(side)
     }
-    
+
 
     render() {
+        //console.log("rendering", this.state.cards)
         return (
             <div className={cx("container", "page")}>
                 <div className={cx("container", "back-button")}>
@@ -105,7 +137,7 @@ class Questions extends PureComponent<Props, State> {
                 <div className={cx("container", "title")}>Environnement</div>
                 <div className={cx("container", "cards")}>
                     <div className={cx("card-stack")}>
-                        {cards.slice().reverse().map(card => <SwipeCard
+                        {this.state.cards.slice().reverse().map(card => <SwipeCard
                             enableSwipe={['right', 'left', 'up']}
                             className={cx("card")}
                             key={card.apiData.voteTitre}
