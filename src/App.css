@@ -1,0 +1,11 @@
+:root {
+    --datan-green: #00b794;
+    --datan-blue: #00668e;
+    --datan-brown: #4c4c4c;
+    --datan-red: #ff661a;
+    --datan-white: #f3f5f6;
+    --datan-black: #212529;
+    color: var(--datan-black);
+    background-color: var(--datan-white);
+    font-family: "Open Sans";
+}
