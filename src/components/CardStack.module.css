@@ -2,10 +2,13 @@
   display: flex;
   padding: 10px;
 }
+
   .card-stack {
-    position: relative;
-    width: 250px;
-    height: 400px;
+    --card-width: 250px;
+    --card-height: 370px;
+      position: relative;
+    width: var(--card-width);
+    height: var(--card-height);
     perspective: 500px;
   }
 
@@ -13,14 +16,14 @@
     background-color: rgba(125, 125, 125, 0.836);
     border: 1px solid rgba(0,125,255,0.90);
     position: absolute;
-    width: 250px;
-    height: 400px;
+    width: var(--card-width);
+    height: var(--card-height);
   }
 
   .card-content {
     position: absolute;
-    width: 250px;
-    height: 400px;
+    width: var(--card-width);
+    height: var(--card-height);
   }
 
   .card-stamp {
