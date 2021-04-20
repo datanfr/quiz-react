@@ -1,11 +1,19 @@
 :root {
     --datan-green: #00b794;
     --datan-blue: #00668e;
-    --datan-brown: #4c4c4c;
-    --datan-red: #ff661a;
+    --datan-grey: #4c4c4c;
+    --datan-orange: #ff661a;
     --datan-white: #f3f5f6;
     --datan-black: #212529;
+    --datan-yellow: #FFBA49;
+    --datan-red: #C5283D;
     color: var(--datan-black);
     background-color: var(--datan-white);
     font-family: "Open Sans";
+}
+
+
+
+.padding {
+    margin: 8px 10px;
 }

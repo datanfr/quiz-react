@@ -1,8 +1,8 @@
 .container {
   display: flex;
-  padding: 10px;
 }
 
+    /* see https://css-tricks.com/how-to-stack-elements-in-css/ */
   .card-stack {
     --card-width: 250px;
     --card-height: 370px;
@@ -13,11 +13,12 @@
   }
 
   .card {
-    background-color: rgba(125, 125, 125, 0.836);
-    border: 1px solid rgba(0,125,255,0.90);
-    position: absolute;
+    background-color: var(--datan-white);
+    position: absolute; 
+    border-radius: 3px;
     width: var(--card-width);
     height: var(--card-height);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   }
 
   .card-content {
@@ -29,4 +30,28 @@
   .card-stamp {
     position: absolute;
     opacity: 0;
+    border-radius: 15px;
+    padding: 5px;
   }
+
+  .pour {
+    color: var(--datan-green);
+    font-size: 3em;
+    transform: translate(5px, 200px) rotate(35deg);
+    border: 5px solid var(--datan-green);
+  }
+
+  .contre {
+    color: var(--datan-red);
+    font-size: 2em;
+    transform: translate(113px, 283px) rotate(-35deg);
+    border: 5px solid var(--datan-red);
+  }
+
+  .osef {
+    color: var(--datan-grey);
+    font-size: 2em;
+    transform: translate(52px, 297px) rotate(-9deg);
+    border: 5px solid var(--datan-grey);
+  }
+

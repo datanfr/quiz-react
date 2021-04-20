@@ -99,26 +99,14 @@ class CardStack<T> extends PureComponent<Props<T>, State> {
                     <div className={cx('card-content')}>
                         {this.props.children(card.cardData)}
                     </div>
-                    <div ref={card.stamps.pour} className={cx('card-stamp', 'stamp-right')}>
-                        <div style={{
-                            color: "green",
-                            fontSize: "3em",
-                            transform: "translate(5px, 200px) rotate(35deg)", border: "5px solid green", borderRadius: "15px"
-                        }}>POUR</div>
+                    <div ref={card.stamps.pour} className={cx('card-stamp', 'pour')}>
+                        <div>POUR</div>
                     </div>
-                    <div ref={card.stamps.contre} className={cx('card-stamp', 'stamp-left')}>
-                        <div style={{
-                            color: "red",
-                            fontSize: "2em",
-                            transform: "translate(113px, 283px) rotate(-35deg)", border: "5px solid red", borderRadius: "15px"
-                        }}>CONTRE</div>
+                    <div ref={card.stamps.contre} className={cx('card-stamp', 'contre')}>
+                        <div>CONTRE</div>
                     </div>
-                    <div ref={card.stamps.osef} className={cx('card-stamp')}>
-                        <div style={{
-                            color: "grey",
-                            fontSize: "3em",
-                            transform: "translate(52px, 297px) rotate(-9deg)", border: "5px solid grey", borderRadius: "15px"
-                        }}>OSEF</div>
+                    <div ref={card.stamps.osef} className={cx('card-stamp', 'osef')}>
+                        <div>NE SAIT PAS</div>
                     </div>
                 </SwipeCard>)}
             </div>
