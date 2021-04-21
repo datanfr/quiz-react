@@ -25,6 +25,7 @@ import Questions from "./pages/Questions"
 
 /* Theme variables */
 import './theme/variables.css';
+import ChooseCategory from './pages/ChooseCategory';
 
 const App: React.FC = () => (
   <div>
@@ -36,8 +37,11 @@ const App: React.FC = () => (
         <Route exact path="/questions">
           <Questions />
         </Route>
+        <Route exact path="/categories">
+          <ChooseCategory />
+        </Route>
         <Route exact path="/">
-          <Redirect to="/home" />
+          <Redirect to="/categories" />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>
