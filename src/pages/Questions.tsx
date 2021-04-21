@@ -7,6 +7,8 @@ import CardStack from '../components/CardStack';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { faSmile, faFrown, faMeh } from '@fortawesome/free-regular-svg-icons'
 import Api from '../Api';
+import mockedData from "../mock/get_most_famous_votes.json"
+
 
 let cx = classNames.bind(classes);
 
@@ -37,11 +39,7 @@ class Questions extends PureComponent<Props, State> {
   }
 
   handleApiError(e: Error) {
-    const questions = [
-      { "voteTitre": "environnement (1/6)", "description": "coucou" },
-      { "voteTitre": "environnement (2/6)", "description": "hola" },
-      { "voteTitre": "environnement (3/6)", "description": "hello" },
-    ]
+    const questions = mockedData
     console.log("Error caught putting fake questions data", e, questions)
     this.setState({ questions })
   }
@@ -65,10 +63,10 @@ class Questions extends PureComponent<Props, State> {
       <div className={cx("container", "title")}><div className={cx('padding')}>Environnement</div></div>
       <div className={cx("container", "cards")}>
         {this.state.questions.length && <CardStack key={Math.random()} ref={this.cardStackRef} cardsData={this.state.questions}>
-          {question => <div className={cx('padding')}>
-            {question.voteTitre}<br />
-            Hello i'm swipe card content<br />
-            {question.description}<br />
+          {question => <div className={cx("container", 'padding')}>
+            <div className={cx("container", "card")}>
+            {question.voteTitre}
+            </div>
           </div>}
         </CardStack>}
       </div>

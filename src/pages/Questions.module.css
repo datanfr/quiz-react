@@ -28,6 +28,12 @@
     justify-content: center;
     align-items: center;
   }
+
+  .card {
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+  }
     
   .buttons {
     justify-content: space-evenly;
