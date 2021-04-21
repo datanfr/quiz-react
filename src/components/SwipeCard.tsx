@@ -21,35 +21,37 @@ interface State { count: number, show: boolean }
 const deltaThreshold = 0.60
 const speedThreshold = 0.9
 
+const animationSpeed = 0.7
+
 const animationEnd: Record<Side, {
   transform: (clientWidth: number, clientHeight: number) => string,
   transition: Record<DetectionMethod, (speedX: number, speedY: number) => string>
 }> = {
   right: {
     transition: {
-      speed: (speedX, speedY) => `transform 0.3s ease`,
-      pos: (speedX, speedY) => `transform 0.3s ease`
+      speed: (speedX, speedY) => `transform ${animationSpeed}s ease`,
+      pos: (speedX, speedY) => `transform ${animationSpeed}s ease`
     },
     transform: (clientWidth, clientHeight) => `translateX(${clientWidth * 2}px) rotate(${clientWidth * 2 * 0.05}deg)`
   },
   left: {
     transition: {
-      speed: (speedX, speedY) => `transform 0.3s ease`,
-      pos: (speedX, speedY) => `transform 0.3s ease`
+      speed: (speedX, speedY) => `transform ${animationSpeed}s ease`,
+      pos: (speedX, speedY) => `transform ${animationSpeed}s ease`
     },
     transform: (clientWidth, clientHeight) => `translateX(${-clientWidth * 2}px) rotate(${-clientWidth * 2 * 0.05}deg)`
   },
   up: {
     transition: {
-      speed: (speedX, speedY) => `transform 0.3s ease`,
-      pos: (speedX, speedY) => `transform 0.3s ease`
+      speed: (speedX, speedY) => `transform ${animationSpeed}s ease`,
+      pos: (speedX, speedY) => `transform ${animationSpeed}s ease`
     },
     transform: (clientWidth, clientHeight) => `translateY(${-clientHeight * 3}px)`
   },
   down: {
     transition: {
-      speed: (speedX, speedY) => `transform 0.3s ease`,
-      pos: (speedX, speedY) => `transform 0.3s ease`
+      speed: (speedX, speedY) => `transform ${animationSpeed}s ease`,
+      pos: (speedX, speedY) => `transform ${animationSpeed}s ease`
     },
     transform: (clientWidth, clientHeight) => `translateY(${clientHeight * 3}px)`
   },
