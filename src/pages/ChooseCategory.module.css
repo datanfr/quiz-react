@@ -34,9 +34,7 @@
 
   .category {
       display: flex;
-      flex-basis: 0;
-      flex-grow: 1;
-      flex-shrink: 1;
+      flex: 1 1 0;
       align-items: center;
       justify-content: center;
       background-color: var(--datan-blue);
@@ -46,11 +44,20 @@
       text-align: center;
   }
 
-  .category-pair .padding {
+  .link {
     display: flex;
-    flex-basis: 0;
-    flex-grow: 1;
-    flex-shrink: 1;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    text-decoration: none;
+}
+
+
+  .category-pair-padding {
+    display: flex;
+    flex: 1 1 0;
     align-items: center;
     justify-content: center;
     margin: 10px;

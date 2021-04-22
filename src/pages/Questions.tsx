@@ -62,7 +62,7 @@ class Questions extends PureComponent<Props, State> {
       </div>
       <div className={cx("container", "title")}><div className={cx('padding')}>Environnement</div></div>
       <div className={cx("container", "cards")}>
-        {this.state.questions.length && <CardStack key={Math.random()} ref={this.cardStackRef} cardsData={this.state.questions}>
+        {this.state.questions.length && <CardStack key={Math.random()} ref={this.cardStackRef} cardsData={this.state.questions} onAllCardsSwiped={() => window.location.href = "/categories"}>
           {question => <div className={cx("container", 'padding')}>
             <div className={cx("container", "card")}>
             {question.voteTitre}

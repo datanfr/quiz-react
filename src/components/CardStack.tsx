@@ -13,7 +13,11 @@ export type Card = {
     stamps: Record<Choice, React.RefObject<HTMLDivElement>>
 }
 
-interface Props<T> { cardsData: T[], children: (cardData:T) => ReactChild | ReactChildren  }
+interface Props<T> {
+    cardsData: T[],
+    children: (cardData:T) => ReactChild | ReactChildren,
+    onAllCardsSwiped: () => void
+}
 interface State {}
 
 let cx = classNames.bind(classes);
@@ -49,6 +53,7 @@ class CardStack<T> extends PureComponent<Props<T>, State> {
         Object.assign(card, { swiped: side })
         if (this.cards.every(x => x.swiped)) {
             console.log("All card swiped !", this.cards)
+            this.props.onAllCardsSwiped()
         }
     }
 
