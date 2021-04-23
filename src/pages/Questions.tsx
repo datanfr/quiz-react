@@ -9,6 +9,7 @@ import { faSmile, faFrown, faMeh } from '@fortawesome/free-regular-svg-icons'
 import Api from '../Api';
 import mockedData from "../mock/get_most_famous_votes.json"
 import Header from "../components/Header"
+import { IonPage } from '@ionic/react';
 
 
 let cx = classNames.bind(classes);
@@ -20,6 +21,7 @@ class Questions extends PureComponent<Props, State> {
 
   apiCall: Promise<any[]>
   cardStackRef: React.RefObject<CardStack<any>>
+  params : URLSearchParams;
 
   constructor(props: Props) {
     super(props);
@@ -28,7 +30,7 @@ class Questions extends PureComponent<Props, State> {
     this.state = {
       questions: []
     }
-
+    this.params = new URLSearchParams(window.location.search)
   }
 
   componentDidMount() {
@@ -51,14 +53,14 @@ class Questions extends PureComponent<Props, State> {
 
   back() {
     const card = this.cardStackRef.current?.resetLastCard()
-    if (!card) window.location.href = "/importance"
+    if (!card) window.location.href = `/importance?theme=${this.params.get("theme")}`
   }
 
   render() {
     const cardStack = this.cardStackRef.current
-    return <div className={cx("fullscreen", "flex", "column")}>
+    return <IonPage><div className={cx("fullscreen", "flex", "column")}>
       <Header onBackClick={() => this.back()}/>
-      <div className={cx("flex", "flex-static", "datan-blue-bg")}><div className={cx('flex', 'margin')}>Environnement</div></div>
+      <div className={cx("flex", "flex-static", "datan-blue-bg")}><div className={cx('flex', 'margin')}>{this.params.get("theme")}</div></div>
       <div className={cx("flex", "align-justify-center", "basis-auto")}>
         {this.state.questions.length && <CardStack key={Math.random()} ref={this.cardStackRef} cardsData={this.state.questions} onAllCardsSwiped={() => window.location.href = "/categories"}>
           {question => <div className={cx("flex", 'margin')}>
@@ -97,7 +99,7 @@ class Questions extends PureComponent<Props, State> {
           </div>
         </div>
       </div>
-    </div>
+    </div></IonPage>
   }
 }
 
