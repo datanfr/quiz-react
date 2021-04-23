@@ -19,7 +19,7 @@ type Props = {
 interface State { count: number, show: boolean }
 
 const deltaThreshold = 0.60
-const speedThreshold = 0.9
+const speedThreshold = 0.3
 
 const animationSpeed = 0.7
 
