@@ -56,7 +56,9 @@ class ChooseCategory extends PureComponent<Props, State> {
     </div>)
 
     return <div className={cx("fullscreen", "flex", "column")}>
-      <div className={cx("margin")}>Choisissez une catégorie pour commencer:</div>
+      <div className={cx("margin")}>
+        <h4>Choisissez une catégorie pour commencer:</h4>
+      </div>
       <div className={cx("flex", "column")}>
         {categoryiesElements}
       </div>

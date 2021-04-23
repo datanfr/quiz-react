@@ -49,10 +49,15 @@ class Questions extends PureComponent<Props, State> {
     this.setState({ questions })
   }
 
+  back() {
+    const card = this.cardStackRef.current?.resetLastCard()
+    if (!card) window.location.href = "/importance"
+  }
+
   render() {
     const cardStack = this.cardStackRef.current
     return <div className={cx("fullscreen", "flex", "column")}>
-      <Header onBackClick={() => this.cardStackRef.current?.resetLastCard()}/>
+      <Header onBackClick={() => this.back()}/>
       <div className={cx("flex", "flex-static", "datan-blue-bg")}><div className={cx('flex', 'margin')}>Environnement</div></div>
       <div className={cx("flex", "align-justify-center", "basis-auto")}>
         {this.state.questions.length && <CardStack key={Math.random()} ref={this.cardStackRef} cardsData={this.state.questions} onAllCardsSwiped={() => window.location.href = "/categories"}>

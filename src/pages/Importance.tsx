@@ -24,21 +24,29 @@ class Importance extends PureComponent<Props, State> {
   render() {
 
     return <div className={cx("fullscreen", "flex", "column")}>
-      <Header/>
-      <div className={cx("flex")}>
-        A quel point cette catégorie est importante pour vous ?
+      <Header onBackClick={() => window.location.href = "categories"} />
+      <div className={cx("flex", "column", "margin")}>
+        <div className={cx("flex", "flex-static")}>
+          <h4>A quel point cette catégorie est importante pour vous ?</h4>
+        </div>
+        <div className={cx("flex", "flex-static")}>
+          Merci de renseigner l'importance de cette catégorie. Cela nous aidera a améliorer la précision des résultats.
+        </div>
       </div>
-      <div className={cx("flex")}>
-        Merci de renseigner l'importance de cette catégorie. Cela nous aidera a améliorer la précision des résultats.
+      <div className={cx("flex", "align-justify-center", "column")}>
+        <div className={cx("flex", "align-justify-center")}>
+          Ceci est un slider
       </div>
-      <div className={cx("flex")}>
-        Ceci est un slider
+        <div className={cx("flex", "align-justify-center")}>
+          Ceci est un indication sur la position du slider
       </div>
-      <div className={cx("flex")}>
-        Ceci est un indication sur la position du slider
       </div>
-      <div className={cx("flex")} onClick={() => window.location.href="/questions"}>
-        Ceci est le bouton valider (et je fonctionne)
+      <div className={cx("flex", "align-justify-center")} onClick={() => window.location.href = "/questions"}>
+        <div className={cx("margin")}>
+          <div className={cx("flex", "datan-blue-bg", "round-corner")}>
+            <div className={cx("margin")}>Commencer</div>
+          </div>
+        </div>
       </div>
     </div>
   }

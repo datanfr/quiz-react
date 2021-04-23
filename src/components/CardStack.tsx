@@ -79,6 +79,7 @@ class CardStack<T> extends PureComponent<Props<T>, State> {
         const lastCard = this.cards.slice().reverse().find(x => x.swiped)//Find last swiped
         delete lastCard?.swiped
         lastCard && lastCard.ref && lastCard.ref.current?.reset()
+        return lastCard
     }
 
     swipeTopCard(side: Side) {
