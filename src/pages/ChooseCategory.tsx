@@ -71,7 +71,7 @@ class ChooseCategory extends PureComponent<Props, State> {
           {categoryiesElements}
         </div>
         {this.params.get("second") && <div className={cx("fab", "datan-green-bg", "round-corner", "shadow-3")}>
-          <div className={cx("margin")}>Résultats</div>
+          <div className={cx("margin")} onClick={() => window.location.href="/resultat"}>Résultats</div>
         </div>}
       </div>
     </div>
