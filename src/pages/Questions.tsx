@@ -8,6 +8,7 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { faSmile, faFrown, faMeh } from '@fortawesome/free-regular-svg-icons'
 import Api from '../Api';
 import mockedData from "../mock/get_most_famous_votes.json"
+import Header from "../components/Header"
 
 
 let cx = classNames.bind(classes);
@@ -50,20 +51,12 @@ class Questions extends PureComponent<Props, State> {
 
   render() {
     const cardStack = this.cardStackRef.current
-    return <div className={cx("container", "page")}>
-      <div className={cx("container", "header")}>
-        <div className={cx('padding')}>
-          <FontAwesomeIcon icon={faChevronLeft} onClick={() => this.cardStackRef.current?.resetLastCard()} />
-        </div>
-        <div className={cx('padding')}>
-
-          <img src="https://datan.fr/assets/imgs/datan/logo_svg.svg" width="150" alt="Logo Datan"></img>
-        </div>
-      </div>
-      <div className={cx("container", "title")}><div className={cx('padding')}>Environnement</div></div>
+    return <div className={cx("fullscreen", "flex", "column")}>
+      <Header onBackClick={() => this.cardStackRef.current?.resetLastCard()}/>
+      <div className={cx("flex", "datan-blue-bg")}><div className={cx('flex', 'margin')}>Environnement</div></div>
       <div className={cx("container", "cards")}>
         {this.state.questions.length && <CardStack key={Math.random()} ref={this.cardStackRef} cardsData={this.state.questions} onAllCardsSwiped={() => window.location.href = "/categories"}>
-          {question => <div className={cx("container", 'padding')}>
+          {question => <div className={cx("flex", 'margin')}>
             <div className={cx("container", "card")}>
             {question.voteTitre}
             </div>

@@ -40,6 +40,15 @@
     text-align: center;
 }
 
+.align-center {
+    align-content: center;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+
 .no-decoration {
     text-decoration: none;
 }
@@ -55,4 +64,8 @@
 
 .round-corner {
     border-radius: 5px;
+}
+
+.space-between {
+    justify-content: space-between;
 }

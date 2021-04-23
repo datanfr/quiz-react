@@ -2,6 +2,7 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
 import React, { PureComponent } from 'react';
+import Header from '../components/Header';
 import classes from './ChooseCategory.module.css';
 
 
@@ -49,21 +50,12 @@ class ChooseCategory extends PureComponent<Props, State> {
       </a>
     </div>
 
-    const categoryiesElements = groupBy(categories, 2).map(categoryPair => <div className={cx("flex", "category-pair")}>
+    const categoryiesElements = groupBy(categories, 2).map(categoryPair => <div className={cx("flex")}>
       {categoryElem(categoryPair[0])}
       {categoryElem(categoryPair[1])}
     </div>)
 
     return <div className={cx("fullscreen", "flex", "column")}>
-      <div className={cx("flex", "flex-static", "header")}>
-        <div className={cx('margin')}>
-          <FontAwesomeIcon icon={faChevronLeft} />
-        </div>
-        <div className={cx('margin')}>
-          <img src="https://datan.fr/assets/imgs/datan/logo_svg.svg" width="150" alt="Logo Datan"></img>
-        </div>
-      </div>
-
       <div className={cx("flex", "column")}>
         {categoryiesElements}
       </div>
