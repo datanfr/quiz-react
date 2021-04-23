@@ -18,11 +18,11 @@ class Header extends PureComponent<Props, State> {
 
   render() {
     const { onBackClick, ...remains } = this.props
-    return <div className={cx("flex", "flex-static", "space-between")}>
-      <div className={cx("flex", 'margin', 'align-center')}  onClick={() => onBackClick && onBackClick()}>
+    return <div className={cx("flex", "flex-static", "shadow")}>
+      <div className={cx("flex", 'margin')} style={{justifyContent: "flex-start", alignContent: "center"}}  onClick={() => onBackClick && onBackClick()}>
          <FontAwesomeIcon icon={faChevronLeft}/>
       </div>
-      <div className={cx("flex", 'margin')}>
+      <div className={cx("flex", 'margin')} style={{justifyContent: "flex-end", alignContent: "center"}}>
         <img src="https://datan.fr/assets/imgs/datan/logo_svg.svg" width="150" alt="Logo Datan"></img>
       </div>
     </div>

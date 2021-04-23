@@ -44,7 +44,7 @@ class ChooseCategory extends PureComponent<Props, State> {
   render() {
     const categoryElem = (category: string) => category && <div className={cx("flex", "margin")}>
       <a className={cx("flex", "no-decoration")}  href={`/questions?theme=${category}`}>
-        <div className={cx("flex", "datan-blue-bg", "centered", "round-corner")}>
+        <div className={cx("flex", "datan-blue-bg", "round-corner", "align-justify-center", "text-center")}>
           {category}
         </div>
       </a>
@@ -56,6 +56,7 @@ class ChooseCategory extends PureComponent<Props, State> {
     </div>)
 
     return <div className={cx("fullscreen", "flex", "column")}>
+      <div ></div>
       <div className={cx("flex", "column")}>
         {categoryiesElements}
       </div>

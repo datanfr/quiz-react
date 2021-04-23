@@ -53,41 +53,41 @@ class Questions extends PureComponent<Props, State> {
     const cardStack = this.cardStackRef.current
     return <div className={cx("fullscreen", "flex", "column")}>
       <Header onBackClick={() => this.cardStackRef.current?.resetLastCard()}/>
-      <div className={cx("flex", "datan-blue-bg")}><div className={cx('flex', 'margin')}>Environnement</div></div>
-      <div className={cx("container", "cards")}>
+      <div className={cx("flex", "flex-static", "datan-blue-bg")}><div className={cx('flex', 'margin')}>Environnement</div></div>
+      <div className={cx("flex", "align-justify-center", "basis-auto")}>
         {this.state.questions.length && <CardStack key={Math.random()} ref={this.cardStackRef} cardsData={this.state.questions} onAllCardsSwiped={() => window.location.href = "/categories"}>
           {question => <div className={cx("flex", 'margin')}>
-            <div className={cx("container", "card")}>
-            {question.voteTitre}
+            <div className={cx("flex", "align-justify-center")}>
+              {question.voteTitre}
             </div>
           </div>}
         </CardStack>}
       </div>
-      <div className={cx("container", "buttons")}>
+      <div className={cx("flex", "basis-auto")} style={{justifyContent: "space-evenly", alignContent: "center"}}>
         <div
-          className={cx("container", "button", "contre")}
+          className={cx("flex", "flex-static", "align-justify-center", "shadow", "button", "contre")}
           data-value="{'importance': 1, 'pour': -1}"
           onClick={e => this.cardStackRef.current?.swipeTopCard("left")}
         >
-          <div className={cx('padding')}>
+          <div className={cx('margin')}>
             <FontAwesomeIcon size="3x" icon={faFrown} />
           </div>
         </div>
         <div
-          className={cx("container", "button", "osef")}
+          className={cx("flex", "flex-static", "align-justify-center", "shadow", "button", "osef")}
           data-value="{'importance': 0, 'pour': 0}"
           onClick={e => this.cardStackRef.current?.swipeTopCard("up")}
         >
-          <div className={cx('padding')}>
+          <div className={cx('margin')}>
             <FontAwesomeIcon size="3x" icon={faMeh} />
           </div>
         </div>
         <div
-          className={cx("container", "button", "pour")}
+          className={cx("flex", "flex-static", "align-justify-center", "shadow", "button", "pour")}
           data-value="{'importance': 1, 'pour': 1}"
           onClick={e => this.cardStackRef.current?.swipeTopCard("right")}
         >
-          <div className={cx('padding')}>
+          <div className={cx('margin')}>
             <FontAwesomeIcon size="3x" icon={faSmile} />
           </div>
         </div>
