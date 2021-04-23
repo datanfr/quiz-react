@@ -26,6 +26,7 @@ import Questions from "./pages/Questions"
 /* Theme variables */
 import './theme/variables.css';
 import ChooseCategory from './pages/ChooseCategory';
+import Importance from './pages/Importance';
 
 const App: React.FC = () => (
   <div>
@@ -42,6 +43,9 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/">
           <Redirect to="/categories" />
+        </Route>
+        <Route exact path="/importance">
+          <Importance />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>
