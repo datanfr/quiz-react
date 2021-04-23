@@ -56,6 +56,7 @@ class ChooseCategory extends PureComponent<Props, State> {
     </div>)
 
     return <div className={cx("fullscreen", "flex", "column")}>
+      <Header/>
       <div className={cx("margin")}>
         <h4>Choisissez une catégorie pour commencer:</h4>
       </div>
