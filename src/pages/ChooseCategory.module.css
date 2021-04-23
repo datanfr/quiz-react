@@ -1,9 +1,4 @@
-.container {
-    display: flex;
-  }
-
   .page {
-    flex-direction: column;
     position: absolute;
     top: 0;
     left: 0;
@@ -18,47 +13,13 @@
   }
 
   .categories {
-    display: flex;
-    flex-direction: column;
     justify-content: space-between;
     width: 100%;
     height: 100%;
   }
 
-  .category-pair {
-    display: flex;
-    flex-direction: row;
-    flex-grow: 1;
-    flex-shrink: 1;
-  }
-
   .category {
-      display: flex;
-      flex: 1 1 0;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--datan-blue);
-      color: var(--datan-white);
-      border-radius: 5px;
-      height: 100%;
-      text-align: center;
-  }
-
-  .link {
-    display: flex;
-    flex: 1 1 0;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    text-align: center;
-    text-decoration: none;
-}
-
-
-  .category-pair-padding {
-    display: flex;
-    flex: 1 1 0;
-    align-items: center;
-    justify-content: center;
-    margin: 10px;
+    border-radius: 5px;
   }

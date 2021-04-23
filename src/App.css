@@ -17,3 +17,29 @@
 .padding {
     margin: 8px 10px;
 }
+
+.flex {
+    display: flex;
+    flex: 1 1 0;
+}
+
+.column {
+    flex-direction: column;
+}
+
+.flex-static {
+    flex: 0 0 auto;
+}
+
+.margin-sm {
+    margin: 10px;
+}
+
+.no-decoration {
+    text-decoration: none;
+}
+
+.datan-blue-bg {
+    background-color: var(--datan-blue);
+    color: var(--datan-white);
+}

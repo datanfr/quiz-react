@@ -41,21 +41,21 @@ class ChooseCategory extends PureComponent<Props, State> {
   }
 
   render() {
-    const categoryElem = (category: string) => category && <div className={cx("category-pair-padding")}>
-      <a className={cx("link")}  href={`/questions?theme=${category}`}>
-        <div className={cx("category")}>
+    const categoryElem = (category: string) => category && <div className={cx("flex", "margin-sm")}>
+      <a className={cx("flex", "no-decoration")}  href={`/questions?theme=${category}`}>
+        <div className={cx("flex", "datan-blue-bg", "category")}>
           {category}
         </div>
       </a>
     </div>
 
-    const categoryiesElements = groupBy(categories, 2).map(categoryPair => <div className={cx("category-pair")}>
+    const categoryiesElements = groupBy(categories, 2).map(categoryPair => <div className={cx("flex", "category-pair")}>
       {categoryElem(categoryPair[0])}
       {categoryElem(categoryPair[1])}
     </div>)
 
-    return <div className={cx("container", "page")}>
-      <div className={cx("container", "header")}>
+    return <div className={cx("flex", "column", "page")}>
+      <div className={cx("flex", "flex-static", "header")}>
         <div className={cx('padding')}>
           <FontAwesomeIcon icon={faChevronLeft} />
         </div>
@@ -64,7 +64,7 @@ class ChooseCategory extends PureComponent<Props, State> {
         </div>
       </div>
 
-      <div className={cx("container", "categories")}>
+      <div className={cx("flex", "column", "categories")}>
         {categoryiesElements}
       </div>
     </div>
