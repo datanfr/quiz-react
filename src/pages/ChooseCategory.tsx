@@ -41,9 +41,9 @@ class ChooseCategory extends PureComponent<Props, State> {
   }
 
   render() {
-    const categoryElem = (category: string) => category && <div className={cx("flex", "margin-sm")}>
+    const categoryElem = (category: string) => category && <div className={cx("flex", "margin")}>
       <a className={cx("flex", "no-decoration")}  href={`/questions?theme=${category}`}>
-        <div className={cx("flex", "datan-blue-bg", "category")}>
+        <div className={cx("flex", "datan-blue-bg", "centered", "round-corner")}>
           {category}
         </div>
       </a>
@@ -54,17 +54,17 @@ class ChooseCategory extends PureComponent<Props, State> {
       {categoryElem(categoryPair[1])}
     </div>)
 
-    return <div className={cx("flex", "column", "page")}>
+    return <div className={cx("fullscreen", "flex", "column")}>
       <div className={cx("flex", "flex-static", "header")}>
-        <div className={cx('padding')}>
+        <div className={cx('margin')}>
           <FontAwesomeIcon icon={faChevronLeft} />
         </div>
-        <div className={cx('padding')}>
+        <div className={cx('margin')}>
           <img src="https://datan.fr/assets/imgs/datan/logo_svg.svg" width="150" alt="Logo Datan"></img>
         </div>
       </div>
 
-      <div className={cx("flex", "column", "categories")}>
+      <div className={cx("flex", "column")}>
         {categoryiesElements}
       </div>
     </div>
