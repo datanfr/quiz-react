@@ -1,5 +1,6 @@
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Fab } from '@material-ui/core';
 import classNames from 'classnames/bind';
 import React, { PureComponent } from 'react';
 import Header from '../components/Header';
@@ -33,21 +34,23 @@ function groupBy(arr: any[], len: number) {
 
 class ChooseCategory extends PureComponent<Props, State> {
 
+  params : URLSearchParams;
 
   constructor(props: Props) {
     super(props);
+    this.params = new URLSearchParams(window.location.search)
   }
 
   componentDidMount() {
   }
 
   render() {
-    const categoryElem = (category: string) => category && <div className={cx("flex", "margin")}>
-      <a className={cx("flex", "no-decoration")}  href={`/importance?theme=${category}`}>
-        <div className={cx("flex", "datan-blue-bg", "round-corner", "align-justify-center", "text-center")}>
+    const categoryElem = (category: string) => <div className={cx("flex", "margin")}>
+      {category && <a className={cx("flex", "no-decoration")} href={`/importance?theme=${category}`}>
+        <div className={cx("flex", "datan-blue-bg", "round-corner", "align-justify-center", "text-center", "shadow-2")}>
           {category}
         </div>
-      </a>
+      </a>}
     </div>
 
     const categoryiesElements = groupBy(categories, 2).map(categoryPair => <div className={cx("flex")}>
@@ -55,13 +58,21 @@ class ChooseCategory extends PureComponent<Props, State> {
       {categoryElem(categoryPair[1])}
     </div>)
 
-    return <div className={cx("fullscreen", "flex", "column")}>
-      <Header/>
-      <div className={cx("margin")}>
-        <h4>Choisissez une catégorie pour commencer:</h4>
-      </div>
-      <div className={cx("flex", "column")}>
-        {categoryiesElements}
+    return <div>
+      <div className={cx("fullscreen", "flex", "column")}>
+        <Header />
+        <div className={cx("margin")}>
+          {!this.params.get("second") 
+            ?<h4>Choisissez une catégorie pour commencer:</h4>
+            :<h4>Choisissez plus de catégories pour améliorer les résultats</h4>
+          }
+        </div>
+        <div className={cx("flex", "column")}>
+          {categoryiesElements}
+        </div>
+        {this.params.get("second") && <div className={cx("fab", "datan-green-bg", "round-corner", "shadow-3")}>
+          <div className={cx("margin")}>Résultats</div>
+        </div>}
       </div>
     </div>
   }
