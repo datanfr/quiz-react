@@ -7,6 +7,7 @@ import classes from './ChooseCategory.module.css';
 import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core';
 import { IonPage } from '@ionic/react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 
 const CustomSlider = withStyles({
@@ -39,7 +40,7 @@ const CustomSlider = withStyles({
 
 let cx = classNames.bind(classes);
 
-interface Props { }
+interface Props extends RouteComponentProps { }
 interface State { hint: string }
 
 const valToText: { to: number, hint: string }[] = [
@@ -78,7 +79,7 @@ class Importance extends PureComponent<Props, State> {
   render() {
 
     return <IonPage><div className={cx("fullscreen", "flex", "column")}>
-      <Header onBackClick={() => window.location.href = `/categories`} />
+      <Header onBackClick={() => this.props.history.push(`/categories`)} />
       <div className={cx("flex", "flex-static", "datan-blue-bg")}><div className={cx('flex', 'margin')}>{this.params.get("theme")}</div></div>
       <div className={cx("flex", "column", "margin")}>
         <div className={cx("flex", "flex-static")}>
@@ -96,7 +97,7 @@ class Importance extends PureComponent<Props, State> {
           {this.state.hint}
         </div>
       </div>
-      <div className={cx("flex", "align-justify-center")} onClick={() => window.location.href = `/questions?theme=${this.params.get("theme")}&importance=${this.val}`}>
+      <div className={cx("flex", "align-justify-center")} onClick={() => this.props.history.push(`/questions?theme=${this.params.get("theme")}&importance=${this.val}`)}>
         <div className={cx("margin")}>
           <div className={cx("flex", "datan-blue-bg", "round-corner")}>
             <div className={cx("margin")}>Commencer</div>
@@ -107,4 +108,4 @@ class Importance extends PureComponent<Props, State> {
   }
 }
 
-export default Importance
+export default withRouter(Importance)

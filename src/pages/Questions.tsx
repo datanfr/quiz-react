@@ -10,11 +10,11 @@ import Api from '../Api';
 import mockedData from "../mock/get_most_famous_votes.json"
 import Header from "../components/Header"
 import { IonPage } from '@ionic/react';
-
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 let cx = classNames.bind(classes);
 
-interface Props { }
+interface Props extends RouteComponentProps { }
 interface State { questions: any[] }
 
 class Questions extends PureComponent<Props, State> {
@@ -53,7 +53,7 @@ class Questions extends PureComponent<Props, State> {
 
   back() {
     const card = this.cardStackRef.current?.resetLastCard()
-    if (!card) window.location.href = `/importance?theme=${this.params.get("theme")}`
+    if (!card) this.props.history.push(`/importance?theme=${this.params.get("theme")}`)
   }
 
   render() {
@@ -63,7 +63,7 @@ class Questions extends PureComponent<Props, State> {
       <div className={cx("flex", "flex-static", "datan-blue-bg")}><div className={cx('flex', 'margin')}>{this.params.get("theme")}</div></div>
       <div className={cx("flex", "align-justify-center", "basis-auto")}>
         {this.state.questions.length && <CardStack key={Math.random()} ref={this.cardStackRef} cardsData={this.state.questions}
-            onAllCardsSwiped={() => window.location.href = "/categories?second=true"}
+            onAllCardsSwiped={() => this.props.history.push("/categories?second=true")}
           >
           {question => <div className={cx("flex", 'margin')}>
             <div className={cx("flex", "align-justify-center")}>
@@ -105,4 +105,4 @@ class Questions extends PureComponent<Props, State> {
   }
 }
 
-export default Questions
+export default withRouter(Questions)

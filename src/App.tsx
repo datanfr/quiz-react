@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import './App.css';
 
 // /* Core CSS required for Ionic components to work properly */
-// import '@ionic/react/css/core.css';
+import '@ionic/react/css/core.css';
 
 // /* Basic CSS for apps built with Ionic */
 // import '@ionic/react/css/normalize.css';

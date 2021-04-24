@@ -5,12 +5,12 @@ import classNames from 'classnames/bind';
 import React, { PureComponent } from 'react';
 import Header from '../components/Header';
 import classes from './ChooseCategory.module.css';
-
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
 let cx = classNames.bind(classes);
 
-interface Props { }
-interface State { }
+interface Props extends RouteComponentProps { }
+interface State {  }
 
 const categories = [
   "Education nationale",
@@ -34,11 +34,10 @@ function groupBy(arr: any[], len: number) {
 
 class ChooseCategory extends PureComponent<Props, State> {
 
-  params : URLSearchParams;
+  params = new URLSearchParams(window.location.search)
 
   constructor(props: Props) {
     super(props);
-    this.params = new URLSearchParams(window.location.search)
   }
 
   componentDidMount() {
@@ -46,11 +45,11 @@ class ChooseCategory extends PureComponent<Props, State> {
 
   render() {
     const categoryElem = (category: string) => <div className={cx("flex", "margin")}>
-      {category && <a className={cx("flex", "no-decoration")} href={`/importance?theme=${category}`}>
+      {category && <Link className={cx("flex", "no-decoration")} to={`/importance?theme=${category}`}>
         <div className={cx("flex", "datan-blue-bg", "round-corner", "align-justify-center", "text-center", "shadow-2")}>
           {category}
         </div>
-      </a>}
+      </Link>}
     </div>
 
     const categoryiesElements = groupBy(categories, 2).map(categoryPair => <div className={cx("flex")}>
@@ -71,11 +70,11 @@ class ChooseCategory extends PureComponent<Props, State> {
           {categoryiesElements}
         </div>
         {this.params.get("second") && <div className={cx("fab", "datan-green-bg", "round-corner", "shadow-3")}>
-          <div className={cx("margin")} onClick={() => window.location.href="/resultat"}>Résultats</div>
+          <div className={cx("margin")} onClick={() => this.props.history.push("/resultat")}>Résultats</div>
         </div>}
       </div>
     </div>
   }
 }
 
-export default ChooseCategory
+export default withRouter(ChooseCategory)
