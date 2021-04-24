@@ -32,7 +32,6 @@ import Resultat from './pages/Resultat';
 const App: React.FC = () => (
   <div>
     <IonReactRouter>
-      <IonRouterOutlet>
         <Route exact path="/home">
           <Home />
         </Route>
@@ -51,7 +50,6 @@ const App: React.FC = () => (
         <Route exact path="/resultat">
           <Resultat />
         </Route>
-      </IonRouterOutlet>
     </IonReactRouter>
   </div>
 );
