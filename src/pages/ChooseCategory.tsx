@@ -6,6 +6,7 @@ import React, { PureComponent } from 'react';
 import Header from '../components/Header';
 import classes from './ChooseCategory.module.css';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { IonPage } from '@ionic/react';
 
 let cx = classNames.bind(classes);
 
@@ -57,7 +58,7 @@ class ChooseCategory extends PureComponent<Props, State> {
       {categoryElem(categoryPair[1])}
     </div>)
 
-    return <div>
+    return <IonPage>
       <div className={cx("fullscreen", "flex", "column")}>
         <Header />
         <div className={cx("margin")}>
@@ -73,7 +74,7 @@ class ChooseCategory extends PureComponent<Props, State> {
           <div className={cx("margin")} onClick={() => this.props.history.push("/resultat")}>Résultats</div>
         </div>}
       </div>
-    </div>
+    </IonPage>
   }
 }
 
