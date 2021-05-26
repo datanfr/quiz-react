@@ -3,6 +3,9 @@ import classNames from 'classnames/bind';
 import classes from './CardStack.module.css';
 import SwipeCard, { Side, SwipeDetection } from "./SwipeCard"
 import React, { Component, Fragment, PureComponent, ReactChild, ReactChildren, useState } from 'react';
+import { Plugins } from '@capacitor/core';
+
+const { Storage } = Plugins;
 
 export type Choice = "pour" | "contre" | "osef"
 
@@ -15,10 +18,10 @@ export type Card = {
 
 interface Props<T> {
     cardsData: T[],
-    children: (cardData:T) => ReactChild | ReactChildren,
+    children: (cardData: T) => ReactChild | ReactChildren,
     onAllCardsSwiped: () => void
 }
-interface State {}
+interface State { }
 
 let cx = classNames.bind(classes);
 
@@ -52,7 +55,27 @@ class CardStack<T> extends PureComponent<Props<T>, State> {
     onSwipe(e: React.TouchEvent<HTMLDivElement> | null, side: Side, card: Card) {
         Object.assign(card, { swiped: side })
         if (this.cards.every(x => x.swiped)) {
-            console.log("All card swiped !", this.cards)
+            Storage.get({ key: 'votes' }).then(votes => {
+                let storedVotes = typeof votes == "string" ? JSON.parse(votes) : [];
+                console.log(this.cards);
+                for (let card of this.cards) {
+                    let choice = 0;
+                    if (card.swiped == "right") {
+                        choice = 1;
+                    }
+                    else if (card.swiped == "left") {
+                        choice = -1;
+                    }
+                    storedVotes.push(
+                        {
+                            "voteNumero": card.cardData.voteNumero,
+                            "choice": choice,
+                            "weight": 3
+                        }
+                    )
+                }
+                Storage.set({ key: "votes", value: JSON.stringify(storedVotes) }).then(() => { console.log('ok') })
+            })
             this.props.onAllCardsSwiped()
         }
     }

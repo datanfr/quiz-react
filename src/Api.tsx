@@ -7,12 +7,6 @@ const Api = {
             .then(res => res.json())
     },
 
-    //vote example :
-    //  {
-    //     "voteNumero": "2948",
-    //     "choice": 1,
-    //     "weight": 3
-    // }
     getResult(votes?: Array<any>): Promise<any[]> {
         const requestOptions = {
             method: 'POST',
