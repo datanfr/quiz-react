@@ -11,6 +11,9 @@ import mockedData from "../mock/get_most_famous_votes.json"
 import Header from "../components/Header"
 import { IonPage } from '@ionic/react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Plugins } from '@capacitor/core';
+
+const { Storage } = Plugins;
 
 let cx = classNames.bind(classes);
 
@@ -56,6 +59,30 @@ class Questions extends PureComponent<Props, State> {
     if (!card) this.props.history.push(`/importance?theme=${this.params.get("theme")}`)
   }
 
+  saveVotes() {
+    Storage.get({ key: 'votes' }).then(async votes => {
+        let storedVotes = typeof votes == "string" ? JSON.parse(votes) : [];
+        // for (let card of cards) {
+        //     let choice = 0;
+        //     if (card.swiped == "right") {
+        //         choice = 1;
+        //     }
+        //     else if (card.swiped == "left") {
+        //         choice = -1;
+        //     }
+        //     storedVotes.push(
+        //         {
+        //             "voteNumero": card.cardData.voteNumero,
+        //             "choice": choice,
+        //             "weight": 3
+        //         }
+        //     )
+        // }
+        Storage.set({ key: "votes", value: JSON.stringify(storedVotes) })
+    })
+    this.props.history.push("/categories?second=true")
+  }
+
   render() {
     const cardStack = this.cardStackRef.current
     return <IonPage><div className={cx("fullscreen", "flex", "column")}>
@@ -63,7 +90,7 @@ class Questions extends PureComponent<Props, State> {
       <div className={cx("flex", "flex-static", "datan-blue-bg")}><div className={cx('flex', 'margin')}>{this.params.get("theme")}</div></div>
       <div className={cx("flex", "align-justify-center", "basis-auto")}>
         {this.state.questions.length && <CardStack key={Math.random()} ref={this.cardStackRef} cardsData={this.state.questions}
-            onAllCardsSwiped={() => this.props.history.push("/categories?second=true")}
+            onAllCardsSwiped={this.saveVotes}
           >
           {question => <div className={cx("flex", 'margin')}>
             <div className={cx("flex", "align-justify-center")}>

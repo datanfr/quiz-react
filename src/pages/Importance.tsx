@@ -1,5 +1,3 @@
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
 import React, { PureComponent } from 'react';
 import Header from '../components/Header';
@@ -8,6 +6,9 @@ import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core';
 import { IonPage } from '@ionic/react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Plugins } from '@capacitor/core';
+
+const { Storage } = Plugins;
 
 
 const CustomSlider = withStyles({
@@ -55,6 +56,7 @@ class Importance extends PureComponent<Props, State> {
 
   params: URLSearchParams;
   val: number;
+  weight: Array<any>;
 
   constructor(props: Props) {
     super(props);
@@ -62,8 +64,11 @@ class Importance extends PureComponent<Props, State> {
       hint: valToText.find(x => x.to < defaultSliderValue)?.hint || "Oops something is wrong"
     }
     this.val = defaultSliderValue
-    this.params = new URLSearchParams(window.location.search)
-    console.log(props)
+    this.params = new URLSearchParams(this.props.location.search)
+    this.weight = [];
+    Storage.get({ key: 'weight' }).then((weight) => {
+      this.weight = typeof weight.value == "string" ? JSON.parse(weight.value) : [];
+    })
   }
 
   componentDidMount() {
@@ -74,6 +79,23 @@ class Importance extends PureComponent<Props, State> {
       hint: valToText.find(x => val <= x.to)?.hint || "Oops something is wrong"
     })
     this.val = val;
+  }
+
+  saveWeight() {
+    const found = this.weight.find(el => el.theme == this.params.get("theme"));
+    console.log(found)
+    if (!found) {
+      this.weight.push({ theme: this.params.get("theme"), weight: this.val })
+    }
+    else {
+      for (let i = 0; i < this.weight.length; i++) {
+        if (this.weight[i].theme == this.params.get("theme")) {
+          this.weight[i].weight = this.val;
+        }
+      }
+    }
+    Storage.set({ key: "weight", value: JSON.stringify(this.weight) })
+    this.props.history.push(`/questions?theme=${this.params.get("theme")}&importance=${this.val}`)
   }
 
   render() {
@@ -97,7 +119,7 @@ class Importance extends PureComponent<Props, State> {
           {this.state.hint}
         </div>
       </div>
-      <div className={cx("flex", "align-justify-center")} onClick={() => this.props.history.push(`/questions?theme=${this.params.get("theme")}&importance=${this.val}`)}>
+      <div className={cx("flex", "align-justify-center")} onClick={this.saveWeight.bind(this)}>
         <div className={cx("margin")}>
           <div className={cx("flex", "datan-blue-bg", "round-corner")}>
             <div className={cx("margin")}>Commencer</div>
