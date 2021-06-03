@@ -24,12 +24,12 @@ class Questions extends PureComponent<Props, State> {
 
   apiCall: Promise<any[]>
   cardStackRef: React.RefObject<CardStack<any>>
-  params : URLSearchParams;
+  params: URLSearchParams;
 
   constructor(props: Props) {
     super(props);
     this.cardStackRef = React.createRef();
-    this.apiCall = Api.getCards('environnement', 5)
+    this.apiCall = Api.getCards('sante', 10)
     this.state = {
       questions: []
     }
@@ -59,26 +59,32 @@ class Questions extends PureComponent<Props, State> {
     if (!card) this.props.history.push(`/importance?theme=${this.params.get("theme")}`)
   }
 
-  saveVotes() {
+  async saveVotes(votesSent: any) {
+    const weightStored = await Storage.get({ key: 'weight' });
+    let weights: Array<any> = [];
+    if (typeof weightStored.value == 'string'){
+      weights = JSON.parse(weightStored.value);
+    }
     Storage.get({ key: 'votes' }).then(async votes => {
-        let storedVotes = typeof votes == "string" ? JSON.parse(votes) : [];
-        // for (let card of cards) {
-        //     let choice = 0;
-        //     if (card.swiped == "right") {
-        //         choice = 1;
-        //     }
-        //     else if (card.swiped == "left") {
-        //         choice = -1;
-        //     }
-        //     storedVotes.push(
-        //         {
-        //             "voteNumero": card.cardData.voteNumero,
-        //             "choice": choice,
-        //             "weight": 3
-        //         }
-        //     )
-        // }
-        Storage.set({ key: "votes", value: JSON.stringify(storedVotes) })
+      let storedVotes = typeof votes == "string" ? JSON.parse(votes) : [];
+      let weight: Number = weights.find((el: any) => el.theme == votesSent[0].cardData.category_libelle) || 3;
+      for (let card of votesSent) {
+        let choice = 0;
+        if (card.swiped == "right") {
+          choice = 1;
+        }
+        else if (card.swiped == "left") {
+          choice = -1;
+        }
+        storedVotes.push(
+          {
+            "voteNumero": card.cardData.voteNumero,
+            "choice": choice,
+            "weight": weight
+          }
+        )
+      }
+      Storage.set({ key: "votes", value: JSON.stringify(storedVotes) })
     })
     this.props.history.push("/categories?second=true")
   }
@@ -86,12 +92,12 @@ class Questions extends PureComponent<Props, State> {
   render() {
     const cardStack = this.cardStackRef.current
     return <IonPage><div className={cx("fullscreen", "flex", "column")}>
-      <Header onBackClick={() => this.back()}/>
+      <Header onBackClick={() => this.back()} />
       <div className={cx("flex", "flex-static", "datan-blue-bg")}><div className={cx('flex', 'margin')}>{this.params.get("theme")}</div></div>
       <div className={cx("flex", "align-justify-center", "basis-auto")}>
         {this.state.questions.length && <CardStack key={Math.random()} ref={this.cardStackRef} cardsData={this.state.questions}
-            onAllCardsSwiped={this.saveVotes}
-          >
+          onAllCardsSwiped={(votes) => { this.saveVotes(votes) }}
+        >
           {question => <div className={cx("flex", 'margin')}>
             <div className={cx("flex", "align-justify-center")}>
               {question.voteTitre}
@@ -99,7 +105,7 @@ class Questions extends PureComponent<Props, State> {
           </div>}
         </CardStack>}
       </div>
-      <div className={cx("flex", "basis-auto")} style={{justifyContent: "space-evenly", alignContent: "center"}}>
+      <div className={cx("flex", "basis-auto")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
         <div
           className={cx("flex", "flex-static", "align-justify-center", "shadow", "button", "contre")}
           data-value="{'importance': 1, 'pour': -1}"

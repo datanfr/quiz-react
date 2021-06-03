@@ -83,7 +83,6 @@ class Importance extends PureComponent<Props, State> {
 
   saveWeight() {
     const found = this.weight.find(el => el.theme == this.params.get("theme"));
-    console.log(found)
     if (!found) {
       this.weight.push({ theme: this.params.get("theme"), weight: this.val })
     }

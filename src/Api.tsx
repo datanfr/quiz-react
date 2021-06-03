@@ -13,7 +13,7 @@ const Api = {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ "votes": votes })
         };
-        return fetch(`${config.DATAN_API_URL}/api/quiz/getResults`, requestOptions)
+        return fetch(`${config.DATAN_API_URL}/quiz/getResults`, requestOptions)
             .then(response => response.json())
     }
 }

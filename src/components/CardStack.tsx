@@ -63,7 +63,6 @@ class CardStack<T> extends PureComponent<Props<T>, State> {
         if (card.stamps.osef.current) card.stamps.osef.current.style.opacity = "0";
         if (choice != null) {
             const targetStamp = card.stamps[choice].current
-            //console.log(targetStamp)
             if (targetStamp) targetStamp.style.opacity = swipe.certainty.toString();
         }
     }
@@ -83,7 +82,6 @@ class CardStack<T> extends PureComponent<Props<T>, State> {
 
     swipeTopCard(side: Side) {
         const topCard = this.cards.find(x => !x.swiped)//Find first unswipped card
-        console.log({ simulateSwipe: side, topCard })
         const choice = sideToChoice[side]
         const stamp = choice && topCard?.stamps[choice].current
         if (stamp) stamp.style.opacity = "1";
