@@ -7,19 +7,13 @@ const Api = {
             .then(res => res.json())
     },
 
-    //vote example :
-    //  {
-    //     "voteNumero": "2948",
-    //     "choice": 1,
-    //     "weight": 3
-    // }
     getResult(votes?: Array<any>): Promise<any[]> {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ "votes": votes })
         };
-        return fetch(`${config.DATAN_API_URL}/api/quiz/getResults`, requestOptions)
+        return fetch(`${config.DATAN_API_URL}/quiz/getResults`, requestOptions)
             .then(response => response.json())
     }
 }

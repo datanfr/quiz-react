@@ -15,10 +15,10 @@ export type Card = {
 
 interface Props<T> {
     cardsData: T[],
-    children: (cardData:T) => ReactChild | ReactChildren,
-    onAllCardsSwiped: () => void
+    children: (cardData: T) => ReactChild | ReactChildren,
+    onAllCardsSwiped: (cards: Array<Card>) => void
 }
-interface State {}
+interface State { }
 
 let cx = classNames.bind(classes);
 
@@ -52,8 +52,7 @@ class CardStack<T> extends PureComponent<Props<T>, State> {
     onSwipe(e: React.TouchEvent<HTMLDivElement> | null, side: Side, card: Card) {
         Object.assign(card, { swiped: side })
         if (this.cards.every(x => x.swiped)) {
-            console.log("All card swiped !", this.cards)
-            this.props.onAllCardsSwiped()
+            this.props.onAllCardsSwiped(this.cards)
         }
     }
 
@@ -64,7 +63,6 @@ class CardStack<T> extends PureComponent<Props<T>, State> {
         if (card.stamps.osef.current) card.stamps.osef.current.style.opacity = "0";
         if (choice != null) {
             const targetStamp = card.stamps[choice].current
-            //console.log(targetStamp)
             if (targetStamp) targetStamp.style.opacity = swipe.certainty.toString();
         }
     }
@@ -84,7 +82,6 @@ class CardStack<T> extends PureComponent<Props<T>, State> {
 
     swipeTopCard(side: Side) {
         const topCard = this.cards.find(x => !x.swiped)//Find first unswipped card
-        console.log({ simulateSwipe: side, topCard })
         const choice = sideToChoice[side]
         const stamp = choice && topCard?.stamps[choice].current
         if (stamp) stamp.style.opacity = "1";
