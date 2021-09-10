@@ -37,11 +37,16 @@ class Questions extends PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    this.apiCall
-      .then(
+    if (this.params.has("mock")) {
+      const questions = mockedData
+      this.setState({ questions })
+    } else {
+      this.apiCall.then(
         resp => this.handleApiResponse(resp),
         e => this.handleApiError(e)
       )
+  }
+
   }
 
   handleApiError(e: Error) {
@@ -51,6 +56,7 @@ class Questions extends PureComponent<Props, State> {
   }
 
   handleApiResponse(questions: any[]) {
+    console.log("Loading questions", questions)
     this.setState({ questions })
   }
 
