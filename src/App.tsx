@@ -38,6 +38,9 @@ const App: React.FC = () => (
         <Route exact path="/questions">
           <Questions />
         </Route>
+        <Route exact path="/questions2">
+          <Questions />
+        </Route>
         <Route exact path="/categories">
           <ChooseCategory />
         </Route>

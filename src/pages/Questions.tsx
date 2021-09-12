@@ -17,8 +17,18 @@ const { Storage } = Plugins;
 
 let cx = classNames.bind(classes);
 
+type QuestionsModel = any
 interface Props extends RouteComponentProps { }
-interface State { questions: any[] }
+interface State { questions: QuestionsModel[] }
+
+
+function Argument(props: { argument: any }) {
+  if (props.argument.opinion === "POUR") {
+    return <div>{ }</div>
+  } else {
+    return <div style={{ color: "red" }}>{props.argument.texte}</div>
+  }
+}
 
 class Questions extends PureComponent<Props, State> {
 
@@ -45,7 +55,7 @@ class Questions extends PureComponent<Props, State> {
         resp => this.handleApiResponse(resp),
         e => this.handleApiError(e)
       )
-  }
+    }
 
   }
 
@@ -68,7 +78,7 @@ class Questions extends PureComponent<Props, State> {
   async saveVotes(votesSent: any) {
     const weightStored = await Storage.get({ key: 'weight' });
     let weights: Array<any> = [];
-    if (typeof weightStored.value == 'string'){
+    if (typeof weightStored.value == 'string') {
       weights = JSON.parse(weightStored.value);
     }
     Storage.get({ key: 'votes' }).then(async votes => {
@@ -100,16 +110,23 @@ class Questions extends PureComponent<Props, State> {
     return <IonPage><div className={cx("fullscreen", "flex", "column")}>
       <Header onBackClick={() => this.back()} />
       <div className={cx("flex", "flex-static", "datan-blue-bg")}><div className={cx('flex', 'margin')}>{this.params.get("theme")}</div></div>
-      <div className={cx("flex", "align-justify-center", "basis-auto")}>
-        {this.state.questions.length && <CardStack key={Math.random()} ref={this.cardStackRef} cardsData={this.state.questions}
-          onAllCardsSwiped={(votes) => { this.saveVotes(votes) }}
-        >
-          {question => <div className={cx("flex", 'margin')}>
-            <div className={cx("flex", "align-justify-center")}>
-              {question.voteTitre}
-            </div>
-          </div>}
-        </CardStack>}
+      <div className={cx("flex", "align-justify-center" , "basis-auto")}>
+        {/* {this.state.questions.length && JSON.stringify(this.state.questions)} */}
+        {this.state.questions.map(question => <div>
+          {question.voteTitre}
+          <fieldset style={{ color: "green", border: "1px solid green" }}>
+            <legend style={{ padding: "0px 10px" }}>Les pour</legend>
+            <ul style={{ color: "black" }}>
+              {question.arguments.filter((argument: any) => argument.opinion === "POUR").map((argument: any) => <li>{argument.texte}</li>)}
+            </ul>
+          </fieldset>
+          <fieldset style={{ color: "red", border: "1px solid red" }}>
+            <legend style={{ padding: "0px 10px" }}>Les contre</legend>
+            <ul style={{ color: "black" }}> 
+              {question.arguments.filter((argument: any) => argument.opinion === "CONTRE").map((argument: any) => <li>{argument.texte}</li>)}
+            </ul>
+          </fieldset>
+        </div>)}
       </div>
       <div className={cx("flex", "basis-auto")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
         <div
@@ -143,5 +160,6 @@ class Questions extends PureComponent<Props, State> {
     </div></IonPage>
   }
 }
+
 
 export default withRouter(Questions)
