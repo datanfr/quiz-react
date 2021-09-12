@@ -22,12 +22,23 @@ interface Props extends RouteComponentProps { }
 interface State { questions: QuestionsModel[] }
 
 
-function Argument(props: { argument: any }) {
-  if (props.argument.opinion === "POUR") {
-    return <div>{ }</div>
-  } else {
-    return <div style={{ color: "red" }}>{props.argument.texte}</div>
-  }
+function Question(props: { question: QuestionsModel }) {
+  const { question } = props
+  return <div>
+    {question.voteTitre}
+    <fieldset style={{ color: "green", border: "1px solid green" }}>
+      <legend style={{ padding: "0px 10px" }}>Les pour</legend>
+      <ul style={{ color: "black" }}>
+        {question.arguments.filter((argument: any) => argument.opinion === "POUR").map((argument: any) => <li>{argument.texte}</li>)}
+      </ul>
+    </fieldset>
+    <fieldset style={{ color: "red", border: "1px solid red" }}>
+      <legend style={{ padding: "0px 10px" }}>Les contre</legend>
+      <ul style={{ color: "black" }}>
+        {question.arguments.filter((argument: any) => argument.opinion === "CONTRE").map((argument: any) => <li>{argument.texte}</li>)}
+      </ul>
+    </fieldset>
+  </div>
 }
 
 class Questions extends PureComponent<Props, State> {
@@ -107,57 +118,45 @@ class Questions extends PureComponent<Props, State> {
 
   render() {
     const cardStack = this.cardStackRef.current
-    return <IonPage><div className={cx("fullscreen", "flex", "column")}>
-      <Header onBackClick={() => this.back()} />
-      <div className={cx("flex", "flex-static", "datan-blue-bg")}><div className={cx('flex', 'margin')}>{this.params.get("theme")}</div></div>
-      <div className={cx("flex", "align-justify-center" , "basis-auto")}>
-        {/* {this.state.questions.length && JSON.stringify(this.state.questions)} */}
-        {this.state.questions.map(question => <div>
-          {question.voteTitre}
-          <fieldset style={{ color: "green", border: "1px solid green" }}>
-            <legend style={{ padding: "0px 10px" }}>Les pour</legend>
-            <ul style={{ color: "black" }}>
-              {question.arguments.filter((argument: any) => argument.opinion === "POUR").map((argument: any) => <li>{argument.texte}</li>)}
-            </ul>
-          </fieldset>
-          <fieldset style={{ color: "red", border: "1px solid red" }}>
-            <legend style={{ padding: "0px 10px" }}>Les contre</legend>
-            <ul style={{ color: "black" }}> 
-              {question.arguments.filter((argument: any) => argument.opinion === "CONTRE").map((argument: any) => <li>{argument.texte}</li>)}
-            </ul>
-          </fieldset>
-        </div>)}
-      </div>
-      <div className={cx("flex", "basis-auto")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
-        <div
-          className={cx("flex", "flex-static", "align-justify-center", "shadow", "button", "contre")}
-          data-value="{'importance': 1, 'pour': -1}"
-          onClick={e => this.cardStackRef.current?.swipeTopCard("left")}
-        >
-          <div className={cx('margin')}>
-            <FontAwesomeIcon size="3x" icon={faFrown} />
-          </div>
-        </div>
-        <div
-          className={cx("flex", "flex-static", "align-justify-center", "shadow", "button", "osef")}
-          data-value="{'importance': 0, 'pour': 0}"
-          onClick={e => this.cardStackRef.current?.swipeTopCard("up")}
-        >
-          <div className={cx('margin')}>
-            <FontAwesomeIcon size="3x" icon={faMeh} />
-          </div>
-        </div>
-        <div
-          className={cx("flex", "flex-static", "align-justify-center", "shadow", "button", "pour")}
-          data-value="{'importance': 1, 'pour': 1}"
-          onClick={e => this.cardStackRef.current?.swipeTopCard("right")}
-        >
-          <div className={cx('margin')}>
-            <FontAwesomeIcon size="3x" icon={faSmile} />
-          </div>
+    return <IonPage style={{ overflow: "auto", justifyContent: "flex-start" }}>
+      <Header title={this.params.get("theme") + '\u00A0' + "1/??"} onBackClick={() => this.back()} />
+      <div className={cx("center-body")}>
+        <div className={cx("body")}>
+          {this.state.questions.map(question => <Question question={question} />)}
         </div>
       </div>
-    </div></IonPage>
+      <div className={cx("buttons", "flex", "basis-auto", "center-body")}>
+          <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
+            <div
+              className={cx("flex", "flex-static", "align-justify-center", "shadow", "button", "contre")}
+              data-value="{'importance': 1, 'pour': -1}"
+              onClick={e => this.cardStackRef.current?.swipeTopCard("left")}
+            >
+              <div className={cx('margin')}>
+                <FontAwesomeIcon size="3x" icon={faFrown} />
+              </div>
+            </div>
+            <div
+              className={cx("flex", "flex-static", "align-justify-center", "shadow", "button", "osef")}
+              data-value="{'importance': 0, 'pour': 0}"
+              onClick={e => this.cardStackRef.current?.swipeTopCard("up")}
+            >
+              <div className={cx('margin')}>
+                <FontAwesomeIcon size="3x" icon={faMeh} />
+              </div>
+            </div>
+            <div
+              className={cx("flex", "flex-static", "align-justify-center", "shadow", "button", "pour")}
+              data-value="{'importance': 1, 'pour': 1}"
+              onClick={e => this.cardStackRef.current?.swipeTopCard("right")}
+            >
+              <div className={cx('margin')}>
+                <FontAwesomeIcon size="3x" icon={faSmile} />
+              </div>
+            </div>
+          </div>
+        </div>
+    </IonPage>
   }
 }
 
