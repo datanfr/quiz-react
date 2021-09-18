@@ -12,7 +12,7 @@ import Header from "../components/Header"
 import { IonPage } from '@ionic/react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Plugins } from '@capacitor/core';
-import {TransitionGroup} from 'react-transition-group';
+import { TransitionGroup } from 'react-transition-group';
 
 const { Storage } = Plugins;
 
@@ -35,7 +35,7 @@ function Question(props: { question: QuestionsModel }) {
         {question.arguments.filter((argument: any) => argument.opinion === "POUR").map((argument: any) => <li>{argument.texte}</li>)}
       </ul>
     </fieldset>
-    <fieldset style={{ color: "red", border: "1px solid red" }}>
+    <fieldset style={{ color: "red", border: "1px solid red", marginBottom: "10px" }}>
       <legend style={{ padding: "0px 10px" }}>Les contre</legend>
       <ul style={{ color: "black" }}>
         {question.arguments.filter((argument: any) => argument.opinion === "CONTRE").map((argument: any) => <li>{argument.texte}</li>)}
@@ -128,31 +128,33 @@ class Questions extends PureComponent<Props, State> {
           {this.state.questions.map(question => <Question question={question} />)}
         </div>
       </div>
-      <div className={cx("buttons", "flex", "basis-auto", "center-body")}>
-          <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
-            <div
-              className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
-              data-value="{'importance': 1, 'pour': -1}"
-              onClick={e => this.cardStackRef.current?.swipeTopCard("left")}
-            >
+
+          <div className={cx("buttons", "center-body")}>
+            <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
+              <div
+                className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
+                data-value="{'importance': 1, 'pour': -1}"
+                onClick={e => this.cardStackRef.current?.swipeTopCard("left")}
+              >
                 CONTRE
-            </div>
-            <div
-              className={cx("flex", "align-justify-center", "shadow", "button", "osef")}
-              data-value="{'importance': 0, 'pour': 0}"
-              onClick={e => this.cardStackRef.current?.swipeTopCard("up")}
-            >
+              </div>
+              <div
+                className={cx("flex", "align-justify-center", "shadow", "button", "osef")}
+                data-value="{'importance': 0, 'pour': 0}"
+                onClick={e => this.cardStackRef.current?.swipeTopCard("up")}
+              >
                 SANS AVIS
-            </div>
-            <div
-              className={cx("flex", "align-justify-center", "shadow", "button", "pour")}
-              data-value="{'importance': 1, 'pour': 1}"
-              onClick={e => this.cardStackRef.current?.swipeTopCard("right")}
-            >
+              </div>
+              <div
+                className={cx("flex", "align-justify-center", "shadow", "button", "pour")}
+                data-value="{'importance': 1, 'pour': 1}"
+                onClick={e => this.cardStackRef.current?.swipeTopCard("right")}
+              >
                 POUR
+              </div>
             </div>
           </div>
-        </div>
+
     </IonPage>
   }
 }
