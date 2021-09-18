@@ -3,9 +3,9 @@
   }
 
   .button {
-    background-color: var(--datan-white);
-    border-radius: 50%;
-    margin: 20px;
+    color: var(--datan-white);
+    height: 100%;
+    max-width: 91px;
   }
 
   .title {
@@ -17,13 +17,13 @@
   
 
   .contre {
-    color: var(--datan-red)
+    background-color: var(--datan-red)
   }
 
   .pour {
-    color: var(--datan-green)
+    background-color: var(--datan-green)
   }
 
   .osef {
-    color: var(--datan-grey)
+    background-color: var(--datan-yellow)
   }

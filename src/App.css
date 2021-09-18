@@ -37,6 +37,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
+    flex-grow: 10;
 }
 
 .flex {

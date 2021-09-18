@@ -131,31 +131,25 @@ class Questions extends PureComponent<Props, State> {
       <div className={cx("buttons", "flex", "basis-auto", "center-body")}>
           <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
             <div
-              className={cx("flex", "flex-static", "align-justify-center", "shadow", "button", "contre")}
+              className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
               data-value="{'importance': 1, 'pour': -1}"
               onClick={e => this.cardStackRef.current?.swipeTopCard("left")}
             >
-              <div className={cx('margin')}>
-                <FontAwesomeIcon size="3x" icon={faFrown} />
-              </div>
+                CONTRE
             </div>
             <div
-              className={cx("flex", "flex-static", "align-justify-center", "shadow", "button", "osef")}
+              className={cx("flex", "align-justify-center", "shadow", "button", "osef")}
               data-value="{'importance': 0, 'pour': 0}"
               onClick={e => this.cardStackRef.current?.swipeTopCard("up")}
             >
-              <div className={cx('margin')}>
-                <FontAwesomeIcon size="3x" icon={faMeh} />
-              </div>
+                SANS AVIS
             </div>
             <div
-              className={cx("flex", "flex-static", "align-justify-center", "shadow", "button", "pour")}
+              className={cx("flex", "align-justify-center", "shadow", "button", "pour")}
               data-value="{'importance': 1, 'pour': 1}"
               onClick={e => this.cardStackRef.current?.swipeTopCard("right")}
             >
-              <div className={cx('margin')}>
-                <FontAwesomeIcon size="3x" icon={faSmile} />
-              </div>
+                POUR
             </div>
           </div>
         </div>
