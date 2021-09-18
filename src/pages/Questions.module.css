@@ -5,7 +5,16 @@
   .button {
     background-color: var(--datan-white);
     border-radius: 50%;
+    margin: 20px;
   }
+
+  .title {
+    text-align: center;
+    padding: 20px 10px;
+    font-weight: 600;
+    font-size: xx-large;
+  }
+  
 
   .contre {
     color: var(--datan-red)

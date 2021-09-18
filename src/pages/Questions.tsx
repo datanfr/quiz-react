@@ -12,6 +12,7 @@ import Header from "../components/Header"
 import { IonPage } from '@ionic/react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Plugins } from '@capacitor/core';
+import {TransitionGroup} from 'react-transition-group';
 
 const { Storage } = Plugins;
 
@@ -25,7 +26,9 @@ interface State { questions: QuestionsModel[] }
 function Question(props: { question: QuestionsModel }) {
   const { question } = props
   return <div>
-    {question.voteTitre}
+    <div className={cx("title")}>
+      {question.voteTitre}
+    </div>
     <fieldset style={{ color: "green", border: "1px solid green" }}>
       <legend style={{ padding: "0px 10px" }}>Les pour</legend>
       <ul style={{ color: "black" }}>
