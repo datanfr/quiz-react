@@ -23,7 +23,7 @@
 .body { grid-area: body;}
 
 .header {
-    position: sticky;
+    position: fixed;
     top: 0;
     left: 0;
     display: flex;
@@ -33,11 +33,13 @@
 }
 
 .buttons {
-    position: sticky;
+    position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     flex-grow: 10;
+    height: 15vw;
+    min-height: 60px;
 }
 
 .flex {

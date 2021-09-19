@@ -46,6 +46,34 @@ function Question(props: { question: QuestionsModel }) {
   </div>
 }
 
+function Buttons(props: any) {
+  return <div className={cx("buttons", "center-body")}>
+    <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
+      <div
+        className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
+        data-value="{'importance': 1, 'pour': -1}"
+      //onClick={e => this.cardStackRef.current?.swipeTopCard("left")}
+      >
+        CONTRE
+      </div>
+      <div
+        className={cx("flex", "align-justify-center", "shadow", "button", "osef")}
+        data-value="{'importance': 0, 'pour': 0}"
+      //onClick={e => this.cardStackRef.current?.swipeTopCard("up")}
+      >
+        SANS AVIS
+      </div>
+      <div
+        className={cx("flex", "align-justify-center", "shadow", "button", "pour")}
+        data-value="{'importance': 1, 'pour': 1}"
+      //onClick={e => this.cardStackRef.current?.swipeTopCard("right")}
+      >
+        POUR
+      </div>
+    </div>
+  </div>
+}
+
 class Questions extends PureComponent<Props, State> {
 
   apiCall: Promise<any[]>
@@ -123,41 +151,17 @@ class Questions extends PureComponent<Props, State> {
 
   render() {
     const cardStack = this.cardStackRef.current
-    return <IonPage style={{ overflow: "auto", justifyContent: "flex-start" }}>
-      <Header title={this.params.get("theme") + '\u00A0' + "1/??"} onBackClick={() => this.back()} />
-      <div className={cx("center-body")}>
-        <div className={cx("body")}>
-          {this.state.questions.map(question => <Question question={question} />)}
-        </div>
-      </div>
-
-          <div className={cx("buttons", "center-body")}>
-            <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
-              <div
-                className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
-                data-value="{'importance': 1, 'pour': -1}"
-                onClick={e => this.cardStackRef.current?.swipeTopCard("left")}
-              >
-                CONTRE
-              </div>
-              <div
-                className={cx("flex", "align-justify-center", "shadow", "button", "osef")}
-                data-value="{'importance': 0, 'pour': 0}"
-                onClick={e => this.cardStackRef.current?.swipeTopCard("up")}
-              >
-                SANS AVIS
-              </div>
-              <div
-                className={cx("flex", "align-justify-center", "shadow", "button", "pour")}
-                data-value="{'importance': 1, 'pour': 1}"
-                onClick={e => this.cardStackRef.current?.swipeTopCard("right")}
-              >
-                POUR
-              </div>
-            </div>
+    return <div>
+      <IonPage style={{ overflow: "auto", justifyContent: "flex-start" }}>
+        <div className={cx("center-body")}>
+          <div className={cx("body")}>
+            {this.state.questions.map(question => <Question question={question} />)}
           </div>
-
-    </IonPage>
+        </div>
+      </IonPage>
+      <Header title={this.params.get("theme") + '\u00A0' + "1/??"} onBackClick={() => this.back()} />
+      <Buttons />
+    </div>
   }
 }
 
