@@ -18,7 +18,7 @@
     text-align: center;
     padding: 20px 0px;
     font-weight: 600;
-    font-size: xx-large;
+    font-size: calc(25px +  1vw);
   }
   
 
