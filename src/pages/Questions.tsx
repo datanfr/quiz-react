@@ -37,7 +37,7 @@ function Question(props: { question: QuestionsModel }) {
         {question.arguments.filter((argument: any) => argument.opinion === "POUR").map((argument: any) => <li>{argument.texte}</li>)}
       </ul>
     </fieldset>
-    <fieldset style={{ color: "red", border: "1px solid red", marginBottom: "10px" }}>
+    <fieldset style={{ color: "red", border: "1px solid red", marginBottom: "200px" }}>
       <legend style={{ padding: "0px 10px" }}>Les contre</legend>
       <ul style={{ color: "black" }}>
         {question.arguments.filter((argument: any) => argument.opinion === "CONTRE").map((argument: any) => <li>{argument.texte}</li>)}
