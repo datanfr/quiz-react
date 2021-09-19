@@ -5,7 +5,13 @@
   .button {
     color: var(--datan-white);
     height: 60px;
-    max-width: 125px;
+    max-width: 140px;
+  }
+
+  .title-container {
+    display: flex;
+    align-items : center;
+    height: 75vh;
   }
 
   .title {

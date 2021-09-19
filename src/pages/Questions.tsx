@@ -26,8 +26,10 @@ interface State { questions: QuestionsModel[] }
 function Question(props: { question: QuestionsModel }) {
   const { question } = props
   return <div>
-    <div className={cx("title")}>
-      {question.voteTitre}
+    <div className={cx("title-container")}>
+      <div className={cx("title")}>
+        {question.voteTitre}
+      </div>
     </div>
     <fieldset style={{ color: "green", border: "1px solid green" }}>
       <legend style={{ padding: "0px 10px" }}>Les pour</legend>
