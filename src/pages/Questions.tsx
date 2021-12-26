@@ -61,7 +61,7 @@ function Buttons(props: any) {
         data-value="{'importance': 0, 'pour': 0}"
       //onClick={e => this.cardStackRef.current?.swipeTopCard("up")}
       >
-        SANS AVIS
+        SANS&nbsp;AVIS
       </div>
       <div
         className={cx("flex", "align-justify-center", "shadow", "button", "pour")}
