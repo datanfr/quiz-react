@@ -25,8 +25,6 @@ import Questions from "./pages/Questions"
 
 /* Theme variables */
 import './theme/variables.css';
-import ChooseCategory from './pages/ChooseCategory';
-import Importance from './pages/Importance';
 import Resultat from './pages/Resultat';
 
 const App: React.FC = () => (
@@ -41,14 +39,8 @@ const App: React.FC = () => (
         <Route exact path="/questions2">
           <Questions />
         </Route>
-        <Route exact path="/categories">
-          <ChooseCategory />
-        </Route>
         <Route exact path="/">
           <Redirect to="/categories" />
-        </Route>
-        <Route exact path="/importance">
-          <Importance />
         </Route>
         <Route exact path="/resultat">
           <Resultat />
