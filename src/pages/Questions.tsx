@@ -18,10 +18,7 @@ const { Storage } = Plugins;
 
 let cx = classNames.bind(classes);
 
-type QuestionsModel = any
-interface Props extends RouteComponentProps { }
-interface State { questions: QuestionsModel[] }
-
+type QuestionsModel = typeof mockedData[0]
 
 function Question(props: { question: QuestionsModel }) {
   const { question } = props
@@ -46,13 +43,14 @@ function Question(props: { question: QuestionsModel }) {
   </div>
 }
 
-function Buttons(props: any) {
+interface ButtonsProps { cardStackRef: React.RefObject<CardStack<any>> }
+function Buttons(props: ButtonsProps) {
   return <div className={cx("buttons", "center-body")}>
     <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
       <div
         className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
         data-value="{'importance': 1, 'pour': -1}"
-      //onClick={e => this.cardStackRef.current?.swipeTopCard("left")}
+        onClick={e => props.cardStackRef.current?.swipeTopCard("left")}
       >
         CONTRE
       </div>
@@ -74,11 +72,12 @@ function Buttons(props: any) {
   </div>
 }
 
+interface Props extends RouteComponentProps { }
+interface State { questions: QuestionsModel[] }
 class Questions extends PureComponent<Props, State> {
 
   apiCall: Promise<any[]>
   cardStackRef: React.RefObject<CardStack<any>>
-  params: URLSearchParams;
 
   constructor(props: Props) {
     super(props);
@@ -87,11 +86,10 @@ class Questions extends PureComponent<Props, State> {
     this.state = {
       questions: []
     }
-    this.params = new URLSearchParams(window.location.search)
   }
 
   componentDidMount() {
-    if (this.params.has("mock")) {
+    if (window.localStorage.getItem("mock") === "true") {
       const questions = mockedData
       this.setState({ questions })
     } else {
@@ -116,7 +114,7 @@ class Questions extends PureComponent<Props, State> {
 
   back() {
     const card = this.cardStackRef.current?.resetLastCard()
-    if (!card) this.props.history.push(`/importance?theme=${this.params.get("theme")}`)
+    if (!card) this.props.history.goBack()
   }
 
   async saveVotes(votesSent: any) {
@@ -151,17 +149,18 @@ class Questions extends PureComponent<Props, State> {
 
   render() {
     const cardStack = this.cardStackRef.current
-    return <div>
-      <IonPage style={{ overflow: "auto", justifyContent: "flex-start" }}>
+    console.log(this.state)
+    return <IonPage>
+      <div style={{ overflow: "auto", justifyContent: "flex-start" }}>
         <div className={cx("center-body")}>
           <div className={cx("body")}>
             {this.state.questions.map(question => <Question question={question} />)}
           </div>
         </div>
-      </IonPage>
-      <Header title={this.params.get("theme") + '\u00A0' + "1/??"} onBackClick={() => this.back()} />
-      <Buttons />
-    </div>
+      </div>
+      <Header title={"Question" + '\u00A0' + `1/${this.state.questions.length}`} onBackClick={() => this.back()} />
+      <Buttons cardStackRef={this.cardStackRef} />
+    </IonPage>
   }
 }
 

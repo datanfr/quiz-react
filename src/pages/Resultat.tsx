@@ -1,13 +1,11 @@
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Fab } from '@material-ui/core';
 import classNames from 'classnames/bind';
 import React, { PureComponent } from 'react';
 import Header from '../components/Header';
-import classes from './ChooseCategory.module.css';
 
 
-let cx = classNames.bind(classes);
+let cx = classNames;
 
 interface Props { }
 interface State { }

@@ -30,21 +30,21 @@ import Resultat from './pages/Resultat';
 const App: React.FC = () => (
   <div>
     <IonReactRouter>
-        <Route exact path="/home">
-          <Home />
-        </Route>
-        <Route exact path="/questions">
-          <Questions />
-        </Route>
-        <Route exact path="/questions2">
-          <Questions />
-        </Route>
-        <Route exact path="/">
-          <Redirect to="/categories" />
-        </Route>
-        <Route exact path="/resultat">
-          <Resultat />
-        </Route>
+      <Route exact path="/">
+        <Redirect to="/home" />
+      </Route>
+      <Route exact path="/home">
+        <Home />
+      </Route>
+      <Route exact path="/questions">
+        <Questions />
+      </Route>
+      <Route exact path="/questions2">
+        <Questions />
+      </Route>
+      <Route exact path="/resultat">
+        <Resultat />
+      </Route>
     </IonReactRouter>
   </div>
 );

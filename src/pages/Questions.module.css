@@ -10,7 +10,7 @@
 
   .title-container {
     display: flex;
-    align-items : center;
+    align-items: center;
     height: 66vh;
   }
 
@@ -18,9 +18,9 @@
     text-align: center;
     padding: 20px 0px;
     font-weight: 600;
-    font-size: calc(25px +  1vw);
+    font-size: calc(25px + 1vw);
   }
-  
+
 
   .contre {
     background-color: var(--datan-red)
