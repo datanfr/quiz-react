@@ -7,6 +7,9 @@
     --datan-black: #212529;
     --datan-yellow: #FFBA49;
     --datan-red: #C5283D;
+
+    --header-height: 50px;
+    --h-btn-ctn: 15vw;
     color: var(--datan-black);
     background-color: var(--datan-white);
     font-family: "Open Sans";
@@ -23,6 +26,7 @@
 
 .body {
     grid-area: body;
+    margin-bottom: calc(max(var(--h-btn-ctn), 60px));
 }
 
 .buttons {
@@ -31,7 +35,7 @@
     left: 0;
     width: 100%;
     flex-grow: 10;
-    height: 15vw;
+    height: var(--h-btn-ctn);
     max-height: 160px;
     min-height: 60px;
     background: linear-gradient(rgba(0, 212, 255, 0) 0%, var(--datan-white) 66%, var(--datan-white)100%);
@@ -121,7 +125,11 @@
     left: 0;
     display: flex;
     width: 100%;
-    height: 50px;
+    height: var(--header-height);
     backdrop-filter: blur(3px);
     background-color: rgba(255, 255, 255, 0.85);
+}
+
+.opacity-hidden {
+    opacity: 0;
 }
