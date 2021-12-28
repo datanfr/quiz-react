@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import Api from '../Api';
 import CardStack from '../components/CardStack';
 import Header from "../components/Header";
-import questionsData from "../mock/get_most_famous_votes.json";
+import questionsData from "../data/questions.json";
 import classes from './Questions.module.css';
 import { Plugins } from '@capacitor/core';
 const { Storage } = Plugins;
