@@ -15,6 +15,10 @@
     font-family: "Open Sans";
 }
 
+a {
+    text-decoration: none;
+}
+
 .center-body {
     display: grid;
     grid-template-columns: auto minmax(0, 800px) auto;

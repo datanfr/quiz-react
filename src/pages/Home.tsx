@@ -2,7 +2,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/rea
 import classNames from 'classnames/bind';
 import classes from './Home.module.css';
 import Header from "../components/Header"
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { PureComponent } from 'react';
 
 let cx = classNames.bind(classes);
@@ -50,9 +50,9 @@ class Home extends PureComponent<Props, State> {
       <Header title="Accueil"  />
       <div className={cx("buttons", "center-body")} >
         <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
-          <div className={cx("datan-green-bg", "flex", "align-justify-center", "shadow")} style={{height: "60px"}}>
+          <Link to="/questions" className={cx("datan-green-bg", "flex", "align-justify-center", "shadow")} style={{height: "60px"}}>
             Commencer le test
-          </div>
+          </Link>
         </div>
       </div>
     </IonPage>

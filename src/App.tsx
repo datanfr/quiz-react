@@ -31,15 +31,9 @@ const App: React.FC = () => (
   <div>
     <IonReactRouter>
       <Route exact path="/">
-        <Redirect to="/home" />
-      </Route>
-      <Route exact path="/home">
         <Home />
       </Route>
       <Route exact path="/questions">
-        <Questions />
-      </Route>
-      <Route exact path="/questions2">
         <Questions />
       </Route>
       <Route exact path="/resultat">

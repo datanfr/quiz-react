@@ -1,26 +1,20 @@
-import React, { Fragment, PureComponent } from 'react';
-import classNames from 'classnames/bind';
-import classes from './Questions.module.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHome } from '@fortawesome/free-solid-svg-icons'
-import CardStack from '../components/CardStack';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
-import { faSmile, faFrown, faMeh } from '@fortawesome/free-regular-svg-icons'
-import Api from '../Api';
-import mockedData from "../mock/get_most_famous_votes.json"
-import Header from "../components/Header"
 import { IonPage } from '@ionic/react';
+import classNames from 'classnames/bind';
+import React, { PureComponent } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import Api from '../Api';
+import CardStack from '../components/CardStack';
+import Header from "../components/Header";
+import questionsData from "../mock/get_most_famous_votes.json";
+import classes from './Questions.module.css';
 import { Plugins } from '@capacitor/core';
-import { TransitionGroup } from 'react-transition-group';
-
 const { Storage } = Plugins;
 
 let cx = classNames.bind(classes);
 
-type QuestionsModel = typeof mockedData[0]
+type QuestionModel = typeof questionsData[0]
 
-function Question(props: { question: QuestionsModel }) {
+function Question(props: { question: QuestionModel }) {
   const { question } = props
   return <div>
     <div className={cx("title-container")}>
@@ -43,28 +37,32 @@ function Question(props: { question: QuestionsModel }) {
   </div>
 }
 
-interface ButtonsProps { cardStackRef: React.RefObject<CardStack<any>> }
-function Buttons(props: ButtonsProps) {
+interface ButtonsProps {
+  onContre: () => void
+  onNspp: () => void
+  onPour: () => void
+}
+function Buttons(p: ButtonsProps) {
   return <div className={cx("buttons", "center-body")}>
     <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
       <div
         className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
         data-value="{'importance': 1, 'pour': -1}"
-        onClick={e => props.cardStackRef.current?.swipeTopCard("left")}
+        onClick={p.onContre}
       >
         CONTRE
       </div>
       <div
         className={cx("flex", "align-justify-center", "shadow", "button", "osef")}
         data-value="{'importance': 0, 'pour': 0}"
-      //onClick={e => this.cardStackRef.current?.swipeTopCard("up")}
+        onClick={p.onNspp}
       >
         SANS&nbsp;AVIS
       </div>
       <div
         className={cx("flex", "align-justify-center", "shadow", "button", "pour")}
         data-value="{'importance': 1, 'pour': 1}"
-      //onClick={e => this.cardStackRef.current?.swipeTopCard("right")}
+        onClick={p.onPour}
       >
         POUR
       </div>
@@ -73,93 +71,53 @@ function Buttons(props: ButtonsProps) {
 }
 
 interface Props extends RouteComponentProps { }
-interface State { questions: QuestionsModel[] }
+interface State {
+  cqi: number //Current question index
+}
 class Questions extends PureComponent<Props, State> {
-
-  apiCall: Promise<any[]>
-  cardStackRef: React.RefObject<CardStack<any>>
 
   constructor(props: Props) {
     super(props);
-    this.cardStackRef = React.createRef();
-    this.apiCall = Api.getCards('sante', 10)
     this.state = {
-      questions: []
+      cqi: 0
     }
-  }
-
-  componentDidMount() {
-    if (window.localStorage.getItem("mock") === "true") {
-      const questions = mockedData
-      this.setState({ questions })
-    } else {
-      this.apiCall.then(
-        resp => this.handleApiResponse(resp),
-        e => this.handleApiError(e)
-      )
-    }
-
-  }
-
-  handleApiError(e: Error) {
-    const questions = mockedData
-    console.log("Error caught putting fake questions data", e, questions)
-    this.setState({ questions })
-  }
-
-  handleApiResponse(questions: any[]) {
-    console.log("Loading questions", questions)
-    this.setState({ questions })
   }
 
   back() {
-    const card = this.cardStackRef.current?.resetLastCard()
-    if (!card) this.props.history.goBack()
+    if (this.state.cqi - 1 >= 0) {
+      this.setState({cqi: this.state.cqi+1})
+    } else {
+      this.props.history.goBack()
+    }
   }
 
-  async saveVotes(votesSent: any) {
-    const weightStored = await Storage.get({ key: 'weight' });
-    let weights: Array<any> = [];
-    if (typeof weightStored.value == 'string') {
-      weights = JSON.parse(weightStored.value);
+  async saveAndGoToNextQuestion(respStr : string)  {
+    const r = await Storage.get({key: "responses"}).then(x => x.value ? JSON.parse(x.value) : {});
+    const cq = questionsData[this.state.cqi]
+    r[cq.vote_id] = respStr
+    await Storage.set({key:"responses", value: JSON.stringify(r)})
+    if (this.state.cqi + 1 >= questionsData.length) {
+      this.props.history.push("/resultats")
     }
-    Storage.get({ key: 'votes' }).then(async votes => {
-      let storedVotes = typeof votes == "string" ? JSON.parse(votes) : [];
-      let weight: Number = weights.find((el: any) => el.theme == votesSent[0].cardData.category_libelle) || 3;
-      for (let card of votesSent) {
-        let choice = 0;
-        if (card.swiped == "right") {
-          choice = 1;
-        }
-        else if (card.swiped == "left") {
-          choice = -1;
-        }
-        storedVotes.push(
-          {
-            "voteNumero": card.cardData.voteNumero,
-            "choice": choice,
-            "weight": weight
-          }
-        )
-      }
-      Storage.set({ key: "votes", value: JSON.stringify(storedVotes) })
-    })
-    this.props.history.push("/categories?second=true")
+    this.setState({cqi: this.state.cqi + 1})
   }
 
   render() {
-    const cardStack = this.cardStackRef.current
     console.log(this.state)
     return <IonPage>
       <div style={{ overflow: "auto", justifyContent: "flex-start" }}>
         <div className={cx("center-body")}>
           <div className={cx("body")}>
-            {this.state.questions.map(question => <Question question={question} />)}
+            <Question question={questionsData[this.state.cqi]} />
           </div>
         </div>
       </div>
-      <Header title={"Question" + '\u00A0' + `1/${this.state.questions.length}`} onBackClick={() => this.back()} />
-      <Buttons cardStackRef={this.cardStackRef} />
+      <Header title={"Question" + '\u00A0' + `1/${questionsData.length}`} onBackClick={() => this.back()} />
+      <Buttons
+        onPour={async () => await this.saveAndGoToNextQuestion("pour")}
+        onContre={async () => await this.saveAndGoToNextQuestion("contre")}
+        onNspp={async () => await this.saveAndGoToNextQuestion("nspp")}
+      />
     </IonPage>
   }
 }
