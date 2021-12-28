@@ -1,5 +1,8 @@
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { IonPage } from '@ionic/react';
+
 import classNames from 'classnames/bind';
 import React, { PureComponent } from 'react';
 import Header from '../components/Header';
@@ -7,12 +10,12 @@ import Header from '../components/Header';
 
 let cx = classNames;
 
-interface Props { }
+interface Props extends RouteComponentProps { }
 interface State { }
 
 class Resultat extends PureComponent<Props, State> {
 
-  params : URLSearchParams;
+  params: URLSearchParams;
 
   constructor(props: Props) {
     super(props);
@@ -24,15 +27,29 @@ class Resultat extends PureComponent<Props, State> {
 
   render() {
 
-    return <div>
-      <div className={cx("fullscreen", "flex", "column")}>
-        <Header />
-        <div className={cx("margin")}>
-          <h4>Résultats</h4>
+    return <IonPage>
+      <div style={{ overflow: "auto", justifyContent: "flex-start" }}>
+        <div className={cx("center-body")}>
+          <div className={cx("body")} style={{marginTop: "var(--header-height)"}}>
+            content
+            adsf
+            adsf
+            adsf
+            asdf
+          </div>
         </div>
       </div>
-    </div>
+      <Header title={`Résultat`} />
+      <div className={cx("buttons", "center-body")} >
+        <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
+          <Link to="/" className={cx("datan-green-bg", "flex", "align-justify-center", "shadow")} style={{ height: "60px" }}>
+            Recommencer le test
+          </Link>
+        </div>
+      </div>
+
+    </IonPage>
   }
 }
 
-export default Resultat
+export default withRouter(Resultat)

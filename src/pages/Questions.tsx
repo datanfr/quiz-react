@@ -44,7 +44,7 @@ interface ButtonsProps {
 }
 function Buttons(p: ButtonsProps) {
   return <div className={cx("buttons", "center-body")}>
-    <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
+    <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center", marginTop: "var(--header-height)" }}>
       <div
         className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
         data-value="{'importance': 1, 'pour': -1}"
@@ -97,13 +97,12 @@ class Questions extends PureComponent<Props, State> {
     r[cq.vote_id] = respStr
     await Storage.set({key:"responses", value: JSON.stringify(r)})
     if (this.state.cqi + 1 >= questionsData.length) {
-      this.props.history.push("/resultats")
+      this.props.history.push("/resultat")
     }
     this.setState({cqi: this.state.cqi + 1})
   }
 
   render() {
-    console.log(this.state)
     return <IonPage>
       <div style={{ overflow: "auto", justifyContent: "flex-start" }}>
         <div className={cx("center-body")}>
