@@ -85,7 +85,7 @@ class Questions extends PureComponent<Props, State> {
 
   back() {
     if (this.state.cqi - 1 >= 0) {
-      this.setState({cqi: this.state.cqi+1})
+      this.setState({cqi: this.state.cqi-1})
     } else {
       this.props.history.goBack()
     }
@@ -111,7 +111,7 @@ class Questions extends PureComponent<Props, State> {
           </div>
         </div>
       </div>
-      <Header title={"Question" + '\u00A0' + `1/${questionsData.length}`} onBackClick={() => this.back()} />
+      <Header title={"Question" + '\u00A0' + `${this.state.cqi+1}/${questionsData.length}`} onBackClick={() => this.back()} />
       <Buttons
         onPour={async () => await this.saveAndGoToNextQuestion("pour")}
         onContre={async () => await this.saveAndGoToNextQuestion("contre")}

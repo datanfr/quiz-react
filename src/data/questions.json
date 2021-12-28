@@ -35,5 +35,43 @@
                 "texte": "La fragilité économique de la betterave n’est pas seulement due à la maladie de la jaunisse, mais à la fin des quotas sucriers et des prix minimums."
             }
         ]
+    },
+    {
+        "voteTitre": "Allonger de 2 semaines le délai légal pour effectuer une interruption volontaire de grossesse (IVG)",
+        "dateScrutin": "2021-03-18",
+        "voteNumero": "2948",
+        "legislature": "15",
+        "category_libelle": "Environnement",
+        "category_slug": "environnement",
+        "sortCode": "adopt\u00e9",
+        "dateScrutinFR": "16 mars 2021",
+        "vote_id": "VTANR5L15V2948",
+        "arguments": [
+            {
+                "opinion": "POUR",
+                "texte": "Dans de nombreux territoires, l’accès à l’IVG est très difficile par manque de médecins et par manque de médecins volontaires pour réaliser l’IVG. Il y a ainsi en France de très nombreuses femmes qui ne trouvent pas de solution, arriver à la douzième semaine (date limite)."
+            },
+            {
+                "opinion": "POUR",
+                "texte": "Se sont par ailleurs les femmes dans des situations de fragilité qui se retrouve à dépasser ce délai. Plusieurs milliers vont réaliser une IVG clandestinement à l’étranger."
+            },
+            {
+                "opinion": "POUR",
+                "texte": "Allongé de semaine, cette date limite permet à ces milliers de femmes de pouvoir réaliser légalement et en toute sécurité leur IVG."
+            },
+            {
+                "opinion": "CONTRE",
+                "texte": "Allonger le délai légal de deux semaines c’est donner l’idée que l’IVG serait un moyen de contraception."
+            },
+            {
+                "opinion": "CONTRE",
+                "texte": "Repousser le délai légal ne mettra pas fin à la démarche de milliers de femmes d’aller avorter à l’étranger. La solution vient en amont, dans la facilitation à l’information sur la contraception."
+            },
+            {
+                "opinion": "CONTRE",
+                "texte": "Compte tenu du développement du fœtus, une IVG tardive peut faire courir des risques plus importants à la femme enceinte."
+            }
+        ]
     }
+
 ]
