@@ -28,20 +28,32 @@ class Home extends PureComponent<Props, State> {
           <div className={cx("body")}>
             <div className={cx("paragraphe-container", { "push-right": counter++ % 2 })}>
               <div className={cx("limit-width", "margin")}>
-                <h1>Maecenas et urna metus</h1>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eu nisi tellus. Etiam bibendum fermentum elementum. Aliquam dapibus tincidunt ligula, nec eleifend diam tempus ullamcorper. Nullam sit amet sagittis tellus. Vestibulum a dolor sapien. Mauris ultrices enim sem. Praesent condimentum accumsan magna, id mattis justo placerat a. Proin eget tempor sem. Fusce turpis tortor, pharetra at arcu at, porttitor tincidunt lectus.
+                <h1>Êtes-vous proche de votre député ?</h1>
               </div>
             </div>
             <div className={cx("paragraphe-container", { "push-right": counter++ % 2 })}>
               <div className={cx("limit-width", "margin")}>
-                <h1>Proin cursus est vitae</h1>
-                Pellentesque dui libero, ullamcorper eu vestibulum et, bibendum eu metus. Nulla ut turpis et tortor blandit finibus eu auctor nisl. Morbi aliquet mattis ex. Cras et augue ultricies, placerat nunc ultrices, mattis nibh. Morbi et dolor non purus finibus ultricies. Nulla facilisi. Morbi sollicitudin lorem vel feugiat pulvinar. Nulla nulla odio, hendrerit eu lacinia ultricies, varius id neque. Fusce vehicula risus eget ligula auctor, eu ultricies lectus faucibus. Etiam nunc risus, molestie in varius nec, bibendum nec quam. Vestibulum quis rutrum quam.
+                <h1>De votre parti politique ?</h1>
               </div>
             </div>
             <div className={cx("paragraphe-container", { "push-right": counter++ % 2 })}>
               <div className={cx("limit-width", "margin")}>
-                <h1>Nullam ultricies massa</h1>
-                Duis augue velit, laoreet eu placerat sed, iaculis ac nisi. Cras sollicitudin pulvinar elit, quis dapibus mi. Vestibulum interdum tortor nec est suscipit rhoncus. Nam eu tristique turpis, et faucibus metus. Nulla congue felis non neque sagittis, sit amet suscipit justo tristique. Maecenas consectetur erat non quam faucibus vulputate. Cras et aliquam diam. Etiam sit amet nisl augue. Donec posuere dui a maximus pharetra. Vestibulum placerat, enim id aliquet hendrerit, massa tortor ultrices enim, facilisis luctus sem eros at massa. Duis pellentesque consequat sem eu dictum.
+                <h1>Faites le quizz pour le savoir ! </h1>
+              </div>
+            </div>
+            <div className={cx("paragraphe-container", { "push-right": counter++ % 2 })}>
+              <div className={cx("limit-width", "margin")}>
+                Ce quizz va vous permet de déterminer si vous avez les mêmes idées que le député de votre circonscription.
+              </div>
+            </div>
+            <div className={cx("paragraphe-container", { "push-right": counter++ % 2 })}>
+              <div className={cx("limit-width", "margin")}>
+              Une des activités principales des députés à l'Assemblée nationale est de voter sur des textes de loi et des amendements. Ils donnent une indication des positions de chaque élu : est-il pour ou contre la réintroduction des pesticides ?
+              </div>
+            </div>
+            <div className={cx("paragraphe-container", { "push-right": counter++ % 2 })}>
+              <div className={cx("limit-width", "margin")}>
+              Votez vous-même sur des lois discutées dans l'hémicycle de l'Assemblée pour déterminer votre proximité avec votre parlementaire et les différents groupes politiques.
               </div>
             </div>
           </div>
