@@ -44,7 +44,7 @@ interface ButtonsProps {
 }
 function Buttons(p: ButtonsProps) {
   return <div className={cx("buttons", "center-body")}>
-    <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center", marginTop: "var(--header-height)" }}>
+    <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
       <div
         className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
         data-value="{'importance': 1, 'pour': -1}"
@@ -103,10 +103,10 @@ class Questions extends PureComponent<Props, State> {
   }
 
   render() {
-    return <IonPage>
+    return <IonPage key={this.state.cqi}>
       <div style={{ overflow: "auto", justifyContent: "flex-start" }}>
         <div className={cx("center-body")}>
-          <div className={cx("body")}>
+          <div className={cx("body")} style={{marginTop: "var(--header-height)"}}>
             <Question question={questionsData[this.state.cqi]} />
           </div>
         </div>
