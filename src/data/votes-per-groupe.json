@@ -1,0 +1,13 @@
+[
+    {
+        "name": "MoDem",
+        "img-url": "https://datan.fr/assets/imgs/groupes/DEM.png",
+        "page-url": "https://datan.fr/groupes/dem",
+        "votes": [
+            {"id": "VTANR5L15V2948","resultat": "pour"},
+            {"id": "VTANR5L15V3484","resultat": "contre"},
+            {"id": "VTANR5L15V3484","resultat": "absent"},
+            {"id": "VTANR5L15V3484","resultat": "nspp"}
+        ]
+    }
+]

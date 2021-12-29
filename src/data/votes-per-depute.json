@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Damien Abad",
+        "img-url": "https://datan.fr/assets/imgs/deputes_original/depute_605036.png",
+        "page-url": "https://datan.fr/deputes/ain-01/depute_damien-abad",
+        "groupe_name": "MoDem",
+        "votes": [
+            {"id": "VTANR5L15V2948","resultat": "pour"},
+            {"id": "VTANR5L15V3484","resultat": "contre"},
+            {"id": "VTANR5L15V3484","resultat": "absent"},
+            {"id": "VTANR5L15V3484","resultat": "nspp"}
+        ]
+    }
+]

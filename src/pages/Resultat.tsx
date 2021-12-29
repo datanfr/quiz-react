@@ -7,6 +7,12 @@ import classNames from 'classnames/bind';
 import React, { PureComponent } from 'react';
 import Header from '../components/Header';
 
+import votesPerDepute from '../data/votes-per-depute.json'
+import votesPerGroupe from '../data/votes-per-groupe.json'
+
+import { Plugins } from '@capacitor/core';
+const { Storage } = Plugins;
+
 
 let cx = classNames;
 
@@ -23,6 +29,19 @@ class Resultat extends PureComponent<Props, State> {
   }
 
   componentDidMount() {
+    const fetchingResponses = Storage.get({key: "responses"}).then(x => x.value ? JSON.parse(x.value) : {})
+    const fetchingVotesPerDepute = Promise.resolve(votesPerDepute)
+    Promise.all([fetchingResponses, fetchingVotesPerDepute]).then(([responses, votesPerDepute]) => {
+      const scoredDepute = votesPerDepute.map(depute => ({depute, score: calculateScore(depute, responses)}))
+      const sortedDepute = sort(scoredDepute)
+      this.setState({resultatDepute: sortedDepute})
+    })
+  
+    Promise.all([fetchingResponses, fetchingVotesPerDepute]).then(([responses, votesPerGroupe]) => {
+      const scoredDepute = votesPerDepute.map(depute => ({depute, score: calculateScore(depute, responses)}))
+      const sortedDepute = sort(scoredDepute)
+      this.setState({resultatDepute: sortedDepute})
+    })
   }
 
   render() {
