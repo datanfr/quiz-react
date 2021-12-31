@@ -6,9 +6,8 @@ import Api from '../Api';
 import CardStack from '../components/CardStack';
 import Header from "../components/Header";
 import questionsData from "../data/questions.json";
+import { getResponses, Reponse, setResponses } from '../models/Reponse';
 import classes from './Questions.module.css';
-import { Plugins } from '@capacitor/core';
-const { Storage } = Plugins;
 
 let cx = classNames.bind(classes);
 
@@ -91,11 +90,11 @@ class Questions extends PureComponent<Props, State> {
     }
   }
 
-  async saveAndGoToNextQuestion(respStr : string)  {
-    const r = await Storage.get({key: "responses"}).then(x => x.value ? JSON.parse(x.value) : {});
+  async saveAndGoToNextQuestion(respStr : Reponse)  {
+    const r = await getResponses()
     const cq = questionsData[this.state.cqi]
     r[cq.vote_id] = respStr
-    await Storage.set({key:"responses", value: JSON.stringify(r)})
+    await setResponses(r)
     if (this.state.cqi + 1 >= questionsData.length) {
       this.props.history.push("/resultat")
     }

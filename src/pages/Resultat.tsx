@@ -11,13 +11,18 @@ import votesPerDepute from '../data/votes-per-depute.json'
 import votesPerGroupe from '../data/votes-per-groupe.json'
 
 import { Plugins } from '@capacitor/core';
+import { getResponses, Reponse } from '../models/Reponse';
+import { calculateVoteSimilarity } from '../calculateScore';
 const { Storage } = Plugins;
 
 
 let cx = classNames;
 
 interface Props extends RouteComponentProps { }
-interface State { }
+interface State {
+  sortedDeputes : {depute: typeof votesPerDepute[0], similarity: number}[]
+  sortedGroupes : {groupe: typeof votesPerGroupe[0], similarity: number}[]
+}
 
 class Resultat extends PureComponent<Props, State> {
 
@@ -26,21 +31,23 @@ class Resultat extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.params = new URLSearchParams(window.location.search)
+    this.state = {sortedDeputes: [], sortedGroupes: []}
   }
 
   componentDidMount() {
-    const fetchingResponses = Storage.get({key: "responses"}).then(x => x.value ? JSON.parse(x.value) : {})
+    const fetchingResponses = getResponses()
     const fetchingVotesPerDepute = Promise.resolve(votesPerDepute)
     Promise.all([fetchingResponses, fetchingVotesPerDepute]).then(([responses, votesPerDepute]) => {
-      const scoredDepute = votesPerDepute.map(depute => ({depute, score: calculateScore(depute, responses)}))
-      const sortedDepute = sort(scoredDepute)
-      this.setState({resultatDepute: sortedDepute})
+      const scoredDeputes = votesPerDepute.map(depute => ({depute, similarity: calculateVoteSimilarity(depute.votes as Record<string, Reponse>, responses)}))
+      const sortedDeputes = scoredDeputes.sort((a, b) => (a.similarity < b.similarity) ? -1 : (a.similarity > b.similarity) ? 1 : 0) 
+      this.setState({sortedDeputes})
     })
   
-    Promise.all([fetchingResponses, fetchingVotesPerDepute]).then(([responses, votesPerGroupe]) => {
-      const scoredDepute = votesPerDepute.map(depute => ({depute, score: calculateScore(depute, responses)}))
-      const sortedDepute = sort(scoredDepute)
-      this.setState({resultatDepute: sortedDepute})
+    const fetchingVotesPerGroupe = Promise.resolve(votesPerGroupe)
+    Promise.all([fetchingResponses, fetchingVotesPerGroupe]).then(([responses, votesPerGroupe]) => {
+      const scoredGroupes = votesPerGroupe.map(groupe => ({groupe, similarity: calculateVoteSimilarity(groupe.votes as Record<string, Reponse>, responses)}))
+      const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? -1 : (a.similarity > b.similarity) ? 1 : 0) 
+      this.setState({sortedGroupes})
     })
   }
 
@@ -50,11 +57,10 @@ class Resultat extends PureComponent<Props, State> {
       <div style={{ overflow: "auto", justifyContent: "flex-start" }}>
         <div className={cx("center-body")}>
           <div className={cx("body")} style={{marginTop: "var(--header-height)"}}>
-            content
-            adsf
-            adsf
-            adsf
-            asdf
+            <pre>
+              {JSON.stringify(this.state.sortedDeputes, null, " ")}
+              {JSON.stringify(this.state.sortedGroupes, null, " ")}
+            </pre>
           </div>
         </div>
       </div>
