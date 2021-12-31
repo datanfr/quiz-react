@@ -20,6 +20,7 @@ let cx = classNames;
 
 interface Props extends RouteComponentProps { }
 interface State {
+  userVotes : Record<string, Reponse>
   sortedDeputes : {depute: typeof votesPerDepute[0], similarity: number}[]
   sortedGroupes : {groupe: typeof votesPerGroupe[0], similarity: number}[]
 }
@@ -31,22 +32,23 @@ class Resultat extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.params = new URLSearchParams(window.location.search)
-    this.state = {sortedDeputes: [], sortedGroupes: []}
+    this.state = {sortedDeputes: [], sortedGroupes: [], userVotes: {}}
   }
 
   componentDidMount() {
     const fetchingResponses = getResponses()
     const fetchingVotesPerDepute = Promise.resolve(votesPerDepute)
+    fetchingResponses.then(userVotes => this.setState({userVotes}))
     Promise.all([fetchingResponses, fetchingVotesPerDepute]).then(([responses, votesPerDepute]) => {
       const scoredDeputes = votesPerDepute.map(depute => ({depute, similarity: calculateVoteSimilarity(depute.votes as Record<string, Reponse>, responses)}))
-      const sortedDeputes = scoredDeputes.sort((a, b) => (a.similarity < b.similarity) ? -1 : (a.similarity > b.similarity) ? 1 : 0) 
+      const sortedDeputes = scoredDeputes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0) 
       this.setState({sortedDeputes})
     })
   
     const fetchingVotesPerGroupe = Promise.resolve(votesPerGroupe)
     Promise.all([fetchingResponses, fetchingVotesPerGroupe]).then(([responses, votesPerGroupe]) => {
       const scoredGroupes = votesPerGroupe.map(groupe => ({groupe, similarity: calculateVoteSimilarity(groupe.votes as Record<string, Reponse>, responses)}))
-      const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? -1 : (a.similarity > b.similarity) ? 1 : 0) 
+      const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0) 
       this.setState({sortedGroupes})
     })
   }
@@ -58,8 +60,12 @@ class Resultat extends PureComponent<Props, State> {
         <div className={cx("center-body")}>
           <div className={cx("body")} style={{marginTop: "var(--header-height)"}}>
             <pre>
-              {JSON.stringify(this.state.sortedDeputes, null, " ")}
-              {JSON.stringify(this.state.sortedGroupes, null, " ")}
+              //USER VOTES<br/>
+              {JSON.stringify(this.state.userVotes, null, " ")}<br/><br/>
+              //DEPUTES LIST<br/>
+              {JSON.stringify(this.state.sortedDeputes, null, " ")}<br/><br/>
+              //GROUPES LIST<br/>
+              {JSON.stringify(this.state.sortedGroupes, null, " ")}<br/><br/>
             </pre>
           </div>
         </div>
