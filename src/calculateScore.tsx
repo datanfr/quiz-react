@@ -4,17 +4,39 @@ import { Reponse } from "./models/Reponse";
 // si vote divergent (depute_vote1 - user_vote1)**2 = 1 
 // sinon (depute_vote1 - user_vote1)**2 = 0
 // donc distance = sqrt(nb_vote_divergent)
+
+const outcomeToScore = {
+    "nspp": 0.5,
+    "absent": null,
+    "pour": 1,
+    "contre": 0
+}
+
+function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
+    if (value === null || value === undefined) return false;
+    const testDummy: TValue = value;
+    return true;
+  }
+
 export function calculateVoteSimilarity(depute_votes: Record<string, Reponse>, user_votes: Record<string, Reponse>) {
-    var nb_votes_divergent = 0
-    const user_votes_list = Object.entries(user_votes)
-    for (const [user_vote_id, user_vote_outcome] of user_votes_list) {
+    depute_votes = []
+    const distancePerVote = Object.entries(user_votes).map(([user_vote_id, user_vote_outcome]) => {
         const depute_vote_outcome = depute_votes[user_vote_id]
-        if (depute_vote_outcome !== "nspp" && user_vote_outcome !== "nspp") { //Ignore nspp and absent 
-            if (depute_vote_outcome !== user_vote_outcome) nb_votes_divergent++
-        }
-    }
-    const distance = nb_votes_divergent ** 0.5 //[0, max_votes_divergent**0.5]
-    const normalised_distance = distance / user_votes_list.length ** 0.5 //[0, 1]
-    const similarity = 1 - normalised_distance//[1, 0] closer from 1 => moar similarity
-    return similarity
+        const userScore = outcomeToScore[user_vote_outcome]
+        const deputeScore = outcomeToScore[depute_vote_outcome]
+        console.log({user_vote_outcome, depute_vote_outcome, userScore, deputeScore, abs: userScore && deputeScore && Math.abs(userScore - deputeScore)})
+        return (userScore != null && deputeScore != null) ? Math.abs(userScore - deputeScore) : null
+    }).filter(notEmpty)
+    const distanceSum = distancePerVote.reduce((a, b) => a + b, 0);
+    const distanceAvg = distanceSum / distancePerVote.length
+    const similarity = (1-distanceAvg)
+    console.log({
+        depute_votes,
+        user_votes,
+        distancePerVote,
+        distanceSum,
+        distanceAvg,
+        similarity
+    })
+    return similarity   
 }

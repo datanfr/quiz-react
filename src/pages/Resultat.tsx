@@ -49,12 +49,12 @@ class Resultat extends PureComponent<Props, State> {
       this.setState({ sortedDeputes })
     })
 
-    const fetchingVotesPerGroupe = Promise.resolve(votesPerGroupe)
-    Promise.all([fetchingResponses, fetchingVotesPerGroupe]).then(([responses, votesPerGroupe]) => {
-      const scoredGroupes = votesPerGroupe.map(groupe => ({ groupe, similarity: calculateVoteSimilarity(groupe.votes as Record<string, Reponse>, responses) }))
-      const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
-      this.setState({ sortedGroupes })
-    })
+    // const fetchingVotesPerGroupe = Promise.resolve(votesPerGroupe)
+    // Promise.all([fetchingResponses, fetchingVotesPerGroupe]).then(([responses, votesPerGroupe]) => {
+    //   const scoredGroupes = votesPerGroupe.map(groupe => ({ groupe, similarity: calculateVoteSimilarity(groupe.votes as Record<string, Reponse>, responses) }))
+    //   const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
+    //   this.setState({ sortedGroupes })
+    // })
   }
 
   render() {
