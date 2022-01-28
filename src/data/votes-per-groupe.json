@@ -2,10 +2,12 @@
     {
         "name": "MoDem",
         "id":"DEM",
-        "img-url": "https://datan.fr/assets/imgs/groupes/DEM.png",
         "page-url": "https://datan.fr/groupes/dem",
         "votes": {
-            "VTANR5L15V2948": {"pour": 12,"contre": 6,"absent": 2,"nspp": 1}
+            "VTANR5L15V2948": {"pour": 12,"contre": 6,"absent": 2,"nspp": 1},
+            "VTANR5L15V3484": {"pour": 12,"contre": 6,"absent": 2,"nspp": 1},
+            "VTANR5L15V3485": {"pour": 12,"contre": 6,"absent": 2,"nspp": 1},
+            "VTANR5L15V3486": {"pour": 12,"contre": 6,"absent": 2,"nspp": 1}
         }
     }
 ]
