@@ -19,7 +19,6 @@ function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
   }
 
 export function calculateVoteSimilarity(depute_votes: Record<string, Reponse>, user_votes: Record<string, Reponse>) {
-    depute_votes = []
     const distancePerVote = Object.entries(user_votes).map(([user_vote_id, user_vote_outcome]) => {
         const depute_vote_outcome = depute_votes[user_vote_id]
         const userScore = outcomeToScore[user_vote_outcome]
@@ -27,8 +26,9 @@ export function calculateVoteSimilarity(depute_votes: Record<string, Reponse>, u
         console.log({user_vote_outcome, depute_vote_outcome, userScore, deputeScore, abs: userScore && deputeScore && Math.abs(userScore - deputeScore)})
         return (userScore != null && deputeScore != null) ? Math.abs(userScore - deputeScore) : null
     }).filter(notEmpty)
-    const distanceSum = distancePerVote.reduce((a, b) => a + b, 0);
-    const distanceAvg = distanceSum / distancePerVote.length
+    const laplace = [0, 1] //https://youtu.be/8idr1WZ1A7Q?t=110
+    const distanceSum = [...distancePerVote, ...laplace].reduce((a, b) => a + b, 0);
+    const distanceAvg = distanceSum / (distancePerVote.length + laplace.length)
     const similarity = (1-distanceAvg)
     console.log({
         depute_votes,
