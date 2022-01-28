@@ -26,6 +26,7 @@ import Questions from "./pages/Questions"
 /* Theme variables */
 import './theme/variables.css';
 import Resultat from './pages/Resultat';
+import { BuildVotes } from './pages/BuildVotes';
 
 const App: React.FC = () => (
   <div>
@@ -38,6 +39,9 @@ const App: React.FC = () => (
       </Route>
       <Route exact path="/resultat">
         <Resultat />
+      </Route>
+      <Route exact path="/buildVote">
+        <BuildVotes />
       </Route>
     </IonReactRouter>
   </div>
