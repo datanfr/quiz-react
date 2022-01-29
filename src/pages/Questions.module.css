@@ -6,6 +6,7 @@
     color: var(--datan-white);
     height: 60px;
     max-width: 140px;
+    cursor: pointer;
   }
 
   .title-container {

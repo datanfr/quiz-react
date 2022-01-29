@@ -47,21 +47,18 @@ function Buttons(p: ButtonsProps) {
     <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
       <div
         className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
-        data-value="{'importance': 1, 'pour': -1}"
         onClick={p.onContre}
       >
         CONTRE
       </div>
       <div
         className={cx("flex", "align-justify-center", "shadow", "button", "osef")}
-        data-value="{'importance': 0, 'pour': 0}"
         onClick={p.onNspp}
       >
         SANS&nbsp;AVIS
       </div>
       <div
         className={cx("flex", "align-justify-center", "shadow", "button", "pour")}
-        data-value="{'importance': 1, 'pour': 1}"
         onClick={p.onPour}
       >
         POUR
