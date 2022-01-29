@@ -2,7 +2,7 @@
 import { Plugins } from '@capacitor/core';
 const { Storage } = Plugins;
 
-export type Reponse = "pour" | "contre" | "nspp" | "absent"
+export type Reponse = "pour" | "contre" | "abstention"
 
 
 

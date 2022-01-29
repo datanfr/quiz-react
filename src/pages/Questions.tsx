@@ -128,7 +128,7 @@ class Questions extends PureComponent<Props, State> {
         <Buttons
           onPour={async () => await this.saveAndGoToNextQuestion("pour")}
           onContre={async () => await this.saveAndGoToNextQuestion("contre")}
-          onNspp={async () => await this.saveAndGoToNextQuestion("nspp")}
+          onNspp={async () => await this.saveAndGoToNextQuestion("abstention")}
         />
       </IonPage>
     } else {

@@ -9,6 +9,7 @@ import Header from '../components/Header';
 
 import votesPerDepute from '../data/votes-per-depute.json'
 import votesPerGroupe from '../data/votes-per-groupe.json'
+import {fetchQuestions, DeputeWithVote} from "../models/Vote"
 
 import classes from './Resultat.module.css';
 import { Plugins } from '@capacitor/core';
@@ -19,7 +20,7 @@ const { Storage } = Plugins;
 
 let cx = classNames.bind(classes);
 
-type ResDeputeType = { depute: typeof votesPerDepute[0], similarity: number }
+type ResDeputeType = { depute: DeputeWithVote, similarity: number }
 type ResGroupeType = { groupe: typeof votesPerGroupe[0], similarity: number }
 
 interface Props extends RouteComponentProps { }
@@ -41,10 +42,11 @@ class Resultat extends PureComponent<Props, State> {
 
   componentDidMount() {
     const fetchingResponses = getResponses()
-    const fetchingVotesPerDepute = Promise.resolve(votesPerDepute)
+    //const fetchingVotesPerDepute = Promise.resolve(votesPerDepute)
+    const fetchingVotesPerDepute = fetchQuestions().then(x => Object.values(x))
     fetchingResponses.then(userVotes => this.setState({ userVotes }))
     Promise.all([fetchingResponses, fetchingVotesPerDepute]).then(([responses, votesPerDepute]) => {
-      const scoredDeputes = votesPerDepute.map(depute => ({ depute, similarity: calculateVoteSimilarity(depute.votes as Record<string, Reponse>, responses) }))
+      const scoredDeputes = votesPerDepute.map(depute => ({ depute, ...calculateVoteSimilarity(depute.votes as Record<string, Reponse | null>, responses) }))
       const sortedDeputes = scoredDeputes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       this.setState({ sortedDeputes })
     })
@@ -104,7 +106,7 @@ function ResDepute(props: { data: ResDeputeType }) {
         <div className={cx("title")} style={{fontSize: (3/(props.data.depute.name.length**0.30)) + "em"}}>{props.data.depute.name}</div>
         <div className={cx("groupe")}>{props.data.depute.groupe_name}</div>
       </div>
-      <div className={cx("badge")}>{Math.round(props.data.similarity * 100)}%</div>
+      <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.data.similarity * 100)}%</div>
     </div >
   </a>
 }
