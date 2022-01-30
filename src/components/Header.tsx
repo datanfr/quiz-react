@@ -18,8 +18,9 @@ class Header extends PureComponent<Props, State> {
 
   render() {
     const { onBackClick, ...remains } = this.props
+    const borderRight = !!onBackClick ? "1px solid rgba(0,0,0,0.3" : "none"
     return <div className={cx("shadow", "header")}>
-      <div className={cx("flex")} style={{justifyContent: "center", alignContent: "center", flex: "0 0 50px", cursor: "pointer", borderRight: "1px solid rgba(0,0,0,0.3"}}>
+      <div className={cx("flex")} style={{justifyContent: "center", alignContent: "center", flex: "0 0 50px", cursor: "pointer", borderRight}}>
         <div className={cx("flex", 'margin', {"opacity-hidden ": !onBackClick})} style={{justifyContent: "center"}}  onClick={() => onBackClick && onBackClick()}>
           <FontAwesomeIcon icon={faChevronLeft}/>
         </div>
