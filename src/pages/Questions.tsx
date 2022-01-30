@@ -8,6 +8,8 @@ import Header from "../components/Header";
 import { getResponses, Reponse, setResponses } from '../models/Reponse';
 import classes from './Questions.module.css';
 import questions from "../data/questions.json";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 export type QuestionModel = typeof questions[0]
 
@@ -19,13 +21,20 @@ function Question(props: { question: QuestionModel }) {
   return <div>
     <div style={{
         "backgroundImage": `linear-gradient(130deg, rgba(0, 183, 148, 0.85) 0.65%, rgba(36, 107, 150, 0.85) 112%), url("https://datan.fr/assets/imgs/cover/hemicycle-from-back.jpg")`,
-        "backgroundPosition": "center"
+        "backgroundPosition": "center",
+        "backgroundSize": "cover"
       }}>
       <div className={cx("center-body")}>
         <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
           <div className={cx("title-container")}>
             <div className={cx("title")}>
               {question.voteTitre}
+              <div style={{position: "relative", top: "10vh", fontSize: "0.5em", display: "flex", justifyContent: "center"}}>
+                <div onClick={() => document.querySelector("#for")?.scrollIntoView({behavior: "smooth"})} style={{cursor: "pointer"}}>
+                  <div>En savoir plus</div>
+                  <div><FontAwesomeIcon icon={faChevronDown}/></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -33,13 +42,13 @@ function Question(props: { question: QuestionModel }) {
     </div>
     <div style={{ height: "200px" }}>
     </div>
-    <fieldset style={{ color: "green", border: "1px solid green" }}>
+    <fieldset id="for" style={{ color: "green", border: "1px solid green" }}>
       <legend style={{ padding: "0px 10px" }}>Les pour</legend>
       <ul style={{ color: "black" }}>
         {question.arguments.filter((argument: any) => argument.opinion === "POUR").map((argument: any) => <li>{argument.texte}</li>)}
       </ul>
     </fieldset>
-    <fieldset style={{ color: "red", border: "1px solid red", marginBottom: "200px" }}>
+    <fieldset style={{ color: "red", border: "1px solid red", marginBottom: "var(--buttons-height)" }}>
       <legend style={{ padding: "0px 10px" }}>Les contre</legend>
       <ul style={{ color: "black" }}>
         {question.arguments.filter((argument: any) => argument.opinion === "CONTRE").map((argument: any) => <li>{argument.texte}</li>)}
