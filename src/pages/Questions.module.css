@@ -10,9 +10,10 @@
   }
 
   .title-container {
+    color: var(--datan-white);
     display: flex;
     align-items: center;
-    height: 66vh;
+    height: calc(100vh - 60px - 50px);
   }
 
   .title {

@@ -17,10 +17,21 @@ let cx = classNames.bind(classes);
 function Question(props: { question: QuestionModel }) {
   const { question } = props
   return <div>
-    <div className={cx("title-container")}>
-      <div className={cx("title")}>
-        {question.voteTitre}
+    <div style={{
+        "backgroundImage": `linear-gradient(130deg, rgba(0, 183, 148, 0.85) 0.65%, rgba(36, 107, 150, 0.85) 112%), url("https://datan.fr/assets/imgs/cover/hemicycle-from-back.jpg")`,
+        "backgroundPosition": "center"
+      }}>
+      <div className={cx("center-body")}>
+        <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
+          <div className={cx("title-container")}>
+            <div className={cx("title")}>
+              {question.voteTitre}
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
+    <div style={{ height: "200px" }}>
     </div>
     <fieldset style={{ color: "green", border: "1px solid green" }}>
       <legend style={{ padding: "0px 10px" }}>Les pour</legend>
@@ -85,7 +96,7 @@ class Questions extends PureComponent<Props, State> {
   componentDidMount() {
     fetch('https://datan.fr/api/quizz/get_questions_api?quizz=1')
       .then(resp => resp.json())
-      .then(json => this.setState({questionsData: json}))
+      .then(json => this.setState({ questionsData: json }))
       .catch(err => console.log(err));
   }
 
@@ -115,11 +126,7 @@ class Questions extends PureComponent<Props, State> {
     if (this.state.questionsData) {
       return <IonPage key={this.state.cqi}>
         <div style={{ overflow: "auto", justifyContent: "flex-start" }}>
-          <div className={cx("center-body")}>
-            <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
-              <Question question={this.state.questionsData[this.state.cqi]} />
-            </div>
-          </div>
+          <Question question={this.state.questionsData[this.state.cqi]} />
         </div>
         <Header title={"Question" + '\u00A0' + `${this.state.cqi + 1}/${this.state.questionsData.length}`} onBackClick={() => this.back()} />
         <Buttons
