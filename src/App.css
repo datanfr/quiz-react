@@ -13,6 +13,7 @@
     color: var(--datan-black);
     background-color: var(--datan-white);
     font-family: "Open Sans";
+    --buttons-height: calc(max(var(--h-btn-ctn), 60px));
 }
 
 a {
@@ -30,7 +31,6 @@ a {
 
 .body {
     grid-area: body;
-    margin-bottom: calc(max(var(--h-btn-ctn), 60px));
 }
 
 .buttons {

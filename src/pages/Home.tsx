@@ -25,7 +25,7 @@ class Home extends PureComponent<Props, State> {
     return <IonPage>
       <div style={{ overflow: "auto", marginTop: "var(--header-height)" }}>
         <div className={cx("center-body")}>
-          <div className={cx("body")}>
+          <div className={cx("body")} style={{marginBottom: "var(--buttons-height)"}}>
             <div className={cx("paragraphe-container", { "push-right": counter++ % 2 })}>
               <div className={cx("limit-width", "margin")}>
                 <h1>Êtes-vous proche de votre député ?</h1>
