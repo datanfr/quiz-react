@@ -9,7 +9,7 @@ import Header from '../components/Header';
 
 import votesPerDepute from '../data/votes-per-depute.json'
 import votesPerGroupe from '../data/votes-per-groupe.json'
-import {fetchQuestions, DeputeWithVote} from "../models/Vote"
+import {buildDeputes, buildGroupes, DeputeWithVote} from "../models/Vote"
 
 import classes from './Resultat.module.css';
 import { Plugins } from '@capacitor/core';
@@ -43,9 +43,11 @@ class Resultat extends PureComponent<Props, State> {
   componentDidMount() {
     const fetchingResponses = getResponses()
     //const fetchingVotesPerDepute = Promise.resolve(votesPerDepute)
-    const fetchingVotesPerDepute = fetchQuestions().then(x => Object.values(x))
+    const fetchingVotesPerDepute = buildDeputes().then(x => Object.values(x))
+    const fetchingVotesPerGroupe = buildGroupes().then(x => Object.values(x))
     fetchingResponses.then(userVotes => this.setState({ userVotes }))
-    Promise.all([fetchingResponses, fetchingVotesPerDepute]).then(([responses, votesPerDepute]) => {
+    Promise.all([fetchingResponses, fetchingVotesPerDepute, fetchingVotesPerGroupe]).then(([responses, votesPerDepute, votesPerGroupe]) => {
+      Object.assign(window as any, {votesPerDepute, votesPerGroupe})  
       const scoredDeputes = votesPerDepute.map(depute => ({ depute, ...calculateVoteSimilarity(depute.votes as Record<string, Reponse | null>, responses) }))
       const sortedDeputes = scoredDeputes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       this.setState({ sortedDeputes })
