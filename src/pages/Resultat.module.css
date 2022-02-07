@@ -58,7 +58,7 @@
   font-weight: 600;
 }
 
-.res-depute .badge {
+.res-depute .badge, .res-groupe .badge {
   position: absolute;
   bottom: 6px;
   right: -19px;
@@ -72,4 +72,37 @@
 
 a {
   color: inherit;
+}
+
+.res-groupe-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.groupe-img-circle {
+  width: 75px;
+  height: 75px;
+  overflow: hidden;
+  position: relative;
+  border-radius: 10px;
+  background: linear-gradient(#99BDDA, #fff);
+  text-align: center;
+}
+
+.groupe-img-circle img {
+  width: 100%;
+  height: auto;
+}
+
+.res-groupe {
+  --margin: 20px;
+  position: relative;
+  display: flex;
+  justify-content: space-evenly;
+  padding: 10px 10px;
+  border-radius: 10px;
+  box-shadow: 3px 3px 10px rgb(0 0 0 / 8%);
+  width: calc(370px - 2*var(--margin));
+  margin: 10px var(--margin)
 }

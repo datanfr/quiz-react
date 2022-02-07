@@ -17,7 +17,7 @@ function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
     return true;
   }
 
-export function calculateVoteSimilarity(depute_votes: Record<string, Reponse | null>, user_votes: Record<string, Reponse>) {
+export function calculateDeputeSimilarity(depute_votes: Record<string, Reponse | null>, user_votes: Record<string, Reponse>) {
     const distanceAndDataPerVote = Object.entries(user_votes).map(([user_vote_id, user_vote_outcome]) => {
         const depute_vote_outcome = depute_votes[user_vote_id]
         const userScore = outcomeToScore[user_vote_outcome]
@@ -32,4 +32,23 @@ export function calculateVoteSimilarity(depute_votes: Record<string, Reponse | n
     const distanceAvg = distanceSum / (distancePerVote.length + laplace.length)
     const similarity = (1-distanceAvg)
     return {distanceAndDataPerVote, distanceWithLaplace: [...distancePerVote, ...laplace], distanceAvg, similarity}   
+}
+
+
+export function calculateGroupeSimilarity(groupe_votes: Record<string, {pour: number,contre: number,abstention: number}>, user_votes: Record<string, Reponse>) {
+    console.log(groupe_votes)
+    const distanceAndDataPerVote = Object.entries(user_votes).map(([user_vote_id, user_vote_outcome]) => {
+        const groupe_vote_outcome = groupe_votes[user_vote_id]
+        const userScore = outcomeToScore[user_vote_outcome]
+        const groupeScore = groupe_vote_outcome && (groupe_vote_outcome.pour * outcomeToScore.pour + groupe_vote_outcome.contre * outcomeToScore.contre + groupe_vote_outcome.contre * outcomeToScore.abstention) / (groupe_vote_outcome.pour + groupe_vote_outcome.contre + groupe_vote_outcome.contre)
+        //console.log({user_vote_outcome, groupe_vote_outcome, userScore, groupeScore, abs: userScore && groupeScore && Math.abs(userScore - groupeScore)})
+        const distance = (userScore != null && groupeScore != null) ? Math.abs(userScore - groupeScore) : null
+        return {user_vote_outcome, userScore, groupe_vote_outcome, groupeScore, distance}
+    })
+    const distancePerVote = distanceAndDataPerVote.map(x => x.distance).filter(notEmpty)
+    const laplace = [0, 1] //https://youtu.be/8idr1WZ1A7Q?t=110
+    const distanceSum = [...distancePerVote, ...laplace].reduce((a, b) => a + b, 0);
+    const distanceAvg = distanceSum / (distancePerVote.length + laplace.length)
+    const similarity = (1-distanceAvg)
+    return {distanceAndDataPerVote, distanceWithLaplace: [...distancePerVote    ], distanceAvg, similarity}   
 }

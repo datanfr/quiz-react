@@ -220,7 +220,7 @@ function buildGroupe(id: number) {
                     "picture": <picture>
                         <source srcSet={`https://datan.fr/assets/imgs/groupes/webp/${libelleAbrev}.webp`} type="image/webp" />
                         <source srcSet={`https://datan.fr/assets/imgs/groupes/${libelleAbrev}.png`} type="image/png" />
-                        <img src={`https://datan.fr/assets/imgs/groupes/${libelleAbrev}.png`} width="150" height="150" />
+                        <img src={`https://datan.fr/assets/imgs/groupes/${libelleAbrev}.png`} width="150" height="150" alt={libelleAbrev }/>
                     </picture>,
                     "votes": {}
                 }
