@@ -5,7 +5,8 @@ export type DeputeWithVote = {
     "id": string,
     "page-url": string,
     "groupe_name": string,
-    "votes": Record<string, string>
+    "votes": Record<string, string>,
+    last: any
 }
 
 export const exVoteDepute: DeputeWithVote = {
@@ -17,6 +18,9 @@ export const exVoteDepute: DeputeWithVote = {
         "VTANR5L15V2948": "pour", //Equivalent to {"pour": 1,"contre": 0,"absent": 0,"nspp": 0}
         "VTANR5L15V3484": "contre",
         "VTANR5L15V3486": "abstention"
+    },
+    last: {
+        
     }
 }
 
@@ -37,13 +41,51 @@ export function buildDeputes() {
         })
 }
 
-
-const fetchDeputeLast = fetch(`https://datan.fr/api/deputes/get_deputes_last?legislature=15`).then(resp => resp.json())
+// [
+//     {
+//     mpId: "PA1008",
+//     legislature: "15",
+//     nameUrl: "alain-david",
+//     civ: "M.",
+//     nameFirst: "Alain",
+//     nameLast: "David",
+//     age: "72",
+//     job: "Ingénieur",
+//     catSocPro: "Cadres d'entreprise",
+//     famSocPro: "Cadres et professions intellectuelles supérieures",
+//     dptSlug: "gironde-33",
+//     departementNom: "Gironde",
+//     departementCode: "33",
+//     circo: "4",
+//     mandatId: "PM722704",
+//     libelle: "Socialistes et apparentés",
+//     libelleAbrev: "SOC",
+//     groupeId: "PO758835",
+//     groupeMandat: "PM758843",
+//     couleurAssociee: "#D46CA9",
+//     dateFin: null,
+//     datePriseFonction: "2017-06-21",
+//     causeFin: "",
+//     img: "1",
+//     imgOgp: "1",
+//     dateMaj: "2022-02-13",
+//     libelle_1: "en ",
+//     libelle_2: "du ",
+//     active: "1"
+//     }
+// ]
+const fetchDeputeLast = fetch(`https://datan.fr/api/deputes/get_deputes_last?legislature=15`).then(resp => resp.json()).then(deputesLast => {
+    const deputeLastByMpId : Record<string, any> = {}
+    for (const depute of deputesLast) {
+        deputeLastByMpId[depute.mpId as string] = depute
+    }
+    return deputeLastByMpId
+})
 
 
 function buildDepute(id: number) {
     return Promise.all([fetch(`https://datan.fr/api/votes/get_vote_deputes?num=${id}&legislature=15`).then(resp => resp.json()), fetchDeputeLast])
-        .then(([voteDepute, deputeLast]) => {
+        .then(([voteDepute, deputeLastByMpId]) => {
             // [
             //     {
             //         "mpId": "PA605036",
@@ -62,11 +104,12 @@ function buildDepute(id: number) {
             //     }
             // }
             for (const { mpId, nameFirst, nameLast, vote_libelle, dptSlug, nameUrl } of voteDepute) {
-                const obj = votesPerDeputeById[mpId] || {
+                const obj : DeputeWithVote = votesPerDeputeById[mpId] || {
                     id: mpId.slice(2),
                     "name": nameFirst + " " + nameLast,
                     "page-url": `https://datan.fr/deputes/${dptSlug}/depute_${nameUrl}`,
-                    votes: {}
+                    votes: {},
+                    last: deputeLastByMpId[mpId]
                 }
                 obj.votes[`VTANR5L15V${id}`] = vote_libelle
                 votesPerDeputeById[mpId] = obj

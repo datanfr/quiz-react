@@ -112,7 +112,7 @@ function ResDepute(props: { data: ResDeputeType }) {
       </div>
       <div className={cx("data-container")}>
         <div className={cx("title")} style={{ fontSize: (3 / (props.data.depute.name.length ** 0.30)) + "em" }}>{props.data.depute.name}</div>
-        <div className={cx("groupe")}>{props.data.depute.groupe_name}</div>
+        <div className={cx("groupe")}>{props.data.depute.last.libelle}</div>
       </div>
       <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.data.similarity * 100)}%</div>
     </div >
