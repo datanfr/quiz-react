@@ -10,6 +10,7 @@ import classes from './Questions.module.css';
 import questions from "../data/questions.json";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import {fetchQuestions} from "../models/Question"
 
 export type QuestionModel = typeof questions[0]
 
@@ -103,8 +104,7 @@ class Questions extends PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    fetch('https://datan.fr/api/quizz/get_questions_api?quizz=1')
-      .then(resp => resp.json())
+    fetchQuestions()
       .then(json => this.setState({ questionsData: json }))
       .catch(err => console.log(err));
   }

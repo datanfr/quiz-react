@@ -9,7 +9,8 @@ import Header from '../components/Header';
 
 import votesPerDepute from '../data/votes-per-depute.json'
 import votesPerGroupe from '../data/votes-per-groupe.json'
-import { buildDeputes, buildGroupes, DeputeWithVote, GroupeWithVote } from "../models/Vote"
+import { buildGroupes, GroupeWithVote } from "../models/Groupe"
+import { buildDeputes, DeputeWithVote} from "../models/Depute"
 
 import classes from './Resultat.module.css';
 import { Plugins } from '@capacitor/core';
