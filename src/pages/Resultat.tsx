@@ -52,6 +52,7 @@ class Resultat extends PureComponent<Props, State> {
       const sortedDeputes = scoredDeputes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       const scoredGroupes = votesPerGroupe.map(groupe => ({ groupe, ...calculateGroupeSimilarity(groupe.votes as Record<string, { pour: number, contre: number, abstention: number }>, responses) }))
       const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
+      Object.assign(window as any, { sortedDeputes, sortedGroupes })
       this.setState({ sortedDeputes, sortedGroupes })
     })
 

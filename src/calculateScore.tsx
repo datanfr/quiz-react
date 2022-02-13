@@ -40,15 +40,15 @@ export function calculateGroupeSimilarity(groupe_votes: Record<string, {pour: nu
     const distanceAndDataPerVote = Object.entries(user_votes).map(([user_vote_id, user_vote_outcome]) => {
         const groupe_vote_outcome = groupe_votes[user_vote_id]
         const userScore = outcomeToScore[user_vote_outcome]
-        const groupeScore = groupe_vote_outcome && (groupe_vote_outcome.pour * outcomeToScore.pour + groupe_vote_outcome.contre * outcomeToScore.contre + groupe_vote_outcome.contre * outcomeToScore.abstention) / (groupe_vote_outcome.pour + groupe_vote_outcome.contre + groupe_vote_outcome.contre)
+        const groupeScore = groupe_vote_outcome && (groupe_vote_outcome.pour * outcomeToScore.pour + groupe_vote_outcome.contre * outcomeToScore.contre + groupe_vote_outcome.contre * outcomeToScore.abstention) / (groupe_vote_outcome.pour + groupe_vote_outcome.contre + groupe_vote_outcome.abstention)
         //console.log({user_vote_outcome, groupe_vote_outcome, userScore, groupeScore, abs: userScore && groupeScore && Math.abs(userScore - groupeScore)})
         const distance = (userScore != null && groupeScore != null) ? Math.abs(userScore - groupeScore) : null
-        return {user_vote_outcome, userScore, groupe_vote_outcome, groupeScore, distance}
+        return {user_vote_outcome, userScore, groupe_vote_outcome, groupeScore, distance, calcule: groupe_vote_outcome && `(${groupe_vote_outcome.pour} * ${outcomeToScore.pour} + ${groupe_vote_outcome.contre} * ${outcomeToScore.contre} + ${groupe_vote_outcome.contre} * ${outcomeToScore.abstention}) / (${groupe_vote_outcome.pour} + ${groupe_vote_outcome.contre} + ${groupe_vote_outcome.abstention})`}
     })
     const distancePerVote = distanceAndDataPerVote.map(x => x.distance).filter(notEmpty)
     const laplace = [0, 1] //https://youtu.be/8idr1WZ1A7Q?t=110
     const distanceSum = [...distancePerVote, ...laplace].reduce((a, b) => a + b, 0);
     const distanceAvg = distanceSum / (distancePerVote.length + laplace.length)
     const similarity = (1-distanceAvg)
-    return {distanceAndDataPerVote, distanceWithLaplace: [...distancePerVote    ], distanceAvg, similarity}   
+    return {distanceAndDataPerVote, distanceWithLaplace: [...distancePerVote, ...laplace    ], distanceAvg, similarity}   
 }
