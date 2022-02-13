@@ -104,7 +104,7 @@ class Questions extends PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    fetchQuestions()
+    fetchQuestions
       .then(json => this.setState({ questionsData: json }))
       .catch(err => console.log(err));
   }

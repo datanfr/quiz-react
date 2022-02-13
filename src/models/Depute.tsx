@@ -26,7 +26,7 @@ const votesPerDeputeById: Record<string, DeputeWithVote> = {}
 Object.assign(window, { votesPerDeputeById })
 
 export function buildDeputes() {
-    return fetchQuestions()
+    return fetchQuestions
         .then(json => {
             console.log("Size fetched", json.length)
             const promisePerVote: Promise<void>[] = json.map((vote: any) => {
@@ -38,10 +38,12 @@ export function buildDeputes() {
 }
 
 
+const fetchDeputeLast = fetch(`https://datan.fr/api/deputes/get_deputes_last?legislature=15`).then(resp => resp.json())
+
+
 function buildDepute(id: number) {
-    return fetch(`https://datan.fr/api/votes/get_vote_deputes?num=${id}&legislature=15`)
-        .then(resp => resp.json())
-        .then(json => {
+    return Promise.all([fetch(`https://datan.fr/api/votes/get_vote_deputes?num=${id}&legislature=15`).then(resp => resp.json()), fetchDeputeLast])
+        .then(([voteDepute, deputeLast]) => {
             // [
             //     {
             //         "mpId": "PA605036",
@@ -59,7 +61,7 @@ function buildDepute(id: number) {
             //         "libelleAbrev": "LR"
             //     }
             // }
-            for (const { mpId, nameFirst, nameLast, vote_libelle, dptSlug, nameUrl } of json) {
+            for (const { mpId, nameFirst, nameLast, vote_libelle, dptSlug, nameUrl } of voteDepute) {
                 const obj = votesPerDeputeById[mpId] || {
                     id: mpId.slice(2),
                     "name": nameFirst + " " + nameLast,

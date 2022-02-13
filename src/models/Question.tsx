@@ -40,4 +40,4 @@
 //     ]
 // },
 
-export const fetchQuestions = () => fetch('https://datan.fr/api/quizz/get_questions_api?quizz=1').then(resp => resp.json())
+export const fetchQuestions = fetch('https://datan.fr/api/quizz/get_questions_api?quizz=1').then(resp => resp.json())
