@@ -10,7 +10,7 @@ import Header from '../components/Header';
 import votesPerDepute from '../data/votes-per-depute.json'
 import votesPerGroupe from '../data/votes-per-groupe.json'
 import { buildGroupes, GroupeWithVote } from "../models/Groupe"
-import { buildDeputes, DeputeWithVote} from "../models/Depute"
+import { buildDeputes, DeputeWithVote } from "../models/Depute"
 
 import classes from './Resultat.module.css';
 import { Plugins } from '@capacitor/core';
@@ -26,9 +26,10 @@ type ResGroupeType = { groupe: GroupeWithVote, similarity: number }
 
 interface Props extends RouteComponentProps { }
 interface State {
-  userVotes: Record<string, Reponse>
-  sortedDeputes: ResDeputeType[]
-  sortedGroupes: ResGroupeType[]
+  userVotes: Record<string, Reponse>,
+  sortedDeputes: ResDeputeType[],
+  sortedGroupes: ResGroupeType[],
+  displayGroupe: boolean
 }
 
 class Resultat extends PureComponent<Props, State> {
@@ -38,7 +39,7 @@ class Resultat extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.params = new URLSearchParams(window.location.search)
-    this.state = { sortedDeputes: [], sortedGroupes: [], userVotes: {} }
+    this.state = { sortedDeputes: [], sortedGroupes: [], userVotes: {}, displayGroupe: false }
   }
 
   componentDidMount() {
@@ -70,18 +71,16 @@ class Resultat extends PureComponent<Props, State> {
       <div style={{ overflow: "auto", justifyContent: "flex-start" }}>
         <div className={cx("center-body")}>
           <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
-            <h1>Groupe</h1>
-            <div className={cx("res-groupe-container")}>
-              {this.state.sortedGroupes.map(x => <ResGroupe data={x} />)}
-            </div>
-            <h1>Depute</h1>
-            <div className={cx("res-depute-container")}>
-              {this.state.sortedDeputes.map(x => <ResDepute data={x} />)}
-            </div>
-            <pre>
-              //USER VOTES<br />
-              {JSON.stringify(this.state.userVotes, null, " ")}<br /><br />
-            </pre>
+            {this.state.sortedGroupes.length > 0 || "Calcule des score..."}
+            {this.state.displayGroupe ?
+              <div className={cx("res-groupe-container")}>
+                {this.state.sortedGroupes.map(x => <ResGroupe data={x} />)}
+              </div>
+              :
+              <div className={cx("res-depute-container")}>
+                {this.state.sortedDeputes.map(x => <ResDepute data={x} />)}
+              </div>
+            }
           </div>
         </div>
       </div>
@@ -91,6 +90,9 @@ class Resultat extends PureComponent<Props, State> {
           <Link to="/" className={cx("datan-green-bg", "flex", "align-justify-center", "shadow")} style={{ height: "60px" }}>
             Recommencer le test
           </Link>
+          <div className={cx("datan-green-bg", "flex", "align-justify-center", "shadow")} style={{ height: "60px" }} onClick={() => this.setState({ displayGroupe: !this.state.displayGroupe })}>
+            {this.state.displayGroupe ? "Afficher les députés" : "Afficher les groupes"}
+          </div>
         </div>
       </div>
 
