@@ -4,6 +4,7 @@ import { ReactElement } from "react"
 
 export type GroupeWithVote = {
     "id": string,
+    "name": string, 
     "page-url": string,
     "member-count": number,
     "picture": ReactElement,
@@ -11,6 +12,7 @@ export type GroupeWithVote = {
 }
 export const exVoteGroupe: GroupeWithVote = {
     "id": "MoDem",
+    "name": "Mouvement Démocrate et apparentés",
     "page-url": "https://datan.fr/groupes/dem",
     "member-count": 256,
     "picture": <picture>
@@ -49,6 +51,7 @@ function buildGroupe(id: number) {
             // [
             // {
             //     libelleAbrev: "LAREM",
+            //     libelle: "La République en Marche"
             //     voteId: "VTANR5L15V1",
             //     voteNumero: "1",
             //     legislature: "15",
@@ -62,9 +65,10 @@ function buildGroupe(id: number) {
             //     nonVotantsVolontaires: "0"
             //     }
             // ]
-            for (const {libelleAbrev, voteNumero, nombreMembresGroupe, nombrePours, nombreContres, nombreAbstentions} of json) {
+            for (const {libelleAbrev, libelle, voteNumero, nombreMembresGroupe, nombrePours, nombreContres, nombreAbstentions} of json) {
                 const obj = votesPerGroupeeById[libelleAbrev] || {
                     "id": libelleAbrev,
+                    "name": libelle,
                     "page-url": `https://datan.fr/groupes/legislature-15/${libelleAbrev}`,
                     "member-count": nombreMembresGroupe,
                     "picture": <picture>

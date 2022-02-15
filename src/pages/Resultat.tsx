@@ -29,7 +29,8 @@ interface State {
   userVotes: Record<string, Reponse>,
   sortedDeputes: ResDeputeType[],
   sortedGroupes: ResGroupeType[],
-  displayGroupe: boolean
+  displayGroupe: boolean,
+  chunk: number,
 }
 
 class Resultat extends PureComponent<Props, State> {
@@ -39,7 +40,7 @@ class Resultat extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.params = new URLSearchParams(window.location.search)
-    this.state = { sortedDeputes: [], sortedGroupes: [], userVotes: {}, displayGroupe: false }
+    this.state = { sortedDeputes: [], sortedGroupes: [], userVotes: {}, displayGroupe: false, chunk: 1 }
   }
 
   componentDidMount() {
@@ -66,21 +67,30 @@ class Resultat extends PureComponent<Props, State> {
     // })
   }
 
+
+  loadMore(e: React.UIEvent<HTMLDivElement, UIEvent>) {
+    if (!this.state.displayGroupe && window.innerHeight + e.currentTarget.scrollTop >= (e.currentTarget.scrollHeight - 300)) {
+      console.log("Loading moarmap")
+      this.setState({chunk: this.state.chunk+1})
+    }
+  }
+
   render() {
+    const currentChunk = this.state.sortedDeputes.slice(0, 20 * this.state.chunk)
     return <IonPage>
-      <div style={{ overflow: "auto", justifyContent: "flex-start" }}>
+      <div style={{ overflow: "auto", justifyContent: "flex-start" }} onScroll={e => this.loadMore(e)}>
         <div className={cx("center-body")}>
           <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
             {this.state.sortedGroupes.length > 0 || "Calcule des score..."}
-            {this.state.displayGroupe ?
-              <div className={cx("res-groupe-container")}>
-                {this.state.sortedGroupes.map(x => <ResGroupe data={x} />)}
-              </div>
-              :
-              <div className={cx("res-depute-container")}>
-                {this.state.sortedDeputes.map(x => <ResDepute data={x} />)}
-              </div>
-            }
+            <div className={cx("res-groupe-container")} style={{ display: this.state.displayGroupe ? "flex" : "none" }}>
+              {this.state.sortedGroupes.map(x => <ResGroupe key={x.groupe.id} data={x} />)}
+              <div style={{height: "var(--buttons-height)", width: "100%"}}></div>
+            </div>
+            <div className={cx("res-depute-container")} style={{ display: !this.state.displayGroupe ? "flex" : "none" }}>
+              {currentChunk.slice(0, -1).map(x => <ResDepute key={x.depute.id} data={x} last={false}/>)}
+              {currentChunk.slice(-1).map(x => <ResDepute key={x.depute.id} data={x} last={true}/>)}
+              <div style={{height: "var(--buttons-height)", width: "100%"}}></div>
+            </div>
           </div>
         </div>
       </div>
@@ -100,8 +110,8 @@ class Resultat extends PureComponent<Props, State> {
   }
 }
 
-function ResDepute(props: { data: ResDeputeType }) {
-  return <a href={props.data.depute['page-url']}>
+function ResDepute(props: { data: ResDeputeType, last: boolean}) {
+  return <a href={props.data.depute['page-url']} id={props.last ? "last" : undefined}>
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>
@@ -130,7 +140,7 @@ function ResGroupe(props: { data: ResGroupeType }) {
         </div>
       </div>
       <div className={cx("data-container")}>
-        <div className={cx("title")} style={{ fontSize: (3 / (props.data.groupe.id.length ** 0.30)) + "em" }}>{props.data.groupe.id}</div>
+        <div className={cx("title")} style={{ fontSize: (3 / (props.data.groupe.name.length ** 0.30)) + "em" }}>{props.data.groupe.name}</div>
       </div>
       <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.data.similarity * 100)}%</div>
     </div >
