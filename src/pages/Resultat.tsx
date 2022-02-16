@@ -97,10 +97,10 @@ class Resultat extends PureComponent<Props, State> {
       <Header title={`Résultat`} />
       <div className={cx("buttons", "center-body")} >
         <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
-          <Link to="/" className={cx("datan-green-bg", "flex", "align-justify-center", "shadow")} style={{ height: "60px" }}>
+          <Link to="/" className={cx("datan-green-bg", "flex", "align-justify-center", "shadow", "button")} style={{ height: "60px" }}>
             Recommencer le test
           </Link>
-          <div className={cx("datan-green-bg", "flex", "align-justify-center", "shadow")} style={{ height: "60px" }} onClick={() => this.setState({ displayGroupe: !this.state.displayGroupe })}>
+          <div className={cx("datan-green-bg", "flex", "align-justify-center", "shadow", "button")} style={{ height: "60px" }} onClick={() => this.setState({ displayGroupe: !this.state.displayGroupe })}>
             {this.state.displayGroupe ? "Afficher les députés" : "Afficher les groupes"}
           </div>
         </div>

@@ -25,7 +25,7 @@
 }
 
 .res-depute {
-  --margin: 20px;
+  --margin: 35px;
   position: relative;
   display: flex;
   justify-content: space-evenly;
@@ -60,7 +60,7 @@
 
 .res-depute .badge, .res-groupe .badge {
   position: absolute;
-  bottom: 6px;
+  bottom: -13px;
   right: -19px;
   background-color: var(--datan-green);
   color: rgba(255, 255, 255, 0.92);
@@ -96,7 +96,7 @@ a {
 }
 
 .res-groupe {
-  --margin: 20px;
+  --margin: 35px;
   position: relative;
   display: flex;
   justify-content: space-evenly;
@@ -105,4 +105,12 @@ a {
   box-shadow: 3px 3px 10px rgb(0 0 0 / 8%);
   width: calc(370px - 2*var(--margin));
   margin: 10px var(--margin)
+}
+
+.button {
+  color: var(--datan-white);
+  height: 60px;
+  max-width: 240px;
+  cursor: pointer;
+  text-align: center;
 }
