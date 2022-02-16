@@ -58,7 +58,8 @@
   font-weight: 600;
 }
 
-.res-depute .badge, .res-groupe .badge {
+.res-depute .badge,
+.res-groupe .badge {
   position: absolute;
   bottom: -13px;
   right: -19px;
@@ -113,4 +114,15 @@ a {
   max-width: 240px;
   cursor: pointer;
   text-align: center;
+}
+
+.search-input, .search-input:focus {
+  --margin: 35px;
+  width: calc(100% - 2*var(--margin));
+  height: 30px;
+  margin: var(--margin);
+  padding: 6px 8px;
+  background: none;
+  border: 1px solid rgba(0, 0, 0, 0.34);
+  color: var(--datan-black);
 }
