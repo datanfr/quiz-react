@@ -16,6 +16,7 @@ import classes from './Resultat.module.css';
 import { Plugins } from '@capacitor/core';
 import { getResponses, Reponse } from '../models/Reponse';
 import { calculateDeputeSimilarity, calculateGroupeSimilarity } from '../calculateScore';
+import { buildIndex, search, Index as SearchIndex, SearchResponse } from "../searchAlgo";
 const { Storage } = Plugins;
 
 
@@ -28,6 +29,7 @@ interface Props extends RouteComponentProps { }
 interface State {
   userVotes: Record<string, Reponse>,
   sortedDeputes: ResDeputeType[],
+  deputeIndex: SearchIndex | null,
   filteredDeputes: ResDeputeType[],
   sortedGroupes: ResGroupeType[],
   displayGroupe: boolean,
@@ -42,7 +44,16 @@ class Resultat extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.params = new URLSearchParams(window.location.search)
-    this.state = { sortedDeputes: [], sortedGroupes: [], filteredDeputes: [], userVotes: {}, displayGroupe: false, chunk: 1, searchTxt: ""}
+    this.state = {
+      sortedDeputes: [],
+      deputeIndex: null,
+      sortedGroupes: [],
+      filteredDeputes: [],
+      userVotes: {},
+      displayGroupe: false,
+      chunk: 1,
+      searchTxt: ""
+    }
   }
 
   componentDidMount() {
@@ -58,7 +69,8 @@ class Resultat extends PureComponent<Props, State> {
       const scoredGroupes = votesPerGroupe.map(groupe => ({ groupe, ...calculateGroupeSimilarity(groupe.votes as Record<string, { pour: number, contre: number, abstention: number }>, responses) }))
       const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       Object.assign(window as any, { sortedDeputes, sortedGroupes })
-      this.setState({ sortedDeputes, sortedGroupes, filteredDeputes: sortedDeputes})
+      const deputeIndex = buildIndex(sortedDeputes/*, sortedGroupes*/ )
+      this.setState({ sortedDeputes, deputeIndex, sortedGroupes, filteredDeputes: sortedDeputes })
     })
 
     // const fetchingVotesPerGroupe = Promise.resolve(votesPerGroupe)
@@ -73,16 +85,20 @@ class Resultat extends PureComponent<Props, State> {
   loadMore(e: React.UIEvent<HTMLDivElement, UIEvent>) {
     if (!this.state.displayGroupe && window.innerHeight + e.currentTarget.scrollTop >= (e.currentTarget.scrollHeight - 300)) {
       console.log("Loading moarmap")
-      this.setState({chunk: this.state.chunk+1})
+      this.setState({ chunk: this.state.chunk + 1 })
     }
   }
 
   onSearchTxtChange(e: React.ChangeEvent<HTMLInputElement>) {
-
-    this.setState({
-      searchTxt: e.target.value,
-      filteredDeputes: this.state.sortedDeputes.filter(d => d.depute.name.split(" ").some(token => token.toLowerCase().startsWith(e.target.value.toLowerCase())))
-    });
+    const searchTxt = e.target.value;
+    if (this.state.deputeIndex) {
+      const filteredDeputes = search(this.state.deputeIndex, searchTxt).map(x=>x.item)
+      this.setState({
+        searchTxt,
+        filteredDeputes
+        // filteredDeputes: this.state.sortedDeputes.filter(d => d.depute.name.split(" ").some(token => token.toLowerCase().startsWith(e.target.value.toLowerCase())))
+      });
+    }
   }
 
   render() {
@@ -90,21 +106,21 @@ class Resultat extends PureComponent<Props, State> {
     return <IonPage>
       <div style={{ overflow: "auto", justifyContent: "flex-start" }} onScroll={e => this.loadMore(e)}>
         <div className={cx("center-body")}>
-          <div className={cx("body")}  style={{ marginTop: "var(--header-height)" }}>
+          <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
             <input
-              className={cx("search-input")} type="text" 
+              className={cx("search-input")} type="text"
               placeholder="Rechercher un député par nom, ville, département, etc.."
               value={this.state.searchTxt} onChange={e => this.onSearchTxtChange(e)}
             />
             {this.state.sortedGroupes.length > 0 || "Calcule des score..."}
             <div className={cx("res-groupe-container")} style={{ display: this.state.displayGroupe ? "flex" : "none" }}>
               {this.state.sortedGroupes.map(x => <ResGroupe key={x.groupe.id} data={x} />)}
-              <div style={{height: "var(--buttons-height)", width: "100%"}}></div>
+              <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
             </div>
             <div className={cx("res-depute-container")} style={{ display: !this.state.displayGroupe ? "flex" : "none" }}>
-              {currentChunk.slice(0, -1).map(x => <ResDepute key={x.depute.id} data={x} last={false}/>)}
-              {currentChunk.slice(-1).map(x => <ResDepute key={x.depute.id} data={x} last={true}/>)}
-              <div style={{height: "var(--buttons-height)", width: "100%"}}></div>
+              {currentChunk.slice(0, -1).map(x => <ResDepute key={x.depute.id} data={x} last={false} />)}
+              {currentChunk.slice(-1).map(x => <ResDepute key={x.depute.id} data={x} last={true} />)}
+              <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
             </div>
           </div>
         </div>
@@ -125,7 +141,7 @@ class Resultat extends PureComponent<Props, State> {
   }
 }
 
-function ResDepute(props: { data: ResDeputeType, last: boolean}) {
+function ResDepute(props: { data: ResDeputeType, last: boolean }) {
   const groupColor = props.data.depute.last.couleurAssociee as string
   return <a href={props.data.depute['page-url']} id={props.last ? "last" : undefined}>
     <div className={cx("res-depute")}>
@@ -140,7 +156,7 @@ function ResDepute(props: { data: ResDeputeType, last: boolean}) {
       </div>
       <div className={cx("data-container")}>
         <div className={cx("title")} style={{ fontSize: (2.9 / (props.data.depute.name.length ** 0.30)) + "em" }}>{props.data.depute.name}</div>
-        <div className={cx("groupe")} style={{color: groupColor, fontSize: "0.8em"}}>{props.data.depute.last.libelle}</div>
+        <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}>{props.data.depute.last.libelle}</div>
       </div>
       <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.data.similarity * 100)}%</div>
     </div >

@@ -1,4 +1,5 @@
 import {fetchQuestions} from "./Question"
+import { Reponse } from "./Reponse"
 
 export type DeputeWithVote = {
     "name": string,
@@ -8,6 +9,7 @@ export type DeputeWithVote = {
     "votes": Record<string, string>,
     last: any
 }
+
 
 export const exVoteDepute: DeputeWithVote = {
     "name": "Damien Abad",
@@ -23,6 +25,22 @@ export const exVoteDepute: DeputeWithVote = {
         
     }
 }
+
+export type DeputeWithScore = {
+    distanceAndDataPerVote: {
+        user_vote_outcome: Reponse;
+        userScore: number;
+        depute_vote_outcome: Reponse | null;
+        deputeScore: number | null;
+        distance: number | null;
+    }[];
+    distanceWithLaplace: number[];
+    distanceAvg: number;
+    similarity: number;
+    depute: DeputeWithVote;
+  }
+
+
 
 
 
