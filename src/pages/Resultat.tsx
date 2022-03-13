@@ -92,11 +92,11 @@ class Resultat extends PureComponent<Props, State> {
   onSearchTxtChange(e: React.ChangeEvent<HTMLInputElement>) {
     const searchTxt = e.target.value;
     if (this.state.deputeIndex) {
-      const filteredDeputes = search(this.state.deputeIndex, searchTxt).map(x=>x.item)
+      const filteredDeputes = searchTxt ? search(this.state.deputeIndex, searchTxt).map(x=>x.item) : this.state.sortedDeputes
+
       this.setState({
         searchTxt,
         filteredDeputes
-        // filteredDeputes: this.state.sortedDeputes.filter(d => d.depute.name.split(" ").some(token => token.toLowerCase().startsWith(e.target.value.toLowerCase())))
       });
     }
   }
@@ -118,8 +118,8 @@ class Resultat extends PureComponent<Props, State> {
               <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
             </div>
             <div className={cx("res-depute-container")} style={{ display: !this.state.displayGroupe ? "flex" : "none" }}>
-              {currentChunk.slice(0, -1).map(x => <ResDepute key={x.depute.id} data={x} last={false} />)}
-              {currentChunk.slice(-1).map(x => <ResDepute key={x.depute.id} data={x} last={true} />)}
+              {currentChunk.slice(0, -1).map(x => <ResDepute data={x} last={false} />)}
+              {currentChunk.slice(-1).map(x => <ResDepute data={x} last={true} />)}
               <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
             </div>
           </div>
@@ -143,7 +143,7 @@ class Resultat extends PureComponent<Props, State> {
 
 function ResDepute(props: { data: ResDeputeType, last: boolean }) {
   const groupColor = props.data.depute.last.couleurAssociee as string
-  return <a href={props.data.depute['page-url']} id={props.last ? "last" : undefined}>
+  return <a  key={props.data.depute.id} href={props.data.depute['page-url']} id={props.last ? "last" : undefined}>
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>

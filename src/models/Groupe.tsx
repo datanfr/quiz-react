@@ -34,9 +34,9 @@ Object.assign(window, { votesPerGroupeeById })
 export function buildGroupes() {
     return fetchQuestions
         .then(json => {
-            console.log("Size fetched", json.length)
+            //console.log("Size fetched", json.length)
             const promisePerVote: Promise<void>[] = json.map((vote: any) => {
-                console.log("Fetching ", vote.voteNumero)
+                //console.log("Fetching ", vote.voteNumero)
                 return buildGroupe(vote.voteNumero)
             })
             return Promise.all(promisePerVote).then(() => votesPerGroupeeById)
