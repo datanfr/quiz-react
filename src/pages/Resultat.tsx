@@ -17,6 +17,7 @@ import { Plugins } from '@capacitor/core';
 import { getResponses, Reponse } from '../models/Reponse';
 import { calculateDeputeSimilarity, calculateGroupeSimilarity } from '../calculateScore';
 import { buildIndex, search, Index as SearchIndex, SearchResponse } from "../searchAlgo";
+import { highlightArray, highlightField } from '../highlightAlgo';
 const { Storage } = Plugins;
 
 
@@ -30,7 +31,7 @@ interface State {
   userVotes: Record<string, Reponse>,
   sortedDeputes: ResDeputeType[],
   deputeIndex: SearchIndex | null,
-  filteredDeputes: ResDeputeType[],
+  filteredDeputes: SearchResponse[] | null,
   sortedGroupes: ResGroupeType[],
   displayGroupe: boolean,
   chunk: number,
@@ -70,7 +71,7 @@ class Resultat extends PureComponent<Props, State> {
       const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       Object.assign(window as any, { sortedDeputes, sortedGroupes })
       const deputeIndex = buildIndex(sortedDeputes/*, sortedGroupes*/ )
-      this.setState({ sortedDeputes, deputeIndex, sortedGroupes, filteredDeputes: sortedDeputes })
+      this.setState({ sortedDeputes, deputeIndex, sortedGroupes, filteredDeputes: null })
     })
 
     // const fetchingVotesPerGroupe = Promise.resolve(votesPerGroupe)
@@ -92,7 +93,7 @@ class Resultat extends PureComponent<Props, State> {
   onSearchTxtChange(e: React.ChangeEvent<HTMLInputElement>) {
     const searchTxt = e.target.value;
     if (this.state.deputeIndex) {
-      const filteredDeputes = searchTxt ? search(this.state.deputeIndex, searchTxt).map(x=>x.item) : this.state.sortedDeputes
+      const filteredDeputes = searchTxt ? search(this.state.deputeIndex, searchTxt) : null
 
       this.setState({
         searchTxt,
@@ -102,7 +103,20 @@ class Resultat extends PureComponent<Props, State> {
   }
 
   render() {
-    const currentChunk = this.state.filteredDeputes.slice(0, 20 * this.state.chunk)
+    let DeputeResList;
+    if (this.state.filteredDeputes) {
+      const currentChunk = this.state.filteredDeputes.slice(0, 20 * this.state.chunk)
+      DeputeResList = () => <>
+                {currentChunk.slice(0, -1).map(x => <ResDeputeFiltered data={x} last={false} />)}
+              {currentChunk.slice(-1).map(x => <ResDeputeFiltered data={x} last={true} />)}
+      </>
+    } else {
+      const currentChunk = this.state.sortedDeputes.slice(0, 20 * this.state.chunk)
+      DeputeResList = () => <>
+                {currentChunk.slice(0, -1).map(x => <ResDepute data={x} last={false} />)}
+              {currentChunk.slice(-1).map(x => <ResDepute data={x} last={true} />)}
+      </>
+    }
     return <IonPage>
       <div style={{ overflow: "auto", justifyContent: "flex-start" }} onScroll={e => this.loadMore(e)}>
         <div className={cx("center-body")}>
@@ -114,12 +128,11 @@ class Resultat extends PureComponent<Props, State> {
             />
             {this.state.sortedGroupes.length > 0 || "Calcule des score..."}
             <div className={cx("res-groupe-container")} style={{ display: this.state.displayGroupe ? "flex" : "none" }}>
-              {this.state.sortedGroupes.map(x => <ResGroupe key={x.groupe.id} data={x} />)}
+              {this.state.sortedGroupes.map(x => <ResGroupe data={x} />)}
               <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
             </div>
             <div className={cx("res-depute-container")} style={{ display: !this.state.displayGroupe ? "flex" : "none" }}>
-              {currentChunk.slice(0, -1).map(x => <ResDepute data={x} last={false} />)}
-              {currentChunk.slice(-1).map(x => <ResDepute data={x} last={true} />)}
+              <DeputeResList />
               <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
             </div>
           </div>
@@ -163,7 +176,40 @@ function ResDepute(props: { data: ResDeputeType, last: boolean }) {
   </a>
 }
 
+function ResDeputeFiltered(props: { data: SearchResponse, last: boolean }) {
+
+  const hglnom = highlightField(props.data.metadata, "name", {h: 0, s: 100, v: 50}) || props.data.item.depute.name
+
+  let hglcommunes = highlightArray(props.data.metadata, "depute.cities.communeNom", {h: 0, s: 100, v: 50}) || []
+  if (hglcommunes.length > 20) {
+    hglcommunes = [...hglcommunes.slice(0, 19), `et ${hglcommunes.length - 19} autres...`]
+  }
+  const CommuneListHtml = () => hglcommunes.length ? <div className="commune-list">{hglcommunes.map((x) =><div className="elem">{x}</div>)}</div> : null
+
+  const groupColor = props.data.item.depute.last.couleurAssociee as string
+  return <a  key={props.data.item.depute.id} href={props.data.item.depute['page-url']} id={props.last ? "last" : undefined}>
+    <div className={cx("res-depute")}>
+      <div className={cx("picture-container")}>
+        <div className={cx("depute-img-circle")}>
+          <picture>
+            <source srcSet={`https://datan.fr/assets/imgs/deputes_nobg_webp/depute_${props.data.item.depute.id}_webp.webp`} type="image/webp" />
+            <source srcSet={`"https://datan.fr/assets/imgs/deputes_nobg/depute_${props.data.item.depute.id}.png`} type="image/png" />
+            <img src={`https://datan.fr/assets/imgs/deputes_original/depute_${props.data.item.depute.id}.png`} width="150" height="192" alt={props.data.item.depute.name} />
+          </picture>
+        </div>
+      </div>
+      <div className={cx("data-container")}>
+        <div className={cx("title")} style={{ fontSize: (2.9 / (props.data.item.depute.name.length ** 0.30)) + "em" }}>{hglnom}</div>
+        <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}>{props.data.item.depute.last.libelle}</div>
+        <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}><CommuneListHtml/></div>
+      </div>
+      <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.data.item.similarity * 100)}%</div>
+    </div >
+  </a>
+}
+
 function ResGroupe(props: { data: ResGroupeType }) {
+
   return <a href={props.data.groupe['page-url']}>
     <div className={cx("res-groupe")}>
       <div className={cx("picture-container")}>
