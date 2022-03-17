@@ -1,6 +1,7 @@
 import { fetchQuestions } from "./Question"
 import { Reponse } from "./Reponse"
 import { Plugins } from '@capacitor/core';
+import { buildIndex, search, Index as SearchIndex, SearchResponse } from "../searchAlgo";
 const { Storage } = Plugins;
 
 const exempleDeputeLast = {
@@ -109,7 +110,12 @@ export type DeputeWithScore = {
 const votesPerDeputeById: Record<string, DeputeWithVote> = {}
 Object.assign(window, { votesPerDeputeById })
 
-export function buildDeputes() {
+
+export const fetchingVotesPerDepute = buildDeputes().then(x => Object.values(x))
+export const buildDeputeIndex = fetchingVotesPerDepute.then(votesPerDepute => buildIndex(votesPerDepute/*, sortedGroupes*/ ))
+
+
+function buildDeputes() {
     return fetchQuestions
         .then(json => {
             //console.log("Size fetched", json.length)

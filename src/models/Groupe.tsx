@@ -31,7 +31,9 @@ export const exVoteGroupe: GroupeWithVote = {
 const votesPerGroupeeById: Record<string, GroupeWithVote> = {}
 Object.assign(window, { votesPerGroupeeById })
 
-export function buildGroupes() {
+export const fetchingVotesPerGroupe = buildGroupes().then(x => Object.values(x))
+
+function buildGroupes() {
     return fetchQuestions
         .then(json => {
             //console.log("Size fetched", json.length)

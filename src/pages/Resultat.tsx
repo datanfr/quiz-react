@@ -9,8 +9,8 @@ import Header from '../components/Header';
 
 import votesPerDepute from '../data/votes-per-depute.json'
 import votesPerGroupe from '../data/votes-per-groupe.json'
-import { buildGroupes, GroupeWithVote } from "../models/Groupe"
-import { buildDeputes, DeputeWithScore, DeputeWithVote } from "../models/Depute"
+import { fetchingVotesPerGroupe, GroupeWithVote } from "../models/Groupe"
+import { buildDeputeIndex, DeputeWithScore, DeputeWithVote, fetchingVotesPerDepute } from "../models/Depute"
 
 import classes from './Resultat.module.css';
 import { Plugins } from '@capacitor/core';
@@ -63,17 +63,14 @@ class Resultat extends PureComponent<Props, State> {
   componentDidMount() {
     const fetchingResponses = getResponses()
     //const fetchingVotesPerDepute = Promise.resolve(votesPerDepute)
-    const fetchingVotesPerDepute = buildDeputes().then(x => Object.values(x))
-    const fetchingVotesPerGroupe = buildGroupes().then(x => Object.values(x))
     fetchingResponses.then(userVotes => this.setState({ userVotes }))
-    Promise.all([fetchingResponses, fetchingVotesPerDepute, fetchingVotesPerGroupe]).then(([responses, votesPerDepute, votesPerGroupe]) => {
+    Promise.all([fetchingResponses, fetchingVotesPerDepute, fetchingVotesPerGroupe, buildDeputeIndex]).then(([responses, votesPerDepute, votesPerGroupe, deputeIndex]) => {
       Object.assign(window as any, { votesPerDepute, votesPerGroupe })
       const scoredDeputes = votesPerDepute.map(depute => ({ depute, ...calculateDeputeSimilarity(depute.votes as Record<string, Reponse | null>, responses) }))
       const sortedDeputes = scoredDeputes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       const deputeScoreById = groupBy(sortedDeputes, x => x.depute.id)
       const scoredGroupes = votesPerGroupe.map(groupe => ({ groupe, ...calculateGroupeSimilarity(groupe.votes as Record<string, { pour: number, contre: number, abstention: number }>, responses) }))
       const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
-      const deputeIndex = buildIndex(votesPerDepute/*, sortedGroupes*/ )
       const calculated = { sortedDeputes, deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null}
       Object.assign(window as any, { calculated })
       this.setState(calculated)
