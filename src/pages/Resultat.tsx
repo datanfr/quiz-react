@@ -10,7 +10,7 @@ import Header from '../components/Header';
 import votesPerDepute from '../data/votes-per-depute.json'
 import votesPerGroupe from '../data/votes-per-groupe.json'
 import { buildGroupes, GroupeWithVote } from "../models/Groupe"
-import { buildDeputes, DeputeWithVote } from "../models/Depute"
+import { buildDeputes, DeputeWithScore, DeputeWithVote } from "../models/Depute"
 
 import classes from './Resultat.module.css';
 import { Plugins } from '@capacitor/core';
@@ -18,6 +18,7 @@ import { getResponses, Reponse } from '../models/Reponse';
 import { calculateDeputeSimilarity, calculateGroupeSimilarity } from '../calculateScore';
 import { buildIndex, search, Index as SearchIndex, SearchResponse } from "../searchAlgo";
 import { highlightArray, highlightField } from '../highlightAlgo';
+import { groupBy } from '../utils';
 const { Storage } = Plugins;
 
 
@@ -30,6 +31,7 @@ interface Props extends RouteComponentProps { }
 interface State {
   userVotes: Record<string, Reponse>,
   sortedDeputes: ResDeputeType[],
+  deputeScoreById: Record<string, ResDeputeType>;
   deputeIndex: SearchIndex | null,
   filteredDeputes: SearchResponse[] | null,
   sortedGroupes: ResGroupeType[],
@@ -47,6 +49,7 @@ class Resultat extends PureComponent<Props, State> {
     this.params = new URLSearchParams(window.location.search)
     this.state = {
       sortedDeputes: [],
+      deputeScoreById: {},
       deputeIndex: null,
       sortedGroupes: [],
       filteredDeputes: [],
@@ -67,11 +70,13 @@ class Resultat extends PureComponent<Props, State> {
       Object.assign(window as any, { votesPerDepute, votesPerGroupe })
       const scoredDeputes = votesPerDepute.map(depute => ({ depute, ...calculateDeputeSimilarity(depute.votes as Record<string, Reponse | null>, responses) }))
       const sortedDeputes = scoredDeputes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
+      const deputeScoreById = groupBy(sortedDeputes, x => x.depute.id)
       const scoredGroupes = votesPerGroupe.map(groupe => ({ groupe, ...calculateGroupeSimilarity(groupe.votes as Record<string, { pour: number, contre: number, abstention: number }>, responses) }))
       const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
-      Object.assign(window as any, { sortedDeputes, sortedGroupes })
-      const deputeIndex = buildIndex(sortedDeputes/*, sortedGroupes*/ )
-      this.setState({ sortedDeputes, deputeIndex, sortedGroupes, filteredDeputes: null })
+      const deputeIndex = buildIndex(votesPerDepute/*, sortedGroupes*/ )
+      const calculated = { sortedDeputes, deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null}
+      Object.assign(window as any, { calculated })
+      this.setState(calculated)
     })
 
     // const fetchingVotesPerGroupe = Promise.resolve(votesPerGroupe)
@@ -107,8 +112,8 @@ class Resultat extends PureComponent<Props, State> {
     if (this.state.filteredDeputes) {
       const currentChunk = this.state.filteredDeputes.slice(0, 20 * this.state.chunk)
       DeputeResList = () => <>
-                {currentChunk.slice(0, -1).map(x => <ResDeputeFiltered data={x} last={false} />)}
-              {currentChunk.slice(-1).map(x => <ResDeputeFiltered data={x} last={true} />)}
+              {currentChunk.slice(0, -1).map(x => <ResDeputeFiltered data={x} last={false}  resDepute={this.state.deputeScoreById[x.item.id]}/>)}
+              {currentChunk.slice(-1).map(x => <ResDeputeFiltered data={x} last={true}  resDepute={this.state.deputeScoreById[x.item.id]}/>)}
       </>
     } else {
       const currentChunk = this.state.sortedDeputes.slice(0, 20 * this.state.chunk)
@@ -176,9 +181,9 @@ function ResDepute(props: { data: ResDeputeType, last: boolean }) {
   </a>
 }
 
-function ResDeputeFiltered(props: { data: SearchResponse, last: boolean }) {
+function ResDeputeFiltered(props: { data: SearchResponse, last: boolean, resDepute: ResDeputeType }) {
 
-  const hglnom = highlightField(props.data.metadata, "name", {h: 0, s: 100, v: 50}) || props.data.item.depute.name
+  const hglnom = highlightField(props.data.metadata, "name", {h: 0, s: 100, v: 50}) || props.data.item.name
 
   let hglcommunes = highlightArray(props.data.metadata, "depute.cities.communeNom", {h: 0, s: 100, v: 50}) || []
   if (hglcommunes.length > 20) {
@@ -186,24 +191,24 @@ function ResDeputeFiltered(props: { data: SearchResponse, last: boolean }) {
   }
   const CommuneListHtml = () => hglcommunes.length ? <div className="commune-list">{hglcommunes.map((x) =><div className="elem">{x}</div>)}</div> : null
 
-  const groupColor = props.data.item.depute.last.couleurAssociee as string
-  return <a  key={props.data.item.depute.id} href={props.data.item.depute['page-url']} id={props.last ? "last" : undefined}>
+  const groupColor = props.data.item.last.couleurAssociee as string
+  return <a  key={props.data.item.id} href={props.data.item['page-url']} id={props.last ? "last" : undefined}>
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>
           <picture>
-            <source srcSet={`https://datan.fr/assets/imgs/deputes_nobg_webp/depute_${props.data.item.depute.id}_webp.webp`} type="image/webp" />
-            <source srcSet={`"https://datan.fr/assets/imgs/deputes_nobg/depute_${props.data.item.depute.id}.png`} type="image/png" />
-            <img src={`https://datan.fr/assets/imgs/deputes_original/depute_${props.data.item.depute.id}.png`} width="150" height="192" alt={props.data.item.depute.name} />
+            <source srcSet={`https://datan.fr/assets/imgs/deputes_nobg_webp/depute_${props.data.item.id}_webp.webp`} type="image/webp" />
+            <source srcSet={`"https://datan.fr/assets/imgs/deputes_nobg/depute_${props.data.item.id}.png`} type="image/png" />
+            <img src={`https://datan.fr/assets/imgs/deputes_original/depute_${props.data.item.id}.png`} width="150" height="192" alt={props.data.item.name} />
           </picture>
         </div>
       </div>
       <div className={cx("data-container")}>
-        <div className={cx("title")} style={{ fontSize: (2.9 / (props.data.item.depute.name.length ** 0.30)) + "em" }}>{hglnom}</div>
-        <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}>{props.data.item.depute.last.libelle}</div>
+        <div className={cx("title")} style={{ fontSize: (2.9 / (props.data.item.name.length ** 0.30)) + "em" }}>{hglnom}</div>
+        <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}>{props.data.item.last.libelle}</div>
         <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}><CommuneListHtml/></div>
       </div>
-      <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.data.item.similarity * 100)}%</div>
+      <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.resDepute?.similarity * 100)}%</div>
     </div >
   </a>
 }

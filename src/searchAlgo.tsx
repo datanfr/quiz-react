@@ -19,7 +19,7 @@ export type Token<T> = {
     slice: [number, number];
 }
 
-export type PossibleToken = Token<DeputeWithScore>
+export type PossibleToken = Token<DeputeWithVote>
 
 export type Node = {
     children: Record<string, Node>;
@@ -39,7 +39,7 @@ export type SearchResults = Record<string, [EditStack, number]>
 
 export type SearchResponse = {
     ref: string;
-    item: DeputeWithScore;
+    item: DeputeWithVote;
     metadata: {
         token: PossibleToken;
         result: {
@@ -50,7 +50,7 @@ export type SearchResponse = {
     score: number;
 }
 
-export function buildIndex(deputes: DeputeWithScore[]/*, groupes: GroupeWithVote*/) {
+export function buildIndex(deputes: DeputeWithVote[]/*, groupes: GroupeWithVote*/) {
     const wordTree = createNode()
     const wordToTokens: Record<string, PossibleToken[]> = {}
     const deputeTokens: PossibleToken[] = deputes.flatMap(tokenizeDepute)
@@ -76,13 +76,13 @@ function tokenizeScrutin([id, titre]: [string, string]) {
     return allTokens.flatMap(x => x)
 }
 
-function tokenizeDepute(depute: DeputeWithScore): Token<DeputeWithScore>[] {
-    const ref = "depute:" + depute.depute.id
-    let allTokens: Token<DeputeWithScore>[][] = []
+function tokenizeDepute(depute: DeputeWithVote): Token<DeputeWithVote>[] {
+    const ref = "depute:" + depute.id
+    let allTokens: Token<DeputeWithVote>[][] = []
     allTokens.push(tokenize(
-        depute.depute.name,
+        depute.name,
         ref,
-        { getField: (x: DeputeWithScore) => x.depute.name, fieldName: `name`, item: depute, weight: 1.10 }
+        { getField: (x: DeputeWithVote) => x.name, fieldName: `name`, item: depute, weight: 1.10 }
     ))
     // allTokens.push(tokenize(
     //     depute.cities,
@@ -99,20 +99,20 @@ function tokenizeDepute(depute: DeputeWithScore): Token<DeputeWithScore>[] {
     //     ref,
     //     {getField: (x: DeputeWithVote) => x.circo.numCirco, fieldName: `circo.numCirco`, item: depute, weight: 1.05}
     // ))
-    for (const [idx, city] of depute.depute.cities.entries()) {
+    for (const [idx, city] of depute.cities.entries()) {
         const communeTokens = tokenize(
             city.communeNom,
             city.mpId,
-            { getField: (x: DeputeWithScore) => x.depute.cities[idx].communeNom, fieldName: `depute.cities.communeNom`, item: depute, arrayKey: idx }
+            { getField: (x: DeputeWithVote) => x.cities[idx].communeNom, fieldName: `depute.cities.communeNom`, item: depute, arrayKey: idx }
         )
         allTokens.push(communeTokens)
     }
-    for (const [idx, city] of depute.depute.cities.entries()) {
+    for (const [idx, city] of depute.cities.entries()) {
         if (city.codePostal) {
             const communeTokens = tokenize(
                 city.codePostal,
                 city.mpId,
-                { getField: (x: DeputeWithScore) => x.depute.cities[idx].codePostal, fieldName: `depute.cities.codePostal`, item: depute, arrayKey: idx }
+                { getField: (x: DeputeWithVote) => x.cities[idx].codePostal, fieldName: `depute.cities.codePostal`, item: depute, arrayKey: idx }
             )
             allTokens.push(communeTokens)
         }
