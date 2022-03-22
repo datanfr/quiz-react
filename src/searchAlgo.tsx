@@ -56,14 +56,17 @@ export function buildIndex(deputes: DeputeWithVote[]/*, groupes: GroupeWithVote*
     const deputeTokens: PossibleToken[] = deputes.flatMap(tokenizeDepute)
     // const scrutinTokens = Object.entries(scrutins).flatMap(tokenizeScrutin)
     const allTokens = deputeTokens//.concat(scrutinTokens)
-    //console.log({dictSize: allTokens.length})
-    for (const token of allTokens) {
-        insert(wordTree, token.word)
-        const tokens = wordToTokens[token.word] || [];
-        tokens.push(token)
-        wordToTokens[token.word] = tokens
-    }
-    return { wordTree, wordToTokens }
+    const inserting = allTokens.map(token => {
+        return new Promise<null>((res) => setTimeout(() => {
+            insert(wordTree, token.word)
+            const tokens = wordToTokens[token.word] || [];
+            tokens.push(token)
+            wordToTokens[token.word] = tokens
+            res(null)
+        }));
+    })
+    console.log({dictSize: allTokens.length})
+    return Promise.all(inserting).then(x => { return {wordTree, wordToTokens}})
 }
 
 function tokenizeScrutin([id, titre]: [string, string]) {
