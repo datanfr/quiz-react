@@ -53,20 +53,23 @@ export type SearchResponse = {
 export function buildIndex(deputes: DeputeWithVote[]/*, groupes: GroupeWithVote*/) {
     const wordTree = createNode()
     const wordToTokens: Record<string, PossibleToken[]> = {}
-    const deputeTokens: PossibleToken[] = deputes.flatMap(tokenizeDepute)
-    // const scrutinTokens = Object.entries(scrutins).flatMap(tokenizeScrutin)
-    const allTokens = deputeTokens//.concat(scrutinTokens)
-    const inserting = allTokens.map(token => {
+    const inserting = deputes.map(depute => {
         return new Promise<null>((res) => setTimeout(() => {
-            insert(wordTree, token.word)
-            const tokens = wordToTokens[token.word] || [];
-            tokens.push(token)
-            wordToTokens[token.word] = tokens
+            console.log("Tokenising: ", depute.name)
+            const deputeTokens = tokenizeDepute(depute)
+            for (const token of deputeTokens) {
+                insert(wordTree, token.word)
+                const tokens = wordToTokens[token.word] || [];
+                tokens.push(token)
+                wordToTokens[token.word] = tokens
+            }
             res(null)
         }));
     })
-    console.log({dictSize: allTokens.length})
-    return Promise.all(inserting).then(x => { return {wordTree, wordToTokens}})
+    return Promise.all(inserting).then(x => {
+        console.log("Index built")
+        return { wordTree, wordToTokens }
+    })
 }
 
 function tokenizeScrutin([id, titre]: [string, string]) {
