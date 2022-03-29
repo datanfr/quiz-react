@@ -105,7 +105,13 @@ function tokenizeDepute(depute: DeputeWithVote): Token<DeputeWithVote>[] {
     //     ref,
     //     {getField: (x: DeputeWithVote) => x.circo.numCirco, fieldName: `circo.numCirco`, item: depute, weight: 1.05}
     // ))
+    const indexedCities : Record<string, number> = {};
     for (const [idx, city] of depute.cities.entries()) {
+        if (indexedCities[city.communeNom]) {
+            indexedCities[city.communeNom]++;
+        } else {
+            indexedCities[city.communeNom] = 1;
+        }
         const communeTokens = tokenize(
             city.communeNom,
             city.mpId,

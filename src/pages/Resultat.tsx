@@ -4,7 +4,8 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { IonPage } from '@ionic/react';
 
 import classNames from 'classnames/bind';
-import React, { PureComponent } from 'react';
+import React, { PureComponent} from 'react';
+import ReactDOMServer from 'react-dom/server'
 import Header from '../components/Header';
 
 import votesPerDepute from '../data/votes-per-depute.json'
@@ -43,10 +44,12 @@ interface State {
 class Resultat extends PureComponent<Props, State> {
 
   params: URLSearchParams;
+  timeoutHandle : NodeJS.Timeout | null;
 
   constructor(props: Props) {
     super(props);
     this.params = new URLSearchParams(window.location.search)
+    this.timeoutHandle = null;
     this.state = {
       sortedDeputes: [],
       deputeScoreById: {},
@@ -94,14 +97,17 @@ class Resultat extends PureComponent<Props, State> {
 
   onSearchTxtChange(e: React.ChangeEvent<HTMLInputElement>) {
     const searchTxt = e.target.value;
-    if (this.state.deputeIndex) {
-      const filteredDeputes = searchTxt ? search(this.state.deputeIndex, searchTxt) : null
-
-      this.setState({
-        searchTxt,
-        filteredDeputes
-      });
-    }
+    this.setState({searchTxt});
+    console.log("reseting timeout")
+    const searchDelay = window.localStorage.getItem("searchDelay")
+    if (this.timeoutHandle != null) clearTimeout(this.timeoutHandle)
+    this.timeoutHandle = setTimeout(() => {
+      console.log(`update text: ${searchTxt}`)
+      if (this.state.deputeIndex) {
+        const filteredDeputes = searchTxt ? search(this.state.deputeIndex, searchTxt) : null
+        this.setState({filteredDeputes})
+      }
+    }, searchDelay ? JSON.parse(searchDelay) : 100) 
   }
 
   render() {

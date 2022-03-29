@@ -136,7 +136,6 @@ const fetchDeputeLast = fetch(`https://datan.fr/api/deputes/get_deputes_last?leg
 })
 
 const fetchCitiesFromLocalStorage = Storage.get({key: "cities"}).then(cities => {
-    console.log({cities})
     if (cities.value) return JSON.parse(cities.value);
     return fetch(`https://datan.fr/api/city/get_mps_city?legislature=15`)
         .then(resp => resp.json())
@@ -152,9 +151,6 @@ function buildDepute(id: number) {
         fetchDeputeLast,
         fetchCitiesFromLocalStorage
     ]).then(([voteDepute, deputeLastByMpId, cities]) => {
-        // [
-
-        // }
         for (const { mpId, nameFirst, nameLast, vote_libelle, dptSlug, nameUrl } of voteDepute as VoteDepute[]) {
             const obj: DeputeWithVote = votesPerDeputeById[mpId] || {
                 id: mpId.slice(2),
@@ -162,12 +158,12 @@ function buildDepute(id: number) {
                 "page-url": `https://datan.fr/deputes/${dptSlug}/depute_${nameUrl}`,
                 votes: {},
                 last: deputeLastByMpId[mpId],
-                cities: []
+                cities: (cities as MpCity[]).filter(x => x.mpId ===  "PA"+id)
             }
             obj.votes[`VTANR5L15V${id}`] = vote_libelle
             votesPerDeputeById[mpId] = obj
         }
-        for (const city of cities as MpCity[]) { 
+        for (const city of cities) { 
             const depute = votesPerDeputeById[city.mpId];
             if (depute) depute.cities.push(city)
         }

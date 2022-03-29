@@ -15,6 +15,7 @@ export function highlightArray(
         return Object.values(byArrayKey).map(metadatas => {
             const sliceAndEditStack = metadatas.map((m): [[number, number], EditStack] => [m.token.slice, m.result.dist[0]])
             const originalValue = metadatas[0].token.getField(metadatas[0].token.item as FixLater)
+            
             return highlightMatch(sliceAndEditStack, originalValue, color)
         })
     } else {
