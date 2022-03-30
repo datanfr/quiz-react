@@ -10,7 +10,7 @@ import classes from './Questions.module.css';
 import questions from "../data/questions.json";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import {fetchQuestions} from "../models/Question"
+import { fetchQuestions } from "../models/Question"
 
 export type QuestionModel = typeof questions[0]
 
@@ -21,19 +21,19 @@ function Question(props: { question: QuestionModel }) {
   const { question } = props
   return <div>
     <div style={{
-        "backgroundImage": `linear-gradient(130deg, rgba(0, 183, 148, 0.85) 0.65%, rgba(36, 107, 150, 0.85) 112%), url("https://datan.fr/assets/imgs/cover/hemicycle-from-back.jpg")`,
-        "backgroundPosition": "center",
-        "backgroundSize": "cover"
-      }}>
+      "backgroundImage": `linear-gradient(130deg, rgba(0, 183, 148, 0.85) 0.65%, rgba(36, 107, 150, 0.85) 112%), url("https://datan.fr/assets/imgs/cover/hemicycle-from-back.jpg")`,
+      "backgroundPosition": "center",
+      "backgroundSize": "cover"
+    }}>
       <div className={cx("center-body")}>
         <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
           <div className={cx("title-container")}>
             <div className={cx("title")}>
               {question.voteTitre}
-              <div style={{position: "relative", top: "10vh", fontSize: "0.5em", display: "flex", justifyContent: "center"}}>
-                <div onClick={() => document.querySelector("#for")?.scrollIntoView({behavior: "smooth"})} style={{cursor: "pointer"}}>
+              <div style={{ position: "relative", top: "10vh", fontSize: "0.5em", display: "flex", justifyContent: "center" }}>
+                <div onClick={() => document.querySelector("#for")?.scrollIntoView({ behavior: "smooth" })} style={{ cursor: "pointer" }}>
                   <div>En savoir plus</div>
-                  <div><FontAwesomeIcon icon={faChevronDown}/></div>
+                  <div><FontAwesomeIcon icon={faChevronDown} /></div>
                 </div>
               </div>
             </div>
@@ -41,20 +41,16 @@ function Question(props: { question: QuestionModel }) {
         </div>
       </div>
     </div>
-    <div style={{ height: "200px" }}>
+    <div id="for" className="flex" style={{justifyContent: "center"}}>
+      <div>
+        <p style={{ padding: "0px 10px", fontWeight: 600 }}>Les pour</p>
+        {question.arguments.filter((argument: any) => argument.opinion === "POUR").map((argument: any) => <div style={{ borderLeft: "2px solid var(--datan-green)", padding: "10px", margin: "10px", maxWidth: "600px" }}>{argument.texte}</div>)}
+      </div>
+      <div style={{marginBottom: "var(--buttons-height)"}}>
+        <p style={{ padding: "0px 10px", fontWeight: 600 }}>Les contre</p>
+        {question.arguments.filter((argument: any) => argument.opinion === "CONTRE").map((argument: any) => <div style={{ borderLeft: "2px solid var(--datan-red)", padding: "10px", margin: "10px", maxWidth: "600px" }}>{argument.texte}</div>)}
+      </div>
     </div>
-    <fieldset id="for" style={{ color: "green", border: "1px solid green" }}>
-      <legend style={{ padding: "0px 10px" }}>Les pour</legend>
-      <ul style={{ color: "black" }}>
-        {question.arguments.filter((argument: any) => argument.opinion === "POUR").map((argument: any) => <li>{argument.texte}</li>)}
-      </ul>
-    </fieldset>
-    <fieldset style={{ color: "red", border: "1px solid red", marginBottom: "var(--buttons-height)" }}>
-      <legend style={{ padding: "0px 10px" }}>Les contre</legend>
-      <ul style={{ color: "black" }}>
-        {question.arguments.filter((argument: any) => argument.opinion === "CONTRE").map((argument: any) => <li>{argument.texte}</li>)}
-      </ul>
-    </fieldset>
   </div>
 }
 

@@ -158,15 +158,21 @@ function buildDepute(id: number) {
                 "page-url": `https://datan.fr/deputes/${dptSlug}/depute_${nameUrl}`,
                 votes: {},
                 last: deputeLastByMpId[mpId],
-                cities: (cities as MpCity[]).filter(x => x.mpId ===  "PA"+id)
+                cities: function()  {
+                    const depCities = (cities as MpCity[]).filter(x => {
+                        return x.mpId === mpId
+                    })
+                    console.log({depCities})
+                    return depCities
+                }()
             }
             obj.votes[`VTANR5L15V${id}`] = vote_libelle
             votesPerDeputeById[mpId] = obj
         }
-        for (const city of cities) { 
-            const depute = votesPerDeputeById[city.mpId];
-            if (depute) depute.cities.push(city)
-        }
+        // for (const city of cities) { 
+        //     const depute = votesPerDeputeById[city.mpId];
+        //     if (depute) depute.cities.push(city)
+        // }
     })
 }
 
