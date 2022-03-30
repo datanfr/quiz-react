@@ -26,34 +26,9 @@ class Home extends PureComponent<Props, State> {
       <div style={{ overflow: "auto", marginTop: "var(--header-height)" }}>
         <div className={cx("center-body")}>
           <div className={cx("body")} style={{marginBottom: "var(--buttons-height)"}}>
-            <div className={cx("paragraphe-container", { "push-right": counter++ % 2 })}>
-              <div className={cx("limit-width", "margin")}>
-                <h1>Êtes-vous proche de votre député ?</h1>
-              </div>
-            </div>
-            <div className={cx("paragraphe-container", { "push-right": counter++ % 2 })}>
-              <div className={cx("limit-width", "margin")}>
-                <h1>De votre parti politique ?</h1>
-              </div>
-            </div>
-            <div className={cx("paragraphe-container", { "push-right": counter++ % 2 })}>
-              <div className={cx("limit-width", "margin")}>
-                <h1>Faites le quizz pour le savoir ! </h1>
-              </div>
-            </div>
-            <div className={cx("paragraphe-container", { "push-right": counter++ % 2 })}>
-              <div className={cx("limit-width", "margin")}>
-                Ce quizz va vous permet de déterminer si vous avez les mêmes idées que le député de votre circonscription.
-              </div>
-            </div>
-            <div className={cx("paragraphe-container", { "push-right": counter++ % 2 })}>
-              <div className={cx("limit-width", "margin")}>
-              Une des activités principales des députés à l'Assemblée nationale est de voter sur des textes de loi et des amendements. Ils donnent une indication des positions de chaque élu : est-il pour ou contre la réintroduction des pesticides ?
-              </div>
-            </div>
-            <div className={cx("paragraphe-container", { "push-right": counter++ % 2 })}>
-              <div className={cx("limit-width", "margin")}>
-              Votez vous-même sur des lois discutées dans l'hémicycle de l'Assemblée pour déterminer votre proximité avec votre parlementaire et les différents groupes politiques.
+          <div className={cx("title-container")}>
+              <div className={cx("title")}>
+                <img src="https://datan.fr/assets/imgs/datan/logo_svg.svg" width="90%" alt="Logo Datan"/>
               </div>
             </div>
           </div>
@@ -67,7 +42,7 @@ class Home extends PureComponent<Props, State> {
           </Link>
         </div>
       </div>
-    </IonPage>
+    </IonPage >
   }
 }
 
