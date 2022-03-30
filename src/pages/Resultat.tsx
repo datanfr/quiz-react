@@ -4,7 +4,7 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { IonPage } from '@ionic/react';
 
 import classNames from 'classnames/bind';
-import React, { PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 import ReactDOMServer from 'react-dom/server'
 import Header from '../components/Header';
 
@@ -44,7 +44,7 @@ interface State {
 class Resultat extends PureComponent<Props, State> {
 
   params: URLSearchParams;
-  timeoutHandle : NodeJS.Timeout | null;
+  timeoutHandle: NodeJS.Timeout | null;
 
   constructor(props: Props) {
     super(props);
@@ -74,7 +74,7 @@ class Resultat extends PureComponent<Props, State> {
       const deputeScoreById = groupBy(sortedDeputes, x => x.depute.id)
       const scoredGroupes = votesPerGroupe.map(groupe => ({ groupe, ...calculateGroupeSimilarity(groupe.votes as Record<string, { pour: number, contre: number, abstention: number }>, responses) }))
       const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
-      const calculated = { sortedDeputes, deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null}
+      const calculated = { sortedDeputes, deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null }
       Object.assign(window as any, { calculated })
       this.setState(calculated)
     })
@@ -97,7 +97,7 @@ class Resultat extends PureComponent<Props, State> {
 
   onSearchTxtChange(e: React.ChangeEvent<HTMLInputElement>) {
     const searchTxt = e.target.value;
-    this.setState({searchTxt});
+    this.setState({ searchTxt });
     console.log("reseting timeout")
     const searchDelay = window.localStorage.getItem("searchDelay")
     if (this.timeoutHandle != null) clearTimeout(this.timeoutHandle)
@@ -105,9 +105,9 @@ class Resultat extends PureComponent<Props, State> {
       console.log(`update text: ${searchTxt}`)
       if (this.state.deputeIndex) {
         const filteredDeputes = searchTxt ? search(this.state.deputeIndex, searchTxt) : null
-        this.setState({filteredDeputes})
+        this.setState({ filteredDeputes })
       }
-    }, searchDelay ? JSON.parse(searchDelay) : 100) 
+    }, searchDelay ? JSON.parse(searchDelay) : 100)
   }
 
   render() {
@@ -115,34 +115,34 @@ class Resultat extends PureComponent<Props, State> {
     if (this.state.filteredDeputes) {
       const currentChunk = this.state.filteredDeputes.slice(0, 20 * this.state.chunk)
       DeputeResList = () => <>
-              {currentChunk.slice(0, -1).map(x => <ResDeputeFiltered data={x} last={false}  resDepute={this.state.deputeScoreById[x.item.id]}/>)}
-              {currentChunk.slice(-1).map(x => <ResDeputeFiltered data={x} last={true}  resDepute={this.state.deputeScoreById[x.item.id]}/>)}
+        {currentChunk.slice(0, -1).map(x => <ResDeputeFiltered data={x} last={false} resDepute={this.state.deputeScoreById[x.item.id]} />)}
+        {currentChunk.slice(-1).map(x => <ResDeputeFiltered data={x} last={true} resDepute={this.state.deputeScoreById[x.item.id]} />)}
       </>
     } else {
       const currentChunk = this.state.sortedDeputes.slice(0, 20 * this.state.chunk)
       DeputeResList = () => <>
-                {currentChunk.slice(0, -1).map(x => <ResDepute data={x} last={false} />)}
-              {currentChunk.slice(-1).map(x => <ResDepute data={x} last={true} />)}
+        {currentChunk.slice(0, -1).map(x => <ResDepute data={x} last={false} />)}
+        {currentChunk.slice(-1).map(x => <ResDepute data={x} last={true} />)}
       </>
     }
     return <IonPage>
       <div style={{ overflow: "auto", justifyContent: "flex-start" }} onScroll={e => this.loadMore(e)}>
         <div className={cx("center-body")}>
           <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
-            <input
-              className={cx("search-input")} type="text"
-              placeholder="Rechercher un député par nom, ville, département, etc.."
-              value={this.state.searchTxt} onChange={e => this.onSearchTxtChange(e)}
-            />
             {this.state.sortedGroupes.length > 0 || "Calcule des score..."}
             <div className={cx("res-groupe-container")} style={{ display: this.state.displayGroupe ? "flex" : "none" }}>
               {this.state.sortedGroupes.map(x => <ResGroupe data={x} />)}
               <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
             </div>
-            <div className={cx("res-depute-container")} style={{ display: !this.state.displayGroupe ? "flex" : "none" }}>
+            {this.state.sortedDeputes.length > 0 && <div className={cx("res-depute-container")} style={{ display: !this.state.displayGroupe ? "flex" : "none" }}>
+              <input
+                className={cx("search-input")} type="text"
+                placeholder="Rechercher un député par nom, ville, département, etc.."
+                value={this.state.searchTxt} onChange={e => this.onSearchTxtChange(e)}
+              />
               <DeputeResList />
               <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
-            </div>
+            </div>}
           </div>
         </div>
       </div>
@@ -164,7 +164,7 @@ class Resultat extends PureComponent<Props, State> {
 
 function ResDepute(props: { data: ResDeputeType, last: boolean }) {
   const groupColor = props.data.depute.last.couleurAssociee as string
-  return <a  key={props.data.depute.id} href={props.data.depute['page-url']} id={props.last ? "last" : undefined}>
+  return <a key={props.data.depute.id} href={props.data.depute['page-url']} id={props.last ? "last" : undefined}>
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>
@@ -186,16 +186,16 @@ function ResDepute(props: { data: ResDeputeType, last: boolean }) {
 
 function ResDeputeFiltered(props: { data: SearchResponse, last: boolean, resDepute: ResDeputeType }) {
 
-  const hglnom = highlightField(props.data.metadata, "name", {h: 0, s: 100, v: 50}) || props.data.item.name
+  const hglnom = highlightField(props.data.metadata, "name", { h: 0, s: 100, v: 50 }) || props.data.item.name
 
-  let hglcommunes = highlightArray(props.data.metadata, "depute.cities.communeNom", {h: 0, s: 100, v: 50}) || []
+  let hglcommunes = highlightArray(props.data.metadata, "depute.cities.communeNom", { h: 0, s: 100, v: 50 }) || []
   if (hglcommunes.length > 20) {
     hglcommunes = [...hglcommunes.slice(0, 19), `et ${hglcommunes.length - 19} autres...`]
   }
-  const CommuneListHtml = () => hglcommunes.length ? <div className="commune-list">{hglcommunes.map((x) =><div className="elem">{x}</div>)}</div> : null
+  const CommuneListHtml = () => hglcommunes.length ? <div className="commune-list">{hglcommunes.map((x) => <div className="elem">{x}</div>)}</div> : null
 
   const groupColor = props.data.item.last.couleurAssociee as string
-  return <a  key={props.data.item.id} href={props.data.item['page-url']} id={props.last ? "last" : undefined}>
+  return <a key={props.data.item.id} href={props.data.item['page-url']} id={props.last ? "last" : undefined}>
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>
@@ -209,7 +209,7 @@ function ResDeputeFiltered(props: { data: SearchResponse, last: boolean, resDepu
       <div className={cx("data-container")}>
         <div className={cx("title")} style={{ fontSize: (2.9 / (props.data.item.name.length ** 0.30)) + "em" }}>{hglnom}</div>
         <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}>{props.data.item.last.libelle}</div>
-        <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}><CommuneListHtml/></div>
+        <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}><CommuneListHtml /></div>
       </div>
       <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.resDepute?.similarity * 100)}%</div>
     </div >
