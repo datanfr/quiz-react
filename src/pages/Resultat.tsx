@@ -20,6 +20,7 @@ import { calculateDeputeSimilarity, calculateGroupeSimilarity } from '../calcula
 import { buildIndex, search, Index as SearchIndex, SearchResponse } from "../searchAlgo";
 import { highlightArray, highlightField } from '../highlightAlgo';
 import { groupBy } from '../utils';
+import { h } from 'ionicons/dist/types/stencil-public-runtime';
 const { Storage } = Plugins;
 
 
@@ -95,19 +96,19 @@ class Resultat extends PureComponent<Props, State> {
     }
   }
 
-  onSearchTxtChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const searchTxt = e.target.value;
-    this.setState({ searchTxt });
+  onSearchTxtChange(e: React.FormEvent<HTMLInputElement>) {
+    const searchTxt = e.currentTarget.value;
     console.log("reseting timeout")
     const searchDelay = window.localStorage.getItem("searchDelay")
     if (this.timeoutHandle != null) clearTimeout(this.timeoutHandle)
     this.timeoutHandle = setTimeout(() => {
       console.log(`update text: ${searchTxt}`)
+      this.setState({ searchTxt });
       if (this.state.deputeIndex) {
         const filteredDeputes = searchTxt ? search(this.state.deputeIndex, searchTxt) : null
         this.setState({ filteredDeputes })
       }
-    }, searchDelay ? JSON.parse(searchDelay) : 100)
+    }, searchDelay ? JSON.parse(searchDelay) : 180)
   }
 
   render() {
@@ -138,7 +139,7 @@ class Resultat extends PureComponent<Props, State> {
               <input
                 className={cx("search-input")} type="text"
                 placeholder="Rechercher un député par nom, ville, département, etc.."
-                value={this.state.searchTxt} onChange={e => this.onSearchTxtChange(e)}
+                defaultValue={this.state.searchTxt} onInput={e => this.onSearchTxtChange(e)}
               />
               <DeputeResList />
               <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
@@ -185,14 +186,20 @@ function ResDepute(props: { data: ResDeputeType, last: boolean }) {
 }
 
 function ResDeputeFiltered(props: { data: SearchResponse, last: boolean, resDepute: ResDeputeType }) {
+  const {h,s,v} = { h: 0, s: 100, v: 50 }
+  const hglnom = highlightField(props.data.metadata, "name", {color:  `hsl(${h},${s - 40}%, ${v}%)`}) || props.data.item.name
 
-  const hglnom = highlightField(props.data.metadata, "name", { h: 0, s: 100, v: 50 }) || props.data.item.name
-
-  let hglcommunes = highlightArray(props.data.metadata, "depute.cities.communeNom", { h: 0, s: 100, v: 50 }) || []
+  let hglcommunes = highlightArray(props.data.metadata, "depute.cities.communeNom", {color:  `hsl(${h},${s - 40}%, ${v}%)`}) || []
   if (hglcommunes.length > 20) {
     hglcommunes = [...hglcommunes.slice(0, 19), `et ${hglcommunes.length - 19} autres...`]
   }
   const CommuneListHtml = () => hglcommunes.length ? <div className="commune-list">{hglcommunes.map((x) => <div className="elem">{x}</div>)}</div> : null
+
+  let hglCp = highlightArray(props.data.metadata, "depute.cities.codePostal", {color:  `hsl(${h},${s - 40}%, ${v}%)`}) || []
+  if (hglCp.length > 20) {
+    hglCp = [...hglCp.slice(0, 19), `et ${hglCp.length - 19} autres...`]
+  }
+  const CpListHtml = () => hglCp.length ? <div className="commune-list">{hglCp.map((x) => <div className="elem">{x}</div>)}</div> : null
 
   const groupColor = props.data.item.last.couleurAssociee as string
   return <a key={props.data.item.id} href={props.data.item['page-url']} id={props.last ? "last" : undefined}>
@@ -210,6 +217,7 @@ function ResDeputeFiltered(props: { data: SearchResponse, last: boolean, resDepu
         <div className={cx("title")} style={{ fontSize: (2.9 / (props.data.item.name.length ** 0.30)) + "em" }}>{hglnom}</div>
         <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}>{props.data.item.last.libelle}</div>
         <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}><CommuneListHtml /></div>
+        <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}><CpListHtml /></div>
       </div>
       <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.resDepute?.similarity * 100)}%</div>
     </div >
