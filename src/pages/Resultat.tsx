@@ -90,8 +90,7 @@ class Resultat extends PureComponent<Props, State> {
 
 
   loadMore(e: React.UIEvent<HTMLDivElement, UIEvent>) {
-    if (!this.state.displayGroupe && window.innerHeight + e.currentTarget.scrollTop >= (e.currentTarget.scrollHeight - 300)) {
-
+    if (!this.state.displayGroupe && window.innerHeight + e.currentTarget.scrollTop >= (e.currentTarget.scrollHeight - window.innerHeight)) {
       this.setState({ chunk: this.state.chunk + 1 })
     }
   }
@@ -118,19 +117,17 @@ class Resultat extends PureComponent<Props, State> {
       const currentChunk = this.state.filteredDeputes.slice(0, 20 * this.state.chunk)
       everythingLoaded = 20 * this.state.chunk > this.state.filteredDeputes.length
       DeputeResList = () => <>
-        {currentChunk.slice(0, -1).map(x => <ResDeputeFiltered data={x} last={false} resDepute={this.state.deputeScoreById[x.item.id]} />)}
-        {currentChunk.slice(-1).map(x => <ResDeputeFiltered data={x} last={true} resDepute={this.state.deputeScoreById[x.item.id]} />)}
+      {currentChunk.map(x => <ResDeputeFiltered data={x} resDepute={this.state.deputeScoreById[x.item.id]} />)}
       </>
-    } else {
+    } else {  
       const currentChunk = this.state.sortedDeputes.slice(0, 20 * this.state.chunk)
       everythingLoaded = 20 * this.state.chunk > this.state.sortedDeputes.length
       DeputeResList = () => <>
-        {currentChunk.slice(0, -1).map(x => <ResDepute data={x} last={false} />)}
-        {currentChunk.slice(-1).map(x => <ResDepute data={x} last={true} />)}
+        {currentChunk.map(x => <ResDepute data={x} />)}
       </>
     }
     return <IonPage>
-      <div style={{ overflow: "auto", justifyContent: "flex-start" }} onScroll={e => this.loadMore(e)}>
+      <div id="inifinte-scroll" style={{ overflow: "auto", justifyContent: "flex-start" }} onScroll={e => this.loadMore(e)}>
         <div className={cx("center-body")}>
           <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
             {this.state.sortedGroupes.length > 0 || "Calcule des score..."}
@@ -166,9 +163,9 @@ class Resultat extends PureComponent<Props, State> {
   }
 }
 
-function ResDepute(props: { data: ResDeputeType, last: boolean }) {
+function ResDepute(props: { data: ResDeputeType}) {
   const groupColor = props.data.depute.last.couleurAssociee as string
-  return <a key={props.data.depute.id} href={props.data.depute['page-url']} id={props.last ? "last" : undefined}>
+  return <a key={props.data.depute.id} href={props.data.depute['page-url']}>
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>
@@ -188,7 +185,7 @@ function ResDepute(props: { data: ResDeputeType, last: boolean }) {
   </a>
 }
 
-function ResDeputeFiltered(props: { data: SearchResponse, last: boolean, resDepute: ResDeputeType }) {
+function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeType }) {
   const {h,s,v} = { h: 0, s: 100, v: 50 }
   const hglnom = highlightField(props.data.metadata, "name", {color:  `hsl(${h},${s - 40}%, ${v}%)`}) || props.data.item.name
 
@@ -205,7 +202,7 @@ function ResDeputeFiltered(props: { data: SearchResponse, last: boolean, resDepu
   const CpListHtml = () => hglCp.length ? <div className="commune-list">{hglCp.map((x) => <div className="elem">{x}</div>)}</div> : null
 
   const groupColor = props.data.item.last.couleurAssociee as string
-  return <a key={props.data.item.id} href={props.data.item['page-url']} id={props.last ? "last" : undefined}>
+  return <a key={props.data.item.id} href={props.data.item['page-url']}>
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>
