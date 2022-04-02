@@ -91,7 +91,7 @@ class Resultat extends PureComponent<Props, State> {
 
   loadMore(e: React.UIEvent<HTMLDivElement, UIEvent>) {
     if (!this.state.displayGroupe && window.innerHeight + e.currentTarget.scrollTop >= (e.currentTarget.scrollHeight - 300)) {
-      console.log("Loading moarmap")
+
       this.setState({ chunk: this.state.chunk + 1 })
     }
   }
@@ -113,14 +113,17 @@ class Resultat extends PureComponent<Props, State> {
 
   render() {
     let DeputeResList;
+    let everythingLoaded = false
     if (this.state.filteredDeputes) {
       const currentChunk = this.state.filteredDeputes.slice(0, 20 * this.state.chunk)
+      everythingLoaded = 20 * this.state.chunk > this.state.filteredDeputes.length
       DeputeResList = () => <>
         {currentChunk.slice(0, -1).map(x => <ResDeputeFiltered data={x} last={false} resDepute={this.state.deputeScoreById[x.item.id]} />)}
         {currentChunk.slice(-1).map(x => <ResDeputeFiltered data={x} last={true} resDepute={this.state.deputeScoreById[x.item.id]} />)}
       </>
     } else {
       const currentChunk = this.state.sortedDeputes.slice(0, 20 * this.state.chunk)
+      everythingLoaded = 20 * this.state.chunk > this.state.sortedDeputes.length
       DeputeResList = () => <>
         {currentChunk.slice(0, -1).map(x => <ResDepute data={x} last={false} />)}
         {currentChunk.slice(-1).map(x => <ResDepute data={x} last={true} />)}
@@ -142,7 +145,7 @@ class Resultat extends PureComponent<Props, State> {
                 defaultValue={this.state.searchTxt} onInput={e => this.onSearchTxtChange(e)}
               />
               <DeputeResList />
-              <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
+              {everythingLoaded && <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>}
             </div>}
           </div>
         </div>
