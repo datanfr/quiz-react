@@ -16,8 +16,10 @@ export function highlightArray(
             const sliceAndEditStack = metadatas.map((m): [[number, number], EditStack] => [m.token.slice, m.result.dist[0]])
             const originalValue = metadatas[0].token.getField(metadatas[0].token.item as FixLater)
             
-            return highlightMatch(sliceAndEditStack, originalValue, style)
-        })
+            return {
+                hightlighted: highlightMatch(sliceAndEditStack, originalValue, style),
+                score: Math.min(...metadatas.map(m => m.result.dist[1]))}
+            }).sort((a,b) => a.score - b.score).map(x => x.hightlighted)
     } else {
         return null
     }

@@ -58,7 +58,8 @@ type VoteDepute = typeof exempleVoteDepute
 const exempleMpCity = {
     mpId: "PA720568",
     communeNom: "Abancourt",
-    codePostal: "60220"
+    codePostal: "60220",
+    indexedName: "Abancourt (60220)"
 }
 
 type MpCity = typeof exempleMpCity
@@ -163,7 +164,13 @@ function buildDepute(id: number) {
                         return x.mpId === mpId
                     })
                     console.log({depCities})
-                    return depCities
+                    
+                    return depCities.map(x => {
+                        //if (x.codePostal === null) debugger;
+                        const fixCp = x.codePostal && x.codePostal.split(/[\/]/).map(x => ("0"+x).slice(-5)).join("/")// "2100/2200" to "02100/02200"
+                        const indexedName =  fixCp ? `${x.communeNom} (${fixCp})` : x.communeNom
+                        return {...x, codePostal: fixCp, indexedName}
+                    })
                 }()
             }
             obj.votes[`VTANR5L15V${id}`] = vote_libelle

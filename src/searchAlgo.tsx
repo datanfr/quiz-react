@@ -79,39 +79,34 @@ function tokenizeDepute(depute: DeputeWithVote): Token<DeputeWithVote>[] {
         ref,
         { getField: (x: DeputeWithVote) => x.name, fieldName: `name`, item: depute, weight: 1.10 }
     ))
-    // allTokens.push(tokenize(
-    //     depute.cities,
-    //     ref,
-    //     {getField: (x: DeputeWithVote) => x.circo.departement, fieldName: `circo.departement`, item: depute, weight: 1.05}
-    // ))
-    // allTokens.push(tokenize(
-    //     depute.circo.numDepartement,
-    //     ref,
-    //     {getField: (x: DeputeWithVote) => x.circo.numDepartement, fieldName: `circo.numDepartement`, item: depute, weight: 1.05}
-    // ))
-    // allTokens.push(tokenize(
-    //     depute.circo.numCirco,
-    //     ref,
-    //     {getField: (x: DeputeWithVote) => x.circo.numCirco, fieldName: `circo.numCirco`, item: depute, weight: 1.05}
-    // ))
+    // for (const [idx, city] of depute.cities.entries()) {
+    //     const communeTokens = tokenize(
+    //         city.communeNom,
+    //         city.mpId,
+    //         { getField: (x: DeputeWithVote) => x.cities[idx].communeNom, fieldName: `depute.cities.communeNom`, item: depute, arrayKey: idx }
+    //     )
+    //     allTokens.push(communeTokens)
+    // }
+    // for (const [idx, city] of depute.cities.entries()) {
+    //     if (city.codePostal) {
+    //         const communeTokens = tokenize(
+    //             city.codePostal,
+    //             city.mpId,
+    //             { getField: (x: DeputeWithVote) => x.cities[idx].codePostal, fieldName: `depute.cities.codePostal`, item: depute, arrayKey: idx }
+    //         )
+    //         allTokens.push(communeTokens)
+    //     }
+    // }
+
     for (const [idx, city] of depute.cities.entries()) {
         const communeTokens = tokenize(
-            city.communeNom,
+            city.indexedName,
             city.mpId,
-            { getField: (x: DeputeWithVote) => x.cities[idx].communeNom, fieldName: `depute.cities.communeNom`, item: depute, arrayKey: idx }
+            { getField: (x: DeputeWithVote) => x.cities[idx].indexedName, fieldName: `depute.cities.indexedName`, item: depute, arrayKey: idx }
         )
         allTokens.push(communeTokens)
     }
-    for (const [idx, city] of depute.cities.entries()) {
-        if (city.codePostal) {
-            const communeTokens = tokenize(
-                city.codePostal,
-                city.mpId,
-                { getField: (x: DeputeWithVote) => x.cities[idx].codePostal, fieldName: `depute.cities.codePostal`, item: depute, arrayKey: idx }
-            )
-            allTokens.push(communeTokens)
-        }
-    }
+
     return allTokens.flatMap(x => x)
 }
 

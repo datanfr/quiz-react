@@ -189,17 +189,17 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
   const {h,s,v} = { h: 0, s: 100, v: 50 }
   const hglnom = highlightField(props.data.metadata, "name", {color:  `hsl(${h},${s - 40}%, ${v}%)`}) || props.data.item.name
 
-  let hglcommunes = highlightArray(props.data.metadata, "depute.cities.communeNom", {color:  `hsl(${h},${s - 40}%, ${v}%)`}) || []
+  let hglcommunes = highlightArray(props.data.metadata, "depute.cities.indexedName", {color:  `hsl(${h},${s - 40}%, ${v}%)`}) || []
   if (hglcommunes.length > 20) {
     hglcommunes = [...hglcommunes.slice(0, 19), `et ${hglcommunes.length - 19} autres...`]
   }
   const CommuneListHtml = () => hglcommunes.length ? <div className="commune-list">{hglcommunes.map((x) => <div className="elem">{x}</div>)}</div> : null
 
-  let hglCp = highlightArray(props.data.metadata, "depute.cities.codePostal", {color:  `hsl(${h},${s - 40}%, ${v}%)`}) || []
-  if (hglCp.length > 20) {
-    hglCp = [...hglCp.slice(0, 19), `et ${hglCp.length - 19} autres...`]
-  }
-  const CpListHtml = () => hglCp.length ? <div className="commune-list">{hglCp.map((x) => <div className="elem">{x}</div>)}</div> : null
+  // let hglCp = highlightArray(props.data.metadata, "depute.cities.codePostal", {color:  `hsl(${h},${s - 40}%, ${v}%)`}) || []
+  // if (hglCp.length > 20) {
+  //   hglCp = [...hglCp.slice(0, 19), `et ${hglCp.length - 19} autres...`]
+  // }
+  // const CpListHtml = () => hglCp.length ? <div className="commune-list">{hglCp.map((x) => <div className="elem">{x}</div>)}</div> : null
 
   const groupColor = props.data.item.last.couleurAssociee as string
   return <a key={props.data.item.id} href={props.data.item['page-url']}>
@@ -217,7 +217,6 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
         <div className={cx("title")} style={{ fontSize: (2.9 / (props.data.item.name.length ** 0.30)) + "em" }}>{hglnom}</div>
         <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}>{props.data.item.last.libelle}</div>
         <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}><CommuneListHtml /></div>
-        <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}><CpListHtml /></div>
       </div>
       <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.resDepute?.similarity * 100)}%</div>
     </div >
