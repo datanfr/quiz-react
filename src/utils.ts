@@ -35,7 +35,7 @@ export function hexToHSL(hex : string) : Hsl {
         }
         h /= 6;
     }
-    return {h,s,l};
+    return {h: h*360,s,l};
 }
 
 export const hslToCss = ({h,s,l}:Hsl) =>  `hsl(${h},${s*100}%, ${l*100}%)`

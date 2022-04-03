@@ -189,7 +189,7 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
 
   const {h,s,l} = props.data.item.last.couleurAssociee ? hexToHSL(props.data.item.last.couleurAssociee as string) : {h: 0, s:0, l:0} //Couleur député non inscrit
   const hglnom = highlightField(props.data.metadata, "name", {color:  hslToCss({h,s,l: l*0.80}), fontWeight: 900}) || props.data.item.name
-  let hglcommunes = highlightArray(props.data.metadata, "depute.cities.indexedName", {color:  hslToCss({h,s,l: l > 0.5 ? l-0.20 : l+0.20}), fontWeight: 800}) || []
+  let hglcommunes = highlightArray(props.data.metadata, "depute.cities.indexedName", {color:  hslToCss({h,s,l: l > 0.4 ? l-0.20 : l+0.20}), fontWeight: 800}) || []
   if (hglcommunes.length > 20) {
     hglcommunes = [...hglcommunes.slice(0, 19), `et ${hglcommunes.length - 19} autres...`]
   }
@@ -214,7 +214,7 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
       </div>
       <div className={cx("data-container")}>
         <div className={cx("title")} style={{ fontSize: (2.9 / (props.data.item.name.length ** 0.30)) + "em" }}>{hglnom}</div>
-        <div className={cx("groupe")} style={{ color: hslaToCss({h,s,l}, 1), fontSize: "0.8em" }}>{props.data.item.last.libelle}</div>
+        <div className={cx("groupe")} style={{ color: hslaToCss({h,s,l}, 1), fontSize: "0.8em" }} data-color={hslToCss({h,s,l})}  data-color-high={hslToCss({h,s,l: l > 0.3 ? l-0.30 : l+0.30})}>{props.data.item.last.libelle}</div>
         <div className={cx("groupe")} style={{ color: hslaToCss({h,s,l}, 0.75), fontSize: "0.8em" }}><CommuneListHtml /></div>
       </div>
       <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.resDepute?.similarity * 100)}%</div>
