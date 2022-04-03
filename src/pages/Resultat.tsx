@@ -19,8 +19,7 @@ import { getResponses, Reponse } from '../models/Reponse';
 import { calculateDeputeSimilarity, calculateGroupeSimilarity } from '../calculateScore';
 import { buildIndex, search, Index as SearchIndex, SearchResponse } from "../searchAlgo";
 import { highlightArray, highlightField } from '../highlightAlgo';
-import { groupBy } from '../utils';
-import { h } from 'ionicons/dist/types/stencil-public-runtime';
+import { groupBy, hexToHSL, hslaToCss, hslToCss } from '../utils';
 const { Storage } = Plugins;
 
 
@@ -105,6 +104,7 @@ class Resultat extends PureComponent<Props, State> {
       this.setState({ searchTxt });
       if (this.state.deputeIndex) {
         const filteredDeputes = searchTxt ? search(this.state.deputeIndex, searchTxt) : null
+        Object.assign(window as any, {filteredDeputes})
         this.setState({ filteredDeputes })
       }
     }, searchDelay ? JSON.parse(searchDelay) : 180)
@@ -186,10 +186,10 @@ function ResDepute(props: { data: ResDeputeType}) {
 }
 
 function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeType }) {
-  const {h,s,v} = { h: 0, s: 100, v: 50 }
-  const hglnom = highlightField(props.data.metadata, "name", {color:  `hsl(${h},${s - 40}%, ${v}%)`}) || props.data.item.name
 
-  let hglcommunes = highlightArray(props.data.metadata, "depute.cities.indexedName", {color:  `hsl(${h},${s - 40}%, ${v}%)`}) || []
+  const {h,s,l} = props.data.item.last.couleurAssociee ? hexToHSL(props.data.item.last.couleurAssociee as string) : {h: 0, s:0, l:0} //Couleur député non inscrit
+  const hglnom = highlightField(props.data.metadata, "name", {color:  hslToCss({h,s,l: l*0.80}), fontWeight: 900}) || props.data.item.name
+  let hglcommunes = highlightArray(props.data.metadata, "depute.cities.indexedName", {color:  hslToCss({h,s,l: l > 0.5 ? l-0.20 : l+0.20}), fontWeight: 800}) || []
   if (hglcommunes.length > 20) {
     hglcommunes = [...hglcommunes.slice(0, 19), `et ${hglcommunes.length - 19} autres...`]
   }
@@ -201,7 +201,6 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
   // }
   // const CpListHtml = () => hglCp.length ? <div className="commune-list">{hglCp.map((x) => <div className="elem">{x}</div>)}</div> : null
 
-  const groupColor = props.data.item.last.couleurAssociee as string
   return <a key={props.data.item.id} href={props.data.item['page-url']}>
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
@@ -215,8 +214,8 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
       </div>
       <div className={cx("data-container")}>
         <div className={cx("title")} style={{ fontSize: (2.9 / (props.data.item.name.length ** 0.30)) + "em" }}>{hglnom}</div>
-        <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}>{props.data.item.last.libelle}</div>
-        <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}><CommuneListHtml /></div>
+        <div className={cx("groupe")} style={{ color: hslaToCss({h,s,l}, 1), fontSize: "0.8em" }}>{props.data.item.last.libelle}</div>
+        <div className={cx("groupe")} style={{ color: hslaToCss({h,s,l}, 0.75), fontSize: "0.8em" }}><CommuneListHtml /></div>
       </div>
       <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.resDepute?.similarity * 100)}%</div>
     </div >

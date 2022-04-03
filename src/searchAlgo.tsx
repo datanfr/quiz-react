@@ -116,7 +116,7 @@ function normalizeTxt(txt: string) {
 
 function tokenize<T>(txt: string, ref: string, meta: Meta<T>): Token<T>[] {
     // eslint-disable-next-line no-useless-escape
-    let words = normalizeTxt(txt).split(/[()\[\]<>\s-,'\/\\]/)
+    let words = normalizeTxt(txt).split(/[()\[\]<>\s,'\/\\]/)
     let i = 0
     let withPos: { word: string, slice: [number, number] }[] = []
     for (const word of words) {
@@ -135,7 +135,7 @@ function tokenize<T>(txt: string, ref: string, meta: Meta<T>): Token<T>[] {
 export function search(index: Index, query: string): SearchResponse[] {
     const { wordTree, wordToTokens } = index
     // eslint-disable-next-line no-useless-escape
-    const terms = normalizeTxt(query).split(/[()\[\]<>\s-,'\/\\]/).filter(x => x)
+    const terms = normalizeTxt(query).split(/[()\[\]<>\s,'\/\\]/).filter(x => x)
     const allTermResults = []
     for (const term of terms) {
         const results = searchWord(wordTree, term)
@@ -146,10 +146,13 @@ export function search(index: Index, query: string): SearchResponse[] {
         }
         const tokensPerRef = groupBy(foundTokens, found => found.token.ref);
         const scoredResults = Object.entries(tokensPerRef).map(([ref, founds]) => {
+            
             const score = founds.map(({ token, result }) => {
                 // eslint-disable-next-line no-unused-vars
+                
                 const [editstack, value] = result.dist
                 const weight = token.weight || 1
+
                 return (query.length - value) / query.length * weight
             }).reduce((a, b) => max(a, b))
             return { ref, item: founds[0].token.item, metadata: founds, score: score }
@@ -158,7 +161,7 @@ export function search(index: Index, query: string): SearchResponse[] {
     }
     const mergedScore = Object.values(groupBy(allTermResults, x => x.ref)).map(sameRefResult => {
         return sameRefResult.reduce((a, b) => {
-            return { ref: a.ref, item: a.item, metadata: a.metadata.concat(b.metadata), score: a.score + b.score }
+            return { ref: a.ref, item: a.item, metadata: a.metadata.concat(b.metadata), score: max(a.score, b.score) }
         })
     })
     return sortBy(mergedScore, x => x.score).reverse()
