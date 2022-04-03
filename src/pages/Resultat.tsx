@@ -109,6 +109,7 @@ class Resultat extends PureComponent<Props, State> {
         Object.assign(window as any, {filteredDeputes})
         this.setState({ filteredDeputes })
       }
+      this.myRef.current?.scrollTo(0, 0);
     }, searchDelay ? JSON.parse(searchDelay) : 180)
   }
 

@@ -125,4 +125,8 @@ a {
   background: none;
   border: 1px solid rgba(0, 0, 0, 0.34);
   color: var(--datan-black);
+  background-color: var(--datan-white);
+  z-index: 999;
+  position: sticky;
+  top: 85px;
 }
