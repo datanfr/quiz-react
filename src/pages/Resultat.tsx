@@ -45,6 +45,7 @@ class Resultat extends PureComponent<Props, State> {
 
   params: URLSearchParams;
   timeoutHandle: NodeJS.Timeout | null;
+  myRef : React.RefObject<HTMLDivElement>
 
   constructor(props: Props) {
     super(props);
@@ -61,6 +62,7 @@ class Resultat extends PureComponent<Props, State> {
       chunk: 1,
       searchTxt: ""
     }
+    this.myRef = React.createRef()
   }
 
   componentDidMount() {
@@ -127,7 +129,7 @@ class Resultat extends PureComponent<Props, State> {
       </>
     }
     return <IonPage>
-      <div id="inifinte-scroll" style={{ overflow: "auto", justifyContent: "flex-start" }} onScroll={e => this.loadMore(e)}>
+      <div id="inifinte-scroll" style={{ overflow: "auto", justifyContent: "flex-start" }} onScroll={e => this.loadMore(e)} ref={this.myRef}>
         <div className={cx("center-body")}>
           <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
             {this.state.sortedGroupes.length > 0 || "Calcule des score..."}
@@ -153,7 +155,10 @@ class Resultat extends PureComponent<Props, State> {
           <Link to="/" className={cx("datan-green-bg", "flex", "align-justify-center", "shadow", "button")} style={{ height: "60px" }}>
             Recommencer le test
           </Link>
-          <div className={cx("datan-blue-bg", "flex", "align-justify-center", "shadow", "button")} style={{ height: "60px" }} onClick={() => this.setState({ displayGroupe: !this.state.displayGroupe })}>
+          <div className={cx("datan-blue-bg", "flex", "align-justify-center", "shadow", "button")} style={{ height: "60px" }} onClick={() => {
+            this.myRef.current?.scrollTo(0, 0);
+            return this.setState({ displayGroupe: !this.state.displayGroupe })
+          }}>
             {this.state.displayGroupe ? "Afficher les députés" : "Afficher les groupes"}
           </div>
         </div>
@@ -165,7 +170,7 @@ class Resultat extends PureComponent<Props, State> {
 
 function ResDepute(props: { data: ResDeputeType}) {
   const groupColor = props.data.depute.last.couleurAssociee as string
-  return <a key={props.data.depute.id} href={props.data.depute['page-url']}>
+  return <a key={props.data.depute.id} href={props.data.depute['page-url']} target="_blank">
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>
@@ -201,7 +206,7 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
   // }
   // const CpListHtml = () => hglCp.length ? <div className="commune-list">{hglCp.map((x) => <div className="elem">{x}</div>)}</div> : null
 
-  return <a key={props.data.item.id} href={props.data.item['page-url']}>
+  return <a key={props.data.item.id} href={props.data.item['page-url']} target="_blank">
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>
@@ -224,7 +229,7 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
 
 function ResGroupe(props: { data: ResGroupeType }) {
 
-  return <a href={props.data.groupe['page-url']}>
+  return <a href={props.data.groupe['page-url']} target="_blank">
     <div className={cx("res-groupe")}>
       <div className={cx("picture-container")}>
         <div className={cx("groupe-img-circle")}>
