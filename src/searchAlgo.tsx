@@ -195,13 +195,14 @@ function searchWord(tree: Node, word: string, log: boolean = false) {
     const results: SearchResults = {}
     // i = 0
     // j = 0
-    searchNode(tree, Array.from(word), 0, min(2, Math.round(word.length / 2)), [], results)
+    const c = new URLSearchParams(window.location.search).get("strictness") || "2";
+    searchNode(tree, Array.from(word), 0, min(parseInt(c), Math.round(word.length / 2)), [], results)
     log && logResultColored(results)
     //console.log({i, j})
     return results
 }
 
-function searchNode(node: Node, word: string[], cur_dist: number, max_dist: number, editStack: EditStack, results: SearchResults) {
+function searchNode(node: Node, word: string[], cur_dist: number, max_dist : number, editStack: EditStack, results: SearchResults) {
     //i++
     if (node.key) {
         // eslint-disable-next-line no-unused-vars
