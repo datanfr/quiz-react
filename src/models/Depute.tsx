@@ -169,10 +169,6 @@ function buildDepute(id: number) {
             obj.votes[`VTANR5L15V${id}`] = vote_libelle
             votesPerDeputeById[mpId] = obj
         }
-        // for (const city of cities) { 
-        //     const depute = votesPerDeputeById[city.mpId];
-        //     if (depute) depute.cities.push(city)
-        // }
     })
 }
 

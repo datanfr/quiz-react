@@ -9,7 +9,6 @@ const { max, min } = Math
 
 const createNode = (): Node => ({ children: {}, key: null/*, prevSearch: {}*/ })
 
-export type ScrutinItem = { id: string, titre: string }
 export type Meta<T> = { getField: (x: T) => string, fieldName: string, item: T, weight?: number, arrayKey?: number }
 
 export type Token<T> = {
@@ -72,16 +71,6 @@ export function buildIndex(deputes: DeputeWithVote[]/*, groupes: GroupeWithVote*
     })
 }
 
-function tokenizeScrutin([id, titre]: [string, string]) {
-    const allTokens: Token<ScrutinItem>[][] = []
-    allTokens.push(tokenize(
-        titre,
-        "vote:" + id,
-        { getField: (x: ScrutinItem) => x.titre, fieldName: `titre`, item: { id, titre }, weight: 0.9 }
-    ))
-    return allTokens.flatMap(x => x)
-}
-
 function tokenizeDepute(depute: DeputeWithVote): Token<DeputeWithVote>[] {
     const ref = "depute:" + depute.id
     let allTokens: Token<DeputeWithVote>[][] = []
@@ -138,7 +127,7 @@ function normalizeTxt(txt: string) {
 
 function tokenize<T>(txt: string, ref: string, meta: Meta<T>): Token<T>[] {
     // eslint-disable-next-line no-useless-escape
-    let words = normalizeTxt(txt).split(/[()\[\]<>\s-,']/)
+    let words = normalizeTxt(txt).split(/[()\[\]<>\s-,'\/\\]/)
     let i = 0
     let withPos: { word: string, slice: [number, number] }[] = []
     for (const word of words) {
@@ -157,7 +146,7 @@ function tokenize<T>(txt: string, ref: string, meta: Meta<T>): Token<T>[] {
 export function search(index: Index, query: string): SearchResponse[] {
     const { wordTree, wordToTokens } = index
     // eslint-disable-next-line no-useless-escape
-    const terms = normalizeTxt(query).split(/[()\[\]<>\s-,']/).filter(x => x)
+    const terms = normalizeTxt(query).split(/[()\[\]<>\s-,'\/\\]/).filter(x => x)
     const allTermResults = []
     for (const term of terms) {
         const results = searchWord(wordTree, term)
@@ -214,7 +203,7 @@ function searchWord(tree: Node, word: string, log: boolean = false) {
     const results: SearchResults = {}
     // i = 0
     // j = 0
-    searchNode(tree, Array.from(word), 0, min(3, Math.round(word.length / 2)), [], results)
+    searchNode(tree, Array.from(word), 0, min(2, Math.round(word.length / 2)), [], results)
     log && logResultColored(results)
     //console.log({i, j})
     return results
