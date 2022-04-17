@@ -4,6 +4,7 @@ import classes from './Home.module.css';
 import Header from "../components/Header"
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { PureComponent } from 'react';
+import { OnBoarding } from './OnBoarding';
 
 let cx = classNames.bind(classes);
 
@@ -42,6 +43,7 @@ class Home extends PureComponent<Props, State> {
           </Link>
         </div>
       </div>
+      {!localStorage.onboardingDone &&  <OnBoarding/>};
     </IonPage >
   }
 }

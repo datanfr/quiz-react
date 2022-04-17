@@ -27,6 +27,9 @@ import Questions from "./pages/Questions"
 import './theme/variables.css';
 import Resultat from './pages/Resultat';
 import { BuildVotes } from './pages/BuildVotes';
+import { OnBoarding } from './pages/OnBoarding';
+
+console.log(localStorage.onboardingDone)
 
 const App: React.FC = () => (
   <div>
@@ -44,7 +47,6 @@ const App: React.FC = () => (
         <BuildVotes />
       </Route>
     </IonReactRouter>
-  </div>
-);
+  </div>)
 
 export default App;
