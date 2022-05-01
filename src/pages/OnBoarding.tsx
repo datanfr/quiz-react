@@ -4,6 +4,8 @@ import classNames from 'classnames/bind';
 import classes from './OnBoarding.module.css';
 import { useState } from 'react';
 import { clearLine } from 'readline';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 let cx = classNames.bind(classes);
 
 
@@ -14,7 +16,7 @@ export function OnBoarding() {
 
     const closeOnboarding = () => {
         localStorage.onboardingDone = true;
-        history.push("/")
+        history.push("/questions")
     }
 
     const overlaystyle = {
@@ -25,7 +27,7 @@ export function OnBoarding() {
 
     const Passer = (props: { style: any }) => <div
         onClick={closeOnboarding}
-        style={Object.assign({ cursor: "pointer", padding: "10px", color: "rgba(125,125,125, 0.5" }, props.style)}
+        style={Object.assign({ cursor: "pointer", padding: "10px", color: "rgba(125,125,125, 0.5)"}, props.style)}
     >
         Passer
     </div>
@@ -47,7 +49,7 @@ export function OnBoarding() {
         position: 'absolute', bottom: 10, left: "10%", padding: "10px", fontSize: "16px", fontWeight: "bolder", lineHeight: "24px",
         color: "#00B794", borderRadius: 5, border: "none", cursor: "pointer", background: 'none'
     }} onClick={() => curPage - 1 >= 0 ? setCurPage(curPage - 1) : closeOnboarding()}>
-        Précédent
+        <FontAwesomeIcon icon={faChevronLeft}/>
     </button > : null
 
 
@@ -124,7 +126,9 @@ export function OnBoarding() {
         <div style={{
             background: "var(--datan-white)", position: "relative",
             width: 'calc(100vw - 10px)', height: 'calc(min(100vw * 1.8, 100vh) - 10px)', maxWidth: 800, maxHeight: 600,
-            display: 'flex', flexDirection: "column", justifyContent: 'space-evenly'
+            display: 'flex', flexDirection: "column", justifyContent: 'space-evenly',
+            marginBottom: '10vh',
+            marginTop: '3vh'
         }}>
             {pages[curPage]}
             <DotDotDot curPage={curPage} nbPage={nbPage} />

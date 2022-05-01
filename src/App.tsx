@@ -35,7 +35,8 @@ const App: React.FC = () => (
   <div>
     <IonReactRouter>
       <Route exact path="/">
-        <Home />
+        <OnBoarding/>
+        <Questions />
       </Route>
       <Route exact path="/questions">
         <Questions />
