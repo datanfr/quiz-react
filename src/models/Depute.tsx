@@ -42,7 +42,7 @@ const exempleVoteDepute = {
     "mpId": "PA605036",
     "vote": "1",
     "mandatId": "PM731292",
-    "scoreLoyaute": "1", 
+    "scoreLoyaute": "1",
     "legislature": "15",
     "vote_libelle": "pour",
     "loyaute_libelle": "loyal",
@@ -113,7 +113,7 @@ Object.assign(window, { votesPerDeputeById })
 
 
 export const fetchingVotesPerDepute = buildDeputes().then(x => Object.values(x))
-export const buildDeputeIndex = fetchingVotesPerDepute.then(votesPerDepute => buildIndex(votesPerDepute/*, sortedGroupes*/ ))
+export const buildDeputeIndex = fetchingVotesPerDepute.then(votesPerDepute => buildIndex(votesPerDepute/*, sortedGroupes*/))
 
 
 function buildDeputes() {
@@ -124,7 +124,11 @@ function buildDeputes() {
                 //console.log("Fetching ", vote.voteNumero)
                 return buildDepute(vote.voteNumero)
             })
-            return Promise.all(promisePerVote).then(() => votesPerDeputeById)
+            console.log("Starting building vote per depute")
+            return Promise.all(promisePerVote).then(() => {
+                console.log("Ending building vote per depute")
+                return votesPerDeputeById
+            })
         })
 }
 
@@ -136,12 +140,12 @@ const fetchDeputeLast = fetch(`https://datan.fr/api/deputes/get_deputes_last?leg
     return deputeLastByMpId
 })
 
-const fetchCitiesFromLocalStorage = Storage.get({key: "cities"}).then(cities => {
+const fetchCitiesFromLocalStorage = Storage.get({ key: "cities" }).then(cities => {
     if (cities.value) return JSON.parse(cities.value);
     return fetch(`https://datan.fr/api/city/get_mps_city?legislature=15`)
         .then(resp => resp.json())
-        .then(cities => { 
-            Storage.set({key: "cities", value: JSON.stringify(cities)})
+        .then(cities => {
+            Storage.set({ key: "cities", value: JSON.stringify(cities) })
             return cities;
         })
 });
@@ -152,30 +156,34 @@ function buildDepute(id: number) {
         fetchDeputeLast,
         fetchCitiesFromLocalStorage
     ]).then(([voteDepute, deputeLastByMpId, cities]) => {
-        for (const { mpId, nameFirst, nameLast, vote_libelle, dptSlug, nameUrl } of voteDepute as VoteDepute[]) {
-            const obj: DeputeWithVote = votesPerDeputeById[mpId] || {
-                id: mpId.slice(2),
-                "name": nameFirst + " " + nameLast,
-                "page-url": `https://datan.fr/deputes/${dptSlug}/depute_${nameUrl}`,
-                votes: {},
-                last: deputeLastByMpId[mpId],
-                cities: function()  {
-                    const depCities = (cities as MpCity[]).filter(x => {
-                        return x.mpId === mpId
-                    })
-                    console.log({depCities})
-                    
-                    return depCities.map(x => {
-                        //if (x.codePostal === null) debugger;
-                        const fixCp = x.codePostal && x.codePostal.split(/[\/]/).map(x => ("0"+x).slice(-5)).join("/")// "2100/2200" to "02100/02200"
-                        const indexedName =  fixCp ? `${x.communeNom} (${fixCp})` : x.communeNom
-                        return {...x, codePostal: fixCp, indexedName}
-                    })
-                }()
-            }
-            obj.votes[`VTANR5L15V${id}`] = vote_libelle
-            votesPerDeputeById[mpId] = obj
-        }
+        const building = (voteDepute as VoteDepute[]).map(({ mpId, nameFirst, nameLast, vote_libelle, dptSlug, nameUrl }) => {
+            return new Promise<null>((res) => setTimeout(() => {
+                const obj: DeputeWithVote = votesPerDeputeById[mpId] || {
+                    id: mpId.slice(2),
+                    "name": nameFirst + " " + nameLast,
+                    "page-url": `https://datan.fr/deputes/${dptSlug}/depute_${nameUrl}`,
+                    votes: {},
+                    last: deputeLastByMpId[mpId],
+                    cities: function () {
+                        const depCities = (cities as MpCity[]).filter(x => {
+                            return x.mpId === mpId
+                        })
+                        console.log({ depCities })
+
+                        return depCities.map(x => {
+                            //if (x.codePostal === null) debugger;
+                            const fixCp = x.codePostal && x.codePostal.split(/[\/]/).map(x => ("0" + x).slice(-5)).join("/")// "2100/2200" to "02100/02200"
+                            const indexedName = fixCp ? `${x.communeNom} (${fixCp})` : x.communeNom
+                            return { ...x, codePostal: fixCp, indexedName }
+                        })
+                    }()
+                }
+                obj.votes[`VTANR5L15V${id}`] = vote_libelle
+                votesPerDeputeById[mpId] = obj
+                res(null)
+            }));
+        })
+        return Promise.all(building)
     })
 }
 
