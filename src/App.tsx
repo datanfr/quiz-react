@@ -41,6 +41,9 @@ const App: React.FC = () => (
       <Route exact path="/questions">
         <Questions />
       </Route>
+      <Route exact path="/questions/:no">
+        <Questions />
+      </Route>
       <Route exact path="/resultat">
         <Resultat />
       </Route>
@@ -48,6 +51,7 @@ const App: React.FC = () => (
         <BuildVotes />
       </Route>
     </IonReactRouter>
+    
   </div>)
 
 export default App;

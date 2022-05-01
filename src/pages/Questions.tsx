@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { fetchQuestions } from "../models/Question"
 
-export type QuestionModel = typeof questions[0]
+export type QuestionModel = typeof questions[number]
 
 let cx = classNames.bind(classes);
 
@@ -84,18 +84,23 @@ function Buttons(p: ButtonsProps) {
   </div>
 }
 
-interface Props extends RouteComponentProps { }
+interface Props extends RouteComponentProps<{ no: string }> {
+
+}
 interface State {
-  cqi: number //Current question index,
+  cqi: number,
   questionsData: null | QuestionModel[]
 }
 class Questions extends PureComponent<Props, State> {
 
+
+
   constructor(props: Props) {
     super(props);
+    const { match, location, history } = this.props;
     this.state = {
-      cqi: 0,
       questionsData: null,
+      cqi: match.params.no ? parseInt(match.params.no) - 1 : 0
     }
   }
 
@@ -109,6 +114,7 @@ class Questions extends PureComponent<Props, State> {
   back() {
     if (this.state.cqi - 1 >= 0) {
       this.setState({ cqi: this.state.cqi - 1 })
+      this.props.history.goBack()
     } else {
       this.props.history.goBack()
     }
@@ -122,8 +128,10 @@ class Questions extends PureComponent<Props, State> {
       await setResponses(r)
       if (this.state.cqi + 1 >= this.state.questionsData.length) {
         this.props.history.push("/resultat")
+      } else {
+        this.props.history.push(`/questions/${this.state.cqi + 1 + 1}`)
+        this.setState({ cqi: this.state.cqi + 1 })
       }
-      this.setState({ cqi: this.state.cqi + 1 })
     }
   }
 
@@ -133,7 +141,7 @@ class Questions extends PureComponent<Props, State> {
         <div style={{ overflow: "auto", justifyContent: "flex-start" }}>
           <Question question={this.state.questionsData[this.state.cqi]} />
         </div>
-        <Header title={"Question" + '\u00A0' + `${this.state.cqi + 1}/${this.state.questionsData.length}`} onBackClick={() => this.back()} />
+        <Header title={"Question" + '\u00A0' + `${this.state.cqi + 1}/${this.state.questionsData.length}`} onBackClick={this.state.cqi - 1 >= 0 ? () => this.back() : undefined} />
         <Buttons
           onPour={async () => await this.saveAndGoToNextQuestion("pour")}
           onContre={async () => await this.saveAndGoToNextQuestion("contre")}
