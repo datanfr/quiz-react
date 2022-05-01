@@ -25,7 +25,7 @@ export function OnBoarding() {
 
     const Passer = (props: { style: any }) => <div
         onClick={closeOnboarding}
-        style={Object.assign({ cursor: "pointer", padding: "10px", color: "#C4C4C4" }, props.style)}
+        style={Object.assign({ cursor: "pointer", padding: "10px", color: "rgba(125,125,125, 0.5" }, props.style)}
     >
         Passer
     </div>
@@ -43,6 +43,13 @@ export function OnBoarding() {
         {curPage + 1 < nbPage ? "Suivant" : "Je commence"}
     </button >
 
+    const Back = () => curPage - 1 >= 0 ? <button style={{
+        position: 'absolute', bottom: 10, left: "10%", padding: "10px", fontSize: "16px", fontWeight: "bolder", lineHeight: "24px",
+        color: "#00B794", borderRadius: 5, border: "none", cursor: "pointer", background: 'none'
+    }} onClick={() => curPage - 1 >= 0 ? setCurPage(curPage - 1) : closeOnboarding()}>
+        Précédent
+    </button > : null
+
 
     const pages = [
         <>
@@ -57,7 +64,7 @@ export function OnBoarding() {
                 </div>
             </div>
             <div className="bottom-half pattern_background" style={{ display: 'flex', justifyContent: 'center', flex: "1 1 50%" }}>
-                <div style={{ display: "flex", flexDirection: "column", justifyContent: 'center', textAlign: 'center' }}>
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: 'center', textAlign: 'center', maxWidth: 300 }}>
                     <div className="titre" style={{ display: "flex", justifyContent: 'center' }}>
                         <h3>
                             Êtes-vous proche <br />
@@ -74,56 +81,38 @@ export function OnBoarding() {
             </div>
         </>,
         <>
-            <div className="top-half" style={{ display: 'flex', flexDirection: "column", justifyContent: 'space-evenly', flex: "1 1 50%" }}>
-                <div className="logo" style={{ display: "flex", justifyContent: 'center' }}>
-                    <img src='assets/datan.png' />
-                </div>
-                <div style={{ display: "flex", justifyContent: 'center' }}>
-                    <h1 className={cx("titre")}>
-                        <span style={{ color: "var(--datan-green)" }}>Mon député.e</span><br />et moi
-                    </h1>
-                </div>
+            <div className="top-half" style={{ display: 'flex', flexDirection: "column", justifyContent: 'space-evenly', flex: "1 1 50%", position: 'relative', backgroundColor: "rgba(0, 183, 148, 0.15)"}}>
+                <img  src="/assets/icon-step1.svg" style={{height: 240}}/>
             </div>
-            <div className="bottom-half pattern_background" style={{ display: 'flex', justifyContent: 'center', flex: "1 1 50%" }}>
-                <div style={{ display: "flex", flexDirection: "column", justifyContent: 'center', textAlign: 'center' }}>
+            <div className="bottom-half" style={{ display: 'flex', justifyContent: 'center', flex: "1 1 50%" }}>
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: 'center', textAlign: 'center', maxWidth: 300 }}>
                     <div className="titre" style={{ display: "flex", justifyContent: 'center' }}>
                         <h3>
-                            Êtes-vous proche <br />
-                            de votre député ?
+                            Je vote sur des propositions débattues à l'Assemblée
                         </h3>
                     </div>
                     <div className="text" style={{ display: "flex", justifyContent: 'center' }}>
                         <p className={cx("text")}>
-                            Découvrez en 3 minutes <br />
-                            si vous votez comme votre député
+                            A l'Assemblée nationale, les députés votent des propositions de loi précises. Comme eux, prenez position et votez.
                         </p>
                     </div>
                 </div>
             </div>
         </>,
         <>
-            <div className="top-half" style={{ display: 'flex', flexDirection: "column", justifyContent: 'space-evenly', flex: "1 1 50%" }}>
-                <div className="logo" style={{ display: "flex", justifyContent: 'center' }}>
-                    <img src='assets/datan.png' />
-                </div>
-                <div style={{ display: "flex", justifyContent: 'center' }}>
-                    <h1 className={cx("titre")}>
-                        <span style={{ color: "var(--datan-green)" }}>Mon député.e</span><br />et moi
-                    </h1>
-                </div>
+            <div className="top-half" style={{ display: 'flex', flexDirection: "column", justifyContent: 'space-evenly', flex: "1 1 50%", position: 'relative', backgroundColor: "rgba(0, 183, 148, 0.15)"}}>
+                <img  src="/assets/icon-step2.svg" style={{height: 240}}/>
             </div>
-            <div className="bottom-half pattern_background" style={{ display: 'flex', justifyContent: 'center', flex: "1 1 50%" }}>
-                <div style={{ display: "flex", flexDirection: "column", justifyContent: 'center', textAlign: 'center' }}>
+            <div className="bottom-half" style={{ display: 'flex', justifyContent: 'center', flex: "1 1 50%" }}>
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: 'center', textAlign: 'center', maxWidth: 300 }}>
                     <div className="titre" style={{ display: "flex", justifyContent: 'center' }}>
                         <h3>
-                            Êtes-vous proche <br />
-                            de votre député ?
+                            Mon député vote-t-il comme moi ?
                         </h3>
                     </div>
                     <div className="text" style={{ display: "flex", justifyContent: 'center' }}>
                         <p className={cx("text")}>
-                            Découvrez en 3 minutes <br />
-                            si vous votez comme votre député
+                            Découvrez votre proximité politique avec votre député, ainsi qu’avec tous les groupes parlementaires de l’Assemblée nationale.
                         </p>
                     </div>
                 </div>
@@ -137,10 +126,11 @@ export function OnBoarding() {
             width: 'calc(100vw - 10px)', height: 'calc(min(100vw * 1.8, 100vh) - 10px)', maxWidth: 800, maxHeight: 600,
             display: 'flex', flexDirection: "column", justifyContent: 'space-evenly'
         }}>
+            {pages[curPage]}
             <DotDotDot curPage={curPage} nbPage={nbPage} />
             <Passer style={{ position: "absolute", top: 0, right: 0 }} />
+            <Back />
             <Next />
-            {pages[curPage]}
         </div>
     </IonPage>
 }
