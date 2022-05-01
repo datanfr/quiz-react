@@ -37,7 +37,7 @@ export function OnBoarding() {
     </div>
 
     const Next = () => <button style={{
-        position: 'absolute', bottom: 10, right: "10%", padding: 10,
+        position: 'absolute', bottom: 10, right: "10%", padding: "10px", fontSize: "16px", fontWeight: "bolder", lineHeight: "24px",
         background: "#00B794", borderRadius: 5, border: "none", cursor: "pointer"
     }} onClick={() => curPage + 1 < nbPage ? setCurPage(curPage + 1) : closeOnboarding()}>
         {curPage + 1 < nbPage ? "Suivant" : "Je commence"}
