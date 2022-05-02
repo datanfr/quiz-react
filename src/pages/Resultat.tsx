@@ -19,7 +19,7 @@ import { getResponses, Reponse } from '../models/Reponse';
 import { calculateDeputeSimilarity, calculateGroupeSimilarity } from '../calculateScore';
 import { buildIndex, search, Index as SearchIndex, SearchResponse } from "../searchAlgo";
 import { highlightArray, highlightField } from '../highlightAlgo';
-import { groupBy, hexToHSL, hslaToCss, hslToCss } from '../utils';
+import { groupBy, hexToHSL, hslaToCss, hwbLerp, hslToCss, hwbToCss } from '../utils';
 const { Storage } = Plugins;
 
 
@@ -153,7 +153,7 @@ class Resultat extends PureComponent<Props, State> {
       <Header title={`Résultat`} />
       <div className={cx("buttons", "center-body")} >
         <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
-          <Link to="/" className={cx("datan-green-bg", "flex", "align-justify-center", "shadow", "button")} style={{ height: "60px" }}>
+          <Link to="/questions" className={cx("datan-green-bg", "flex", "align-justify-center", "shadow", "button")} style={{ height: "60px" }}>
             Recommencer le test
           </Link>
           <div className={cx("datan-blue-bg", "flex", "align-justify-center", "shadow", "button")} style={{ height: "60px" }} onClick={() => {
@@ -170,6 +170,7 @@ class Resultat extends PureComponent<Props, State> {
 }
 
 function ResDepute(props: { data: ResDeputeType}) {
+  const badgeBgColor = hwbLerp(props.data.similarity)
   const groupColor = props.data.depute.last.couleurAssociee as string
   return <a key={props.data.depute.id} href={props.data.depute['page-url']} target="_blank">
     <div className={cx("res-depute")}>
@@ -186,13 +187,13 @@ function ResDepute(props: { data: ResDeputeType}) {
         <div className={cx("title")} style={{ fontSize: (2.9 / (props.data.depute.name.length ** 0.30)) + "em" }}>{props.data.depute.name}</div>
         <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}>{props.data.depute.last.libelle}</div>
       </div>
-      <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.data.similarity * 100)}%</div>
+      <div className={cx("badge")} style={{backgroundColor: hwbToCss(badgeBgColor)}} onMouseEnter={() => console.log(props.data)}>{Math.round(props.data.similarity * 100)}%</div>
     </div >
   </a>
 }
 
 function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeType }) {
-
+  const badgeBgColor = hwbLerp(props.resDepute?.similarity )
   const {h,s,l} = props.data.item.last.couleurAssociee ? hexToHSL(props.data.item.last.couleurAssociee as string) : {h: 0, s:0, l:0} //Couleur député non inscrit
   const hglnom = highlightField(props.data.metadata, "name", {color:  hslToCss({h,s,l: l*0.80}), fontWeight: 900}) || props.data.item.name
   let hglcommunes = highlightArray(props.data.metadata, "depute.cities.indexedName", {color:  hslToCss({h,s,l: l > 0.4 ? l-0.20 : l+0.20}), fontWeight: 800}) || []
@@ -223,12 +224,16 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
         <div className={cx("groupe")} style={{ color: hslaToCss({h,s,l}, 1), fontSize: "0.8em" }} data-color={hslToCss({h,s,l})}  data-color-high={hslToCss({h,s,l: l > 0.3 ? l-0.30 : l+0.30})}>{props.data.item.last.libelle}</div>
         <div className={cx("groupe")} style={{ color: hslaToCss({h,s,l}, 0.75), fontSize: "0.8em" }}><CommuneListHtml /></div>
       </div>
-      <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.resDepute?.similarity * 100)}%</div>
+      <div className={cx("badge")} style={{backgroundColor: hwbToCss(badgeBgColor)}}  onMouseEnter={() => console.log(props.data)}>{Math.round(props.resDepute?.similarity * 100)}%</div>
     </div >
   </a>
 }
 
+
+
 function ResGroupe(props: { data: ResGroupeType }) {
+
+  const badgeBgColor = hwbLerp(props.data.similarity)
 
   return <a href={props.data.groupe['page-url']} target="_blank">
     <div className={cx("res-groupe")}>
@@ -238,9 +243,13 @@ function ResGroupe(props: { data: ResGroupeType }) {
         </div>
       </div>
       <div className={cx("data-container")}>
-        <div className={cx("title")} style={{ fontSize: (3 / (props.data.groupe.name.length ** 0.30)) + "em" }}>{props.data.groupe.name}</div>
+        <div className={cx("title")} style={{ fontSize: (3 / (props.data.groupe.name.length ** 0.30)) + "em" }}>
+          {props.data.groupe.name}
+        </div>
       </div>
-      <div className={cx("badge")} onMouseEnter={() => console.log(props.data)}>{Math.round(props.data.similarity * 100)}%</div>
+      <div className={cx("badge")} style={{backgroundColor: hwbToCss(badgeBgColor)}} onMouseEnter={() => console.log(props.data)}>
+          {Math.round(props.data.similarity * 100)}%
+      </div>
     </div >
   </a>
 }

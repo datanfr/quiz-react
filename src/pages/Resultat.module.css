@@ -116,7 +116,7 @@ a {
   text-align: center;
 }
 
-.search-input, .search-input:focus {
+.search-input, .search-input:focus, .search-input:focus-visible {
   --margin: 35px;
   width: calc(100% - 2*var(--margin));
   height: 30px;
@@ -129,4 +129,8 @@ a {
   z-index: 999;
   position: sticky;
   top: 85px;
+}
+.search-input:focus-visible {
+  outline: 0;
+  border: 1px solid rgba(0, 183, 148, 0.8);
 }
