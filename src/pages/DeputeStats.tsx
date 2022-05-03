@@ -38,11 +38,11 @@ export const DeputeStatsPage: React.FC = () => {
     </IonPage>
 }
 
-export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ deputeStats: { deputeResponses } }) => {
+export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ deputeStats: { deputeResponses, userResponses, questions } }) => {
     // const badgeBgColor = hwbLerp(props.data.similarity)
     const groupColor = deputeResponses.last.couleurAssociee as string
 
-    return <div className={cx("center-body")}>
+    return <div style={{ overflow: "auto" }}><div className={cx("center-body")}>
         <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
             <div className={cx("profile-container")}>
                 <div className={cx("profile")}>
@@ -58,7 +58,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                     <div className={cx("data-container")}>
                         <div>
                             <div className={cx("title")} style={{ fontSize: (4 / (deputeResponses.name.length ** 0.30)) + "em" }}>{deputeResponses.name}</div>
-                            <div className={cx("groupe")} style={{ color: groupColor}}>{deputeResponses.last.libelle}</div>
+                            <div className={cx("groupe")} style={{ color: groupColor }}>{deputeResponses.last.libelle}</div>
                         </div>
                     </div>
                     {/* <div className={cx("badge")} style={{ backgroundColor: hwbToCss(badgeBgColor) }} >{Math.round(props.data.similarity * 100)}%</div> */}
@@ -66,9 +66,27 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
             </div>
             <a className={cx("datan-link-container")} href={deputeResponses["page-url"]} target="_blank">
                 <div className={cx("datan-link")}>
-                    <span>EN SAVOIR PLUS SUR</span>&nbsp;&nbsp;<img src="/assets/logo_svg.svg" width={120}/>
+                    <span>EN SAVOIR PLUS SUR</span>&nbsp;&nbsp;<img src="/assets/logo_svg.svg" width={120} />
                 </div>
             </a>
+            <div className={cx("cards-container")}>
+                {questions.map(q => {
+                    const d = {
+                        q,
+                        user: userResponses[q.vote_id],
+                        depute: deputeResponses.votes[q.vote_id]
+                    }
+                    return <div style={{display: "flex", flexDirection: "column", padding: "10px", width: 300, margin: 10, boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.52)"}}>
+                        <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+                            <div style={{textAlign: "center", padding: 10}}>{q.voteTitre}</div>
+                        </div>
+                        <div  style={{display: "flex", alignItems: "center", justifyContent: "space-evenly"}}>
+                            <div>le député: {d.depute}</div> <div>vous: {d.user}</div>
+                        </div>
+                    </div>
+                })}
+            </div>
         </div>
+    </div>
     </div>
 }

@@ -175,3 +175,9 @@ a {
   outline: 0;
   border: 1px solid rgba(0, 183, 148, 0.8);
 }
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
