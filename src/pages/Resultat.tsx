@@ -21,6 +21,7 @@ import { groupBy, hexToHSL, hslaToCss, hwbLerp, hslToCss, hwbToCss } from '../ut
 const { Storage } = Plugins;
 
 
+
 let cx = classNames.bind(classes);
 
 type ResDeputeType = { depute: DeputeWithVote, similarity: number }
@@ -43,7 +44,7 @@ class Resultat extends PureComponent<Props, State> {
 
   params: URLSearchParams;
   timeoutHandle: NodeJS.Timeout | null;
-  myRef : React.RefObject<HTMLDivElement>
+  myRef: React.RefObject<HTMLDivElement>
 
   constructor(props: Props) {
     super(props);
@@ -104,7 +105,7 @@ class Resultat extends PureComponent<Props, State> {
       this.setState({ searchTxt });
       if (this.state.deputeIndex) {
         const filteredDeputes = searchTxt ? search(this.state.deputeIndex, searchTxt) : null
-        Object.assign(window as any, {filteredDeputes})
+        Object.assign(window as any, { filteredDeputes })
         this.setState({ filteredDeputes })
       }
       this.myRef.current?.scrollTo(0, 0);
@@ -118,9 +119,9 @@ class Resultat extends PureComponent<Props, State> {
       const currentChunk = this.state.filteredDeputes.slice(0, 20 * this.state.chunk)
       everythingLoaded = 20 * this.state.chunk > this.state.filteredDeputes.length
       DeputeResList = () => <>
-      {currentChunk.map(x => <ResDeputeFiltered data={x} resDepute={this.state.deputeScoreById[x.item.id]} />)}
+        {currentChunk.map(x => <ResDeputeFiltered data={x} resDepute={this.state.deputeScoreById[x.item.id]} />)}
       </>
-    } else {  
+    } else {
       const currentChunk = this.state.sortedDeputes.slice(0, 20 * this.state.chunk)
       everythingLoaded = 20 * this.state.chunk > this.state.sortedDeputes.length
       DeputeResList = () => <>
@@ -162,12 +163,11 @@ class Resultat extends PureComponent<Props, State> {
           </div>
         </div>
       </div>
-
     </IonPage>
   }
 }
 
-function ResDepute(props: { data: ResDeputeType}) {
+function ResDepute(props: { data: ResDeputeType }) {
   const badgeBgColor = hwbLerp(props.data.similarity)
   const groupColor = props.data.depute.last.couleurAssociee as string
 
@@ -186,16 +186,16 @@ function ResDepute(props: { data: ResDeputeType}) {
         <div className={cx("title")} style={{ fontSize: (2.9 / (props.data.depute.name.length ** 0.30)) + "em" }}>{props.data.depute.name}</div>
         <div className={cx("groupe")} style={{ color: groupColor, fontSize: "0.8em" }}>{props.data.depute.last.libelle}</div>
       </div>
-      <div className={cx("badge")} style={{backgroundColor: hwbToCss(badgeBgColor)}} onMouseEnter={() => console.log(props.data)}>{Math.round(props.data.similarity * 100)}%</div>
+      <div className={cx("badge")} style={{ backgroundColor: hwbToCss(badgeBgColor) }} onMouseEnter={() => console.log(props.data)}>{Math.round(props.data.similarity * 100)}%</div>
     </div >
   </Link>
 }
 
 function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeType }) {
-  const badgeBgColor = hwbLerp(props.resDepute?.similarity )
-  const {h,s,l} = props.data.item.last.couleurAssociee ? hexToHSL(props.data.item.last.couleurAssociee as string) : {h: 0, s:0, l:0} //Couleur député non inscrit
-  const hglnom = highlightField(props.data.metadata, "name", {color:  hslToCss({h,s,l: l*0.80}), fontWeight: 900}) || props.data.item.name
-  let hglcommunes = highlightArray(props.data.metadata, "depute.cities.indexedName", {color:  hslToCss({h,s,l: l > 0.4 ? l-0.20 : l+0.20}), fontWeight: 800}) || []
+  const badgeBgColor = hwbLerp(props.resDepute?.similarity)
+  const { h, s, l } = props.data.item.last.couleurAssociee ? hexToHSL(props.data.item.last.couleurAssociee as string) : { h: 0, s: 0, l: 0 } //Couleur député non inscrit
+  const hglnom = highlightField(props.data.metadata, "name", { color: hslToCss({ h, s, l: l * 0.80 }), fontWeight: 900 }) || props.data.item.name
+  let hglcommunes = highlightArray(props.data.metadata, "depute.cities.indexedName", { color: hslToCss({ h, s, l: l > 0.4 ? l - 0.20 : l + 0.20 }), fontWeight: 800 }) || []
   if (hglcommunes.length > 20) {
     hglcommunes = [...hglcommunes.slice(0, 19), `et ${hglcommunes.length - 19} autres...`]
   }
@@ -207,7 +207,7 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
   // }
   // const CpListHtml = () => hglCp.length ? <div className="commune-list">{hglCp.map((x) => <div className="elem">{x}</div>)}</div> : null
 
-  return <a key={props.data.item.id} href={props.data.item['page-url']} target="_blank">
+  return <Link key={props.data.item.id} to={`stats/${props.data.item.id}`} >
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>
@@ -220,12 +220,12 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
       </div>
       <div className={cx("data-container")}>
         <div className={cx("title")} style={{ fontSize: (2.9 / (props.data.item.name.length ** 0.30)) + "em" }}>{hglnom}</div>
-        <div className={cx("groupe")} style={{ color: hslaToCss({h,s,l}, 1), fontSize: "0.8em" }} data-color={hslToCss({h,s,l})}  data-color-high={hslToCss({h,s,l: l > 0.3 ? l-0.30 : l+0.30})}>{props.data.item.last.libelle}</div>
-        <div className={cx("groupe")} style={{ color: hslaToCss({h,s,l}, 0.75), fontSize: "0.8em" }}><CommuneListHtml /></div>
+        <div className={cx("groupe")} style={{ color: hslaToCss({ h, s, l }, 1), fontSize: "0.8em" }} data-color={hslToCss({ h, s, l })} data-color-high={hslToCss({ h, s, l: l > 0.3 ? l - 0.30 : l + 0.30 })}>{props.data.item.last.libelle}</div>
+        <div className={cx("groupe")} style={{ color: hslaToCss({ h, s, l }, 0.75), fontSize: "0.8em" }}><CommuneListHtml /></div>
       </div>
-      <div className={cx("badge")} style={{backgroundColor: hwbToCss(badgeBgColor)}}  onMouseEnter={() => console.log(props.data)}>{Math.round(props.resDepute?.similarity * 100)}%</div>
+      <div className={cx("badge")} style={{ backgroundColor: hwbToCss(badgeBgColor) }} onMouseEnter={() => console.log(props.data)}>{Math.round(props.resDepute?.similarity * 100)}%</div>
     </div >
-  </a>
+  </Link>
 }
 
 
@@ -246,8 +246,8 @@ function ResGroupe(props: { data: ResGroupeType }) {
           {props.data.groupe.name}
         </div>
       </div>
-      <div className={cx("badge")} style={{backgroundColor: hwbToCss(badgeBgColor)}} onMouseEnter={() => console.log(props.data)}>
-          {Math.round(props.data.similarity * 100)}%
+      <div className={cx("badge")} style={{ backgroundColor: hwbToCss(badgeBgColor) }} onMouseEnter={() => console.log(props.data)}>
+        {Math.round(props.data.similarity * 100)}%
       </div>
     </div >
   </a>

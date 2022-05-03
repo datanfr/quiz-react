@@ -2,9 +2,13 @@ import { IonPage } from "@ionic/react"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router"
 import Header from "../components/Header"
-import {DeputeWithScore, DeputeWithVote, fetchingVotesPerDepute } from "../models/Depute"
+import { DeputeWithScore, DeputeWithVote, fetchingVotesPerDepute } from "../models/Depute"
 import { fetchQuestions, Questions } from "../models/Question"
 import { getResponses, Reponse } from "../models/Reponse"
+import classNames from 'classnames/bind';
+import classes from './DeputeStats.module.css';
+
+let cx = classNames.bind(classes);
 
 type DeputeStatsData = {
     userResponses: Record<string, Reponse>;
@@ -12,30 +16,59 @@ type DeputeStatsData = {
     questions: Questions;
 }
 
-export const DeputeStatsPage : React.FC = () => {
+export const DeputeStatsPage: React.FC = () => {
     const fetchingResponses = getResponses()
 
     const [deputeStats, setDeputeStats] = useState<DeputeStatsData | null>(null)
-    const { mpId } = useParams<{mpId:string}>();
+    const { mpId } = useParams<{ mpId: string }>();
     useEffect(() => {
         Promise.all([fetchingResponses, fetchingVotesPerDepute, fetchQuestions]).then(([userResponses, votesPerDepute, questions]) => {
-            const deputeResponses = votesPerDepute["PA"+mpId]
+            const deputeResponses = votesPerDepute["PA" + mpId]
             setDeputeStats({
                 userResponses,
                 deputeResponses,
                 questions
             })
         })
-    })
+    }, [])
 
     return <IonPage>
         <Header title={`Résultat`} />
-        {deputeStats ? <DeputeStats deputeStats={deputeStats}  /> : "Loading data" }
+        {deputeStats ? <DeputeStats deputeStats={deputeStats} /> : "Loading data"}
     </IonPage>
 }
 
-export const DeputeStats : React.FC<{deputeStats : DeputeStatsData}> = ({deputeStats}) => {
-    return <pre>
-        {JSON.stringify(deputeStats, null, ' ')}
-    </pre>
+export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ deputeStats: { deputeResponses } }) => {
+    // const badgeBgColor = hwbLerp(props.data.similarity)
+    const groupColor = deputeResponses.last.couleurAssociee as string
+
+    return <div className={cx("center-body")}>
+        <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
+            <div className={cx("profile-container")}>
+                <div className={cx("profile")}>
+                    <div className={cx("picture-container")}>
+                        <div className={cx("depute-img-circle")}>
+                            <picture>
+                                <source srcSet={`https://datan.fr/assets/imgs/deputes_nobg_webp/depute_${deputeResponses.id}_webp.webp`} type="image/webp" />
+                                <source srcSet={`"https://datan.fr/assets/imgs/deputes_nobg/depute_${deputeResponses.id}.png`} type="image/png" />
+                                <img src={`https://datan.fr/assets/imgs/deputes_original/depute_${deputeResponses.id}.png`} width="150" height="192" alt={deputeResponses.name} />
+                            </picture>
+                        </div>
+                    </div>
+                    <div className={cx("data-container")}>
+                        <div>
+                            <div className={cx("title")} style={{ fontSize: (4 / (deputeResponses.name.length ** 0.30)) + "em" }}>{deputeResponses.name}</div>
+                            <div className={cx("groupe")} style={{ color: groupColor}}>{deputeResponses.last.libelle}</div>
+                        </div>
+                    </div>
+                    {/* <div className={cx("badge")} style={{ backgroundColor: hwbToCss(badgeBgColor) }} >{Math.round(props.data.similarity * 100)}%</div> */}
+                </div>
+            </div>
+            <a className={cx("datan-link-container")} href={deputeResponses["page-url"]} target="_blank">
+                <div className={cx("datan-link")}>
+                    <span>EN SAVOIR PLUS SUR</span>&nbsp;&nbsp;<img src="/assets/logo_svg.svg" width={120}/>
+                </div>
+            </a>
+        </div>
+    </div>
 }
