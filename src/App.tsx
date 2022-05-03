@@ -28,6 +28,7 @@ import './theme/variables.css';
 import Resultat from './pages/Resultat';
 import { BuildVotes } from './pages/BuildVotes';
 import { OnBoarding } from './pages/OnBoarding';
+import { DeputeStats, DeputeStatsPage } from './pages/DeputeStats';
 
 console.log(localStorage.onboardingDone)
 
@@ -49,6 +50,9 @@ const App: React.FC = () => (
       </Route>
       <Route exact path="/buildVote">
         <BuildVotes />
+      </Route>
+      <Route exact path="/stats/:mpId">
+        <DeputeStatsPage />
       </Route>
     </IonReactRouter>
     

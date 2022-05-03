@@ -170,7 +170,8 @@ class Resultat extends PureComponent<Props, State> {
 function ResDepute(props: { data: ResDeputeType}) {
   const badgeBgColor = hwbLerp(props.data.similarity)
   const groupColor = props.data.depute.last.couleurAssociee as string
-  return <a key={props.data.depute.id} href={props.data.depute['page-url']} target="_blank">
+
+  return <Link key={props.data.depute.id} to={`stats/${props.data.depute.id}`} >
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>
@@ -187,7 +188,7 @@ function ResDepute(props: { data: ResDeputeType}) {
       </div>
       <div className={cx("badge")} style={{backgroundColor: hwbToCss(badgeBgColor)}} onMouseEnter={() => console.log(props.data)}>{Math.round(props.data.similarity * 100)}%</div>
     </div >
-  </a>
+  </Link>
 }
 
 function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeType }) {
