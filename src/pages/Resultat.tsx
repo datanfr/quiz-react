@@ -8,10 +8,8 @@ import React, { PureComponent } from 'react';
 import ReactDOMServer from 'react-dom/server'
 import Header from '../components/Header';
 
-import votesPerDepute from '../data/votes-per-depute.json'
-import votesPerGroupe from '../data/votes-per-groupe.json'
 import { fetchingVotesPerGroupe, GroupeWithVote } from "../models/Groupe"
-import { buildDeputeIndex, DeputeWithScore, DeputeWithVote, fetchingVotesPerDepute } from "../models/Depute"
+import { buildDeputeIndex, DeputeWithScore, DeputeWithVote, fetchingDeputes, fetchingVotesPerDepute } from "../models/Depute"
 
 import classes from './Resultat.module.css';
 import { Plugins } from '@capacitor/core';
@@ -69,9 +67,9 @@ class Resultat extends PureComponent<Props, State> {
     const fetchingResponses = getResponses()
     //const fetchingVotesPerDepute = Promise.resolve(votesPerDepute)
     fetchingResponses.then(userVotes => this.setState({ userVotes }))
-    Promise.all([fetchingResponses, fetchingVotesPerDepute, fetchingVotesPerGroupe, buildDeputeIndex]).then(([responses, votesPerDepute, votesPerGroupe, deputeIndex]) => {
-      Object.assign(window as any, { votesPerDepute, votesPerGroupe })
-      const scoredDeputes = votesPerDepute.map(depute => ({ depute, ...calculateDeputeSimilarity(depute.votes as Record<string, Reponse | null>, responses) }))
+    Promise.all([fetchingResponses, fetchingDeputes, fetchingVotesPerGroupe, buildDeputeIndex]).then(([responses, deputes, votesPerGroupe, deputeIndex]) => {
+      Object.assign(window as any, { deputes, votesPerGroupe })
+      const scoredDeputes = deputes.map(depute => ({ depute, ...calculateDeputeSimilarity(depute.votes as Record<string, Reponse | null>, responses) }))
       const sortedDeputes = scoredDeputes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       const deputeScoreById = groupBy(sortedDeputes, x => x.depute.id)
       const scoredGroupes = votesPerGroupe.map(groupe => ({ groupe, ...calculateGroupeSimilarity(groupe.votes as Record<string, { pour: number, contre: number, abstention: number }>, responses) }))

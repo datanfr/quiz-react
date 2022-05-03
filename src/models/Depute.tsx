@@ -111,16 +111,16 @@ export type DeputeWithScore = {
 const votesPerDeputeById: Record<string, DeputeWithVote> = {}
 Object.assign(window, { votesPerDeputeById })
 
-
-export const fetchingVotesPerDepute = buildDeputes().then(x => Object.values(x))
-export const buildDeputeIndex = fetchingVotesPerDepute.then(votesPerDepute => buildIndex(votesPerDepute/*, sortedGroupes*/))
+export const fetchingVotesPerDepute = buildDeputes()
+export const fetchingDeputes = fetchingVotesPerDepute.then(x => Object.values(x))
+export const buildDeputeIndex = fetchingDeputes.then(deputes => buildIndex(deputes/*, sortedGroupes*/))
 
 
 function buildDeputes() {
     return fetchQuestions
         .then(json => {
             //console.log("Size fetched", json.length)
-            const promisePerVote: Promise<void>[] = json.map((vote: any) => {
+            const promisePerVote: Promise<void[]>[] = json.map((vote: any) => {
                 //console.log("Fetching ", vote.voteNumero)
                 return buildDepute(vote.voteNumero)
             })
@@ -157,7 +157,7 @@ function buildDepute(id: number) {
         fetchCitiesFromLocalStorage
     ]).then(([voteDepute, deputeLastByMpId, cities]) => {
         const building = (voteDepute as VoteDepute[]).map(({ mpId, nameFirst, nameLast, vote_libelle, dptSlug, nameUrl }) => {
-            return new Promise<null>((res) => setTimeout(() => {
+            return new Promise<void>((res) => setTimeout(() => {
                 const obj: DeputeWithVote = votesPerDeputeById[mpId] || {
                     id: mpId.slice(2),
                     "name": nameFirst + " " + nameLast,
@@ -180,7 +180,7 @@ function buildDepute(id: number) {
                 }
                 obj.votes[`VTANR5L15V${id}`] = vote_libelle
                 votesPerDeputeById[mpId] = obj
-                res(null)
+                res()
             }));
         })
         return Promise.all(building)

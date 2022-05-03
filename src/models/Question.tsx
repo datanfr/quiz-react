@@ -1,3 +1,4 @@
+import question from "../data/questions.json"
 
 //https://datan.fr/api/votes/get_vote_deputes?num=1&legislature=15
 //https://datan.fr/api/votes/get_vote_groupes_simplified?num=1&legislature=15
@@ -38,6 +39,10 @@
 //             "texte": "La fragilit\u00e9 \u00e9conomique de la betterave n\u2019est pas seulement due \u00e0 la maladie de la jaunisse, mais \u00e0 la fin des quotas sucriers et des prix minimums."
 //         }
 //     ]
-// },
+// }
 
-export const fetchQuestions = fetch('https://datan.fr/api/quizz/get_questions_api?quizz=1').then(resp => resp.json())
+export type Questions = typeof question
+export type Question = Questions[number]
+export type Argument = Question["arguments"][number]
+
+export const fetchQuestions = fetch('https://datan.fr/api/quizz/get_questions_api?quizz=1').then(resp => resp.json() as Promise<Questions>)
