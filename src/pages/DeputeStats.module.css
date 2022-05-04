@@ -13,7 +13,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 25vh;
 }
 
 .datan-link-container {
@@ -180,4 +179,23 @@ a {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
+}
+
+.button {
+  color: var(--datan-white);
+  height: 40px;
+  width: 100px;
+  cursor: pointer;
+}
+
+.contre {
+  background-color: var(--datan-red)
+}
+
+.pour {
+  background-color: var(--datan-green)
+}
+
+.osef {
+  background-color: var(--datan-yellow)
 }
