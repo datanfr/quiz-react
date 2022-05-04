@@ -1,6 +1,6 @@
 import { IonPage } from "@ionic/react"
 import { useEffect, useState } from "react"
-import { useParams } from "react-router"
+import { useHistory, useParams } from "react-router"
 import Header from "../components/Header"
 import { DeputeWithScore, DeputeWithVote, fetchingVotesPerDepute } from "../models/Depute"
 import { fetchQuestions, Questions } from "../models/Question"
@@ -45,7 +45,7 @@ type DeputeStatsData = {
 
 export const DeputeStatsPage: React.FC = () => {
     const fetchingResponses = getResponses()
-
+    const history = useHistory()
     const [deputeStats, setDeputeStats] = useState<DeputeStatsData | null>(null)
     const { mpId } = useParams<{ mpId: string }>();
     useEffect(() => {
@@ -61,7 +61,7 @@ export const DeputeStatsPage: React.FC = () => {
 
     return <IonPage>
         {deputeStats ? <DeputeStats deputeStats={deputeStats} /> : "Loading data"}
-        <Header title={`Résultat`} />
+        <Header onBackClick={() => history.goBack()} title={`Résultat`} />
     </IonPage>
 }
 
@@ -71,7 +71,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
 
     return <div style={{ overflow: "auto" }}><div className={cx("center-body")} style={{gridTemplateColumns: "auto minmax(0, 1920px) auto"}}>
         <div className={cx("body")} style={{ marginTop: "var(--header-height)"}}>
-            <div style={{ display: "flex", flexDirection: "column", height: "30vh", justifyContent: "space-evenly" }}>
+            <div style={{ display: "flex", flexDirection: "column", height: "30vh", minHeight: "160px", justifyContent: "space-evenly" }}>
                 <div className={cx("profile-container")}>
                     <div className={cx("profile")}>
                         <div className={cx("picture-container")}>
