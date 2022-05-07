@@ -8,6 +8,7 @@ import { getResponses, Reponse } from "../models/Reponse"
 import classNames from 'classnames/bind';
 import classes from './DeputeStats.module.css';
 import { counter } from "@fortawesome/fontawesome-svg-core"
+import { groupBy } from "../utils"
 
 let cx = classNames.bind(classes);
 
@@ -65,9 +66,30 @@ export const DeputeStatsPage: React.FC = () => {
     </IonPage>
 }
 
+const pc = ["pour", "contre"]
+const allCompOutcome = ["accord", "desaccord", "nspp"] as const
+type CompOutcome = typeof allCompOutcome[number]
+
 export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ deputeStats: { deputeResponses, userResponses, questions } }) => {
     // const badgeBgColor = hwbLerp(props.data.similarity)
     const groupColor = deputeResponses.last.couleurAssociee as string
+
+    const compOutcome = questions.map((q) : CompOutcome => {
+        const ur = userResponses[q.vote_id];
+        const dr = deputeResponses.votes[q.vote_id]
+        if (pc.includes(ur) && pc.includes(dr)) {
+            return ur === dr ? "accord" : "desaccord"
+        } else {
+            return "nspp"
+        }
+    });
+    const counts = Object.fromEntries(allCompOutcome.map(o => [o, compOutcome.filter(x => x === o).length])) as Record<CompOutcome, number>
+    const toDisplay : any = {
+        counts,
+        confiance: (counts["accord"] + counts["desaccord"]) / compOutcome.length,
+        compatibilite: counts["accord"] / (counts["accord"] + counts["desaccord"])
+    }
+    toDisplay["score"] = toDisplay["confiance"] * toDisplay["compatibilite"]
 
     return <div style={{ overflow: "auto" }}><div className={cx("center-body")} style={{gridTemplateColumns: "auto minmax(0, 1920px) auto"}}>
         <div className={cx("body")} style={{ marginTop: "var(--header-height)"}}>
@@ -98,6 +120,9 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                     </div>
                 </a>
             </div>
+            <pre> 
+                {JSON.stringify(toDisplay, null, " ")}
+            </pre>
             <div className={cx("cards-container")}>
                 {questions.map(q => {
                     const d = {

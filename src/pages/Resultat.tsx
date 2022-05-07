@@ -14,6 +14,7 @@ import { buildDeputeIndex, DeputeWithScore, DeputeWithVote, fetchingDeputes, fet
 import classes from './Resultat.module.css';
 import { Plugins } from '@capacitor/core';
 import { getResponses, Reponse } from '../models/Reponse';
+import { fetchQuestions, Questions } from "../models/Question"
 import { calculateDeputeSimilarity, calculateGroupeSimilarity } from '../calculateScore';
 import { buildIndex, search, Index as SearchIndex, SearchResponse } from "../searchAlgo";
 import { highlightArray, highlightField } from '../highlightAlgo';
@@ -68,9 +69,9 @@ class Resultat extends PureComponent<Props, State> {
     const fetchingResponses = getResponses()
     //const fetchingVotesPerDepute = Promise.resolve(votesPerDepute)
     fetchingResponses.then(userVotes => this.setState({ userVotes }))
-    Promise.all([fetchingResponses, fetchingDeputes, fetchingVotesPerGroupe, buildDeputeIndex]).then(([responses, deputes, votesPerGroupe, deputeIndex]) => {
+    Promise.all([fetchingResponses, fetchingDeputes, fetchingVotesPerGroupe, buildDeputeIndex, fetchQuestions]).then(([responses, deputes, votesPerGroupe, deputeIndex, questions]) => {
       Object.assign(window as any, { deputes, votesPerGroupe })
-      const scoredDeputes = deputes.map(depute => ({ depute, ...calculateDeputeSimilarity(depute.votes as Record<string, Reponse | null>, responses) }))
+      const scoredDeputes = deputes.map(depute => ({ depute, ...calculateDeputeSimilarity(depute.votes as Record<string, Reponse | null>, responses, questions) }))
       const sortedDeputes = scoredDeputes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       const deputeScoreById = groupBy(sortedDeputes, x => x.depute.id)
       const scoredGroupes = votesPerGroupe.map(groupe => ({ groupe, ...calculateGroupeSimilarity(groupe.votes as Record<string, { pour: number, contre: number, abstention: number }>, responses) }))
