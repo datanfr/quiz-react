@@ -49,8 +49,8 @@
   }
 
   .osef {
-    color: var(--datan-grey);
     font-size: 2em;
+    color: var(--datan-grey);
     transform: translate(52px, 297px) rotate(-9deg);
     border: 5px solid var(--datan-grey);
   }

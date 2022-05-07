@@ -6,8 +6,8 @@ export const groupBy = <T, K extends keyof any>(list: T[], getKey: (item: T) => 
     }, {} as Record<K, T>);
 
 
-type Hsl = { h: number, s: number, l: number }
-type Hwb = { h: number, w: number, b: number }
+export type Hsl = { h: number, s: number, l: number }
+export type Hwb = { h: number, w: number, b: number }
 
 export function hexToHSL(hex: string): Hsl {
     let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -43,27 +43,19 @@ export function lerp(start: number, end: number, amt: number) {
     return (1 - amt) * start + amt * end
 }
 
-
-const cg = { //colorGradient
-    same: {
-        h: 169,
-        w: 0,
-        b: 0.28
-    },
-    different: {
-        h: 169,
-        w: 1,
-        b: 0.28
+export const hwbLerp = (amt: number, colorGradient : {start: Hwb, end:Hwb}) => {
+    //amt = (amt - 0.3) / (0.70 - 0.30)
+    return {
+        h: lerp(colorGradient.start.h, colorGradient.end.h, amt),
+        w: lerp(colorGradient.start.w, colorGradient.end.w, amt),
+        b: lerp(colorGradient.start.b, colorGradient.end.b, amt)
     }
 }
 
-export const hwbLerp = (amt: number) => {
-    //amt = (amt - 0.3) / (0.70 - 0.30)
-    return {
-        h: lerp(cg.different.h, cg.same.h, amt),
-        w: lerp(cg.different.w, cg.same.w, amt),
-        b: lerp(cg.different.b, cg.same.b, amt)
-    }
+export const hwb = {
+    green: {h:169, w:0, b:0.28},
+    yellow: {h:37, w:0.29, b:0},
+    red: {h:352, w:0.15, b:0.23},
 }
 
 export const hslToCss = ({ h, s, l }: Hsl) => `hsl(${h},${s * 100}%, ${l * 100}%)`;
@@ -72,7 +64,6 @@ export const hwbToCss = ({ h, w, b }: Hwb) => `hwb(${h} ${w * 100}% ${b * 100}%)
 
 (window as any).colorTool = {
     lerp,
-    cg,
     hwbLerp,
     hwbToCss,
     hslToCss,

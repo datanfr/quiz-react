@@ -8,14 +8,14 @@ import React, { PureComponent } from 'react';
 import ReactDOMServer from 'react-dom/server'
 import Header from '../components/Header';
 
-import { fetchingVotesPerGroupe, GroupeWithVote } from "../models/Groupe"
+import { fetchingGroupes, fetchingVotesPerGroupe, GroupeWithVote } from "../models/Groupe"
 import { buildDeputeIndex, DeputeWithScore, DeputeWithVote, fetchingDeputes, fetchingVotesPerDepute } from "../models/Depute"
 
 import classes from './Resultat.module.css';
 import { Plugins } from '@capacitor/core';
 import { getResponses, Reponse } from '../models/Reponse';
 import { fetchQuestions, Questions } from "../models/Question"
-import {algorithms as scoringAlgorithms, algorithmsNames, algoFromString} from '../scoring-algorithm/ScoringAlgorithm';
+import { algorithms as scoringAlgorithms, algorithmsNames, algoFromString } from '../scoring-algorithm/ScoringAlgorithm';
 import { buildIndex, search, Index as SearchIndex, SearchResponse } from "../searchAlgo";
 import { highlightArray, highlightField } from '../highlightAlgo';
 import { groupBy, hexToHSL, hslaToCss, hwbLerp, hslToCss, hwbToCss } from '../utils';
@@ -68,15 +68,15 @@ class Resultat extends PureComponent<Props, State> {
   componentDidMount() {
     const fetchingResponses = getResponses()
     const algorythmName = algoFromString(this.params.get("algorithm"), () => "confianceXCompatibilite")
-    console.log({algorythmName})
+    console.log({ algorythmName })
     //const fetchingVotesPerDepute = Promise.resolve(votesPerDepute)
     fetchingResponses.then(userVotes => this.setState({ userVotes }))
-    Promise.all([fetchingResponses, fetchingDeputes, fetchingVotesPerGroupe, buildDeputeIndex, fetchQuestions]).then(([responses, deputes, votesPerGroupe, deputeIndex, questions]) => {
-      Object.assign(window as any, { deputes, votesPerGroupe })
+    Promise.all([fetchingResponses, fetchingDeputes, fetchingGroupes, buildDeputeIndex, fetchQuestions]).then(([responses, deputes, groupes, deputeIndex, questions]) => {
+      Object.assign(window as any, { deputes, groupes })
       const scoredDeputes = deputes.map(depute => ({ depute, ...scoringAlgorithms[algorythmName].depute(depute.votes as Record<string, Reponse | null>, responses, questions) }))
       const sortedDeputes = scoredDeputes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       const deputeScoreById = groupBy(sortedDeputes, x => x.depute.id)
-      const scoredGroupes = votesPerGroupe.map(groupe => ({ groupe, ...scoringAlgorithms[algorythmName].groupe(groupe.votes as Record<string, { pour: number, contre: number, abstention: number }>, responses, questions) }))
+      const scoredGroupes = groupes.map(groupe => ({ groupe, ...scoringAlgorithms[algorythmName].groupe(groupe.votes as Record<string, { pour: number, contre: number, abstention: number }>, responses, questions) }))
       const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       const calculated = { sortedDeputes, deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null }
       Object.assign(window as any, { calculated })
@@ -170,11 +170,24 @@ class Resultat extends PureComponent<Props, State> {
   }
 }
 
+const badgeColorGradient = { //colorGradient
+  start: {//similar
+      h: 169,
+      w: 0,
+      b: 0.28
+  },
+  end: {//different
+      h: 169,
+      w: 1,
+      b: 0.28
+  }
+}
+
 function ResDepute(props: { data: ResDeputeType }) {
-  const badgeBgColor = hwbLerp(props.data.similarity)
+  const badgeBgColor = hwbLerp(props.data.similarity, badgeColorGradient)
   const groupColor = props.data.depute.last.couleurAssociee as string
 
-  return <Link key={props.data.depute.id} to={`stats/${props.data.depute.id}`} >
+  return <Link key={props.data.depute.id} to={`depute-stats/${props.data.depute.id}`} >
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>
@@ -195,7 +208,7 @@ function ResDepute(props: { data: ResDeputeType }) {
 }
 
 function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeType }) {
-  const badgeBgColor = hwbLerp(props.resDepute?.similarity)
+  const badgeBgColor = hwbLerp(props.resDepute?.similarity, badgeColorGradient)
   const { h, s, l } = props.data.item.last.couleurAssociee ? hexToHSL(props.data.item.last.couleurAssociee as string) : { h: 0, s: 0, l: 0 } //Couleur député non inscrit
   const hglnom = highlightField(props.data.metadata, "name", { color: hslToCss({ h, s, l: l * 0.80 }), fontWeight: 900 }) || props.data.item.name
   let hglcommunes = highlightArray(props.data.metadata, "depute.cities.indexedName", { color: hslToCss({ h, s, l: l > 0.4 ? l - 0.20 : l + 0.20 }), fontWeight: 800 }) || []
@@ -210,7 +223,7 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
   // }
   // const CpListHtml = () => hglCp.length ? <div className="commune-list">{hglCp.map((x) => <div className="elem">{x}</div>)}</div> : null
 
-  return <Link key={props.data.item.id} to={`stats/${props.data.item.id}`} >
+  return <Link key={props.data.item.id} to={`depute-stats/${props.data.item.id}`} >
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>
@@ -235,9 +248,9 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
 
 function ResGroupe(props: { data: ResGroupeType }) {
 
-  const badgeBgColor = hwbLerp(props.data.similarity)
+  const badgeBgColor = hwbLerp(props.data.similarity, badgeColorGradient)
 
-  return <a href={props.data.groupe['page-url']} target="_blank">
+  return <Link key={props.data.groupe.id} to={`groupe-stats/${props.data.groupe.id}`} >
     <div className={cx("res-groupe")}>
       <div className={cx("picture-container")}>
         <div className={cx("groupe-img-circle")}>
@@ -253,6 +266,6 @@ function ResGroupe(props: { data: ResGroupeType }) {
         {Math.round(props.data.similarity * 100)}%
       </div>
     </div >
-  </a>
+  </Link >
 }
 export default withRouter(Resultat)
