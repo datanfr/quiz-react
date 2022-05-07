@@ -15,7 +15,7 @@ import classes from './Resultat.module.css';
 import { Plugins } from '@capacitor/core';
 import { getResponses, Reponse } from '../models/Reponse';
 import { fetchQuestions, Questions } from "../models/Question"
-import { calculateDeputeSimilarity, calculateGroupeSimilarity } from '../calculateScore';
+import {algorithms as scoringAlgorithms, algorithmsNames, algoFromString} from '../scoring-algorithm/ScoringAlgorithm';
 import { buildIndex, search, Index as SearchIndex, SearchResponse } from "../searchAlgo";
 import { highlightArray, highlightField } from '../highlightAlgo';
 import { groupBy, hexToHSL, hslaToCss, hwbLerp, hslToCss, hwbToCss } from '../utils';
@@ -67,14 +67,16 @@ class Resultat extends PureComponent<Props, State> {
 
   componentDidMount() {
     const fetchingResponses = getResponses()
+    const algorythmName = algoFromString(this.params.get("algorithm"), () => "confianceXCompatibilite")
+    console.log({algorythmName})
     //const fetchingVotesPerDepute = Promise.resolve(votesPerDepute)
     fetchingResponses.then(userVotes => this.setState({ userVotes }))
     Promise.all([fetchingResponses, fetchingDeputes, fetchingVotesPerGroupe, buildDeputeIndex, fetchQuestions]).then(([responses, deputes, votesPerGroupe, deputeIndex, questions]) => {
       Object.assign(window as any, { deputes, votesPerGroupe })
-      const scoredDeputes = deputes.map(depute => ({ depute, ...calculateDeputeSimilarity(depute.votes as Record<string, Reponse | null>, responses, questions) }))
+      const scoredDeputes = deputes.map(depute => ({ depute, ...scoringAlgorithms[algorythmName].depute(depute.votes as Record<string, Reponse | null>, responses, questions) }))
       const sortedDeputes = scoredDeputes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       const deputeScoreById = groupBy(sortedDeputes, x => x.depute.id)
-      const scoredGroupes = votesPerGroupe.map(groupe => ({ groupe, ...calculateGroupeSimilarity(groupe.votes as Record<string, { pour: number, contre: number, abstention: number }>, responses) }))
+      const scoredGroupes = votesPerGroupe.map(groupe => ({ groupe, ...scoringAlgorithms[algorythmName].groupe(groupe.votes as Record<string, { pour: number, contre: number, abstention: number }>, responses, questions) }))
       const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       const calculated = { sortedDeputes, deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null }
       Object.assign(window as any, { calculated })
