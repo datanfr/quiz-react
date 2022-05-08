@@ -21,7 +21,7 @@ function depute(deputeResponses: Record<string, Reponse | null>, userResponses: 
     const calcData = {
         counts,
         confiance: (counts["accord"] + counts["desaccord"]) / compOutcome.length,
-        compatibilite: counts["accord"] / (counts["accord"] + counts["desaccord"])
+        compatibilite: counts["accord"] + counts["desaccord"] > 0 ? counts["accord"] / (counts["accord"] + counts["desaccord"]) : 0
     }
     return {
         calcData, similarity: calcData.confiance * calcData.compatibilite, HumanReadable: () => <pre>
