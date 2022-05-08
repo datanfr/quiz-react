@@ -173,12 +173,12 @@ class Resultat extends PureComponent<Props, State> {
 const badgeColorGradient = { //colorGradient
   start: {//similar
       h: 169,
-      w: 0,
+      w: 1,
       b: 0.28
   },
   end: {//different
       h: 169,
-      w: 1,
+      w: 0,
       b: 0.28
   }
 }
