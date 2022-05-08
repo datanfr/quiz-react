@@ -3,10 +3,11 @@ import { Reponse } from "../models/Reponse";
 import simpleLaplace from "./simple-laplace"
 import confianceXCompatibilite from "./confiance-x-compatibilite"
 import React from "react";
+import { GroupeWithVote } from "../models/Groupe";
 
 export type Algorithm<DeputeCalcData, GroupeCalcData> = {
     depute : (deputeResponses: Record<string, Reponse | null>, userResponses: Record<string, Reponse>, questions : Questions ) => {calcData : DeputeCalcData, similarity: number, HumanReadable?: React.FC},
-    groupe : (groupe_votes: Record<string, {pour: number,contre: number,abstention: number}>, user_votes: Record<string, Reponse>, questions : Questions) => {calcData : GroupeCalcData, similarity: number, HumanReadable?: React.FC}
+    groupe : (groupe_votes: GroupeWithVote, user_votes: Record<string, Reponse>, questions : Questions) => {calcData : GroupeCalcData, similarity: number, HumanReadable?: React.FC}
 }
 
 export const algorithms = {

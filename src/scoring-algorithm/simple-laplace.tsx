@@ -1,3 +1,4 @@
+import { GroupeWithVote } from "../models/Groupe";
 import { Questions } from "../models/Question";
 import { Reponse } from "../models/Reponse";
 import { Algorithm } from "./ScoringAlgorithm";
@@ -39,10 +40,10 @@ export function depute(depute_votes: Record<string, Reponse | null>, user_votes:
     return {calcData, similarity}
 }
 
-export function groupe(groupe_votes: Record<string, { pour: number, contre: number, abstention: number }>, user_votes: Record<string, Reponse>, questions: Questions) {
+export function groupe(groupe_votes: GroupeWithVote, user_votes: Record<string, Reponse>, questions: Questions) {
     console.log(groupe_votes)
     const distanceAndDataPerVote = Object.entries(user_votes).map(([user_vote_id, user_vote_outcome]) => {
-        const groupe_vote_outcome = groupe_votes[user_vote_id]
+        const groupe_vote_outcome = groupe_votes.votes[user_vote_id]
         const userScore = outcomeToScore[user_vote_outcome]
         const groupeScore = groupe_vote_outcome && (groupe_vote_outcome.pour * outcomeToScore.pour + groupe_vote_outcome.contre * outcomeToScore.contre + groupe_vote_outcome.contre * outcomeToScore.abstention) / (groupe_vote_outcome.pour + groupe_vote_outcome.contre + groupe_vote_outcome.abstention)
         //console.log({user_vote_outcome, groupe_vote_outcome, userScore, groupeScore, abs: userScore && groupeScore && Math.abs(userScore - groupeScore)})

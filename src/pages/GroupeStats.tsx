@@ -121,7 +121,7 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData }> = ({ groupe
     const algorithmName = algoFromString(new URLSearchParams(window.location.search).get("algorithm"), () => "confianceXCompatibilite")
     console.log({ algorithmName })
     const scoringAlgorithm = scoringAlgorithms[algorithmName]
-    const scoring = scoringAlgorithm.groupe(groupeResponses.votes, userResponses, questions)
+    const scoring = scoringAlgorithm.groupe(groupeResponses, userResponses, questions)
     const HumanReadable = scoring.HumanReadable
     // const badgeBgColor = hwbLerp(props.data.similarity)
     return <div style={{ overflow: "auto" }}><div className={cx("center-body")} style={{ gridTemplateColumns: "auto minmax(0, 1920px) auto" }}>

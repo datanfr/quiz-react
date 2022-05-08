@@ -76,7 +76,7 @@ class Resultat extends PureComponent<Props, State> {
       const scoredDeputes = deputes.map(depute => ({ depute, ...scoringAlgorithms[algorythmName].depute(depute.votes as Record<string, Reponse | null>, responses, questions) }))
       const sortedDeputes = scoredDeputes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       const deputeScoreById = groupBy(sortedDeputes, x => x.depute.id)
-      const scoredGroupes = groupes.map(groupe => ({ groupe, ...scoringAlgorithms[algorythmName].groupe(groupe.votes as Record<string, { pour: number, contre: number, abstention: number }>, responses, questions) }))
+      const scoredGroupes = groupes.map(groupe => ({ groupe, ...scoringAlgorithms[algorythmName].groupe(groupe, responses, questions) }))
       const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       const calculated = { sortedDeputes, deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null }
       Object.assign(window as any, { calculated })

@@ -8,7 +8,7 @@ export type GroupeWithVote = {
     "page-url": string,
     "member-count": number,
     "picture": ReactElement,
-    "votes": Record<string, { "pour": number, "contre": number, "abstention": number }>
+    "votes": Record<string, {positionMajoritaire:string, "pour": number, "contre": number, "abstention": number }>
 }
 export const exVoteGroupe: GroupeWithVote = {
     "id": "MoDem",
@@ -21,10 +21,10 @@ export const exVoteGroupe: GroupeWithVote = {
         <img src="https://datan.fr/assets/imgs/groupes/LAREM.png" width="150" height="150" alt="La République en Marche" />
     </picture>,
     "votes": {
-        "VTANR5L15V2948": { "pour": 12, "contre": 6, "abstention": 2},
-        "VTANR5L15V3484": { "pour": 12, "contre": 6, "abstention": 2},
-        "VTANR5L15V3485": { "pour": 12, "contre": 6, "abstention": 2},
-        "VTANR5L15V3486": { "pour": 12, "contre": 6, "abstention": 2}
+        "VTANR5L15V2948": { positionMajoritaire: "pour", "pour": 12, "contre": 6, "abstention": 2},
+        "VTANR5L15V3484": { positionMajoritaire: "pour",  "pour": 12, "contre": 6, "abstention": 2},
+        "VTANR5L15V3485": { positionMajoritaire: "pour",  "pour": 12, "contre": 6, "abstention": 2},
+        "VTANR5L15V3486": { positionMajoritaire: "pour",  "pour": 12, "contre": 6, "abstention": 2}
     }
 }
 
@@ -68,7 +68,7 @@ function buildGroupe(id: number) {
             //     nonVotantsVolontaires: "0"
             //     }
             // ]
-            for (const {libelleAbrev, libelle, voteNumero, nombreMembresGroupe, nombrePours, nombreContres, nombreAbstentions, nonVotants} of json) {
+            for (const {libelleAbrev, libelle, voteNumero, nombreMembresGroupe, nombrePours, nombreContres, nombreAbstentions, nonVotants, positionMajoritaire} of json) {
                 const obj = votesPerGroupeeById[libelleAbrev] || {
                     "id": libelleAbrev,
                     "name": libelle,
@@ -81,7 +81,7 @@ function buildGroupe(id: number) {
                     </picture>,
                     "votes": {}
                 }
-                obj.votes[`VTANR5L15V${voteNumero}`] = { "pour": parseInt(nombrePours), "contre": parseInt(nombreContres), "abstention": (parseInt(nombreMembresGroupe) - parseInt(nombrePours) - parseInt(nombreContres))}
+                obj.votes[`VTANR5L15V${voteNumero}`] = { positionMajoritaire, "pour": parseInt(nombrePours), "contre": parseInt(nombreContres), "abstention": parseInt(nombreAbstentions)}
                 votesPerGroupeeById[libelleAbrev] = obj
             }
         })
