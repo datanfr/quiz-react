@@ -46,7 +46,7 @@ function Question(props: { question: QuestionModel }) {
         <p style={{ padding: "0px 10px", fontSize: "17px", fontWeight: 800, color: "var(--datan-green)" }}>LES ARGUMENTS POUR</p>
         {question.arguments.filter((argument: any) => argument.opinion === "POUR").map((argument: any) => <div style={{ borderLeft: "2px solid var(--datan-green)", padding: "10px", margin: "10px", maxWidth: "600px" }}>{argument.texte}</div>)}
       </div>
-      <div style={{ marginBottom: "var(--buttons-height)" }}>
+      <div style={{ marginBottom: "calc(var(--buttons-height) + 15px)" }}>
         <p style={{ padding: "0px 10px", fontSize: "17px", fontWeight: 800, color: "var(--datan-red)" }}>LES ARGUMENTS CONTRE</p>
         {question.arguments.filter((argument: any) => argument.opinion === "CONTRE").map((argument: any) => <div style={{ borderLeft: "2px solid var(--datan-red)", padding: "10px", margin: "10px", maxWidth: "600px" }}>{argument.texte}</div>)}
       </div>
@@ -60,7 +60,7 @@ interface ButtonsProps {
   onPour: () => void
 }
 function Buttons(p: ButtonsProps) {
-  return <div className={cx("buttons", "center-body")}>
+  return <div className={cx("buttons", "center-body")} style={{paddingBottom: "15px"}}>
     <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
       <div
         className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
