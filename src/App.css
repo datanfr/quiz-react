@@ -5,7 +5,7 @@
     --datan-orange: #ff661a;
     --datan-white: #f3f5f6;
     --datan-black: #212529;
-    --datan-yellow: #FFBA49;
+    --datan-yellow: #fb9b00;
     --datan-red: #C5283D;
 
     --header-height: 50px;
@@ -102,7 +102,7 @@ a {
 .shadow:before {
 
     Remarque : je ne sais pas pourquoi tu utilises un before ; mais avec les nvx buttons cela faisait qqchose de bizarre.
-    
+
     content: "";
     position: absolute;
     top: 0;
