@@ -41,7 +41,7 @@ function Question(props: { question: QuestionModel }) {
         </div>
       </div>
     </div>
-    <div id="for" className="flex" style={{ justifyContent: "center" }}>
+    <div id="for" className="flex" style={{ justifyContent: "center", scrollMarginTop: "var(--header-height)" }}>
       <div style={{ marginBottom: "var(--buttons-height)" }}>
         <p style={{ padding: "0px 10px", fontWeight: 600 }}>Les pour</p>
         {question.arguments.filter((argument: any) => argument.opinion === "POUR").map((argument: any) => <div style={{ borderLeft: "2px solid var(--datan-green)", padding: "10px", margin: "10px", maxWidth: "600px" }}>{argument.texte}</div>)}
