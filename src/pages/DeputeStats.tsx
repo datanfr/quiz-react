@@ -15,20 +15,21 @@ let cx = classNames.bind(classes);
 
 const nspp = <div
     className={cx("flex", "align-justify-center", "shadow", "button", "osef")}
+
 >
-    SANS&nbsp;AVIS
+    <span style={{fontWeight: "800"}}>SANS&nbsp;AVIS</span>
 </div>
 
 const contre = <div
     className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
 >
-    CONTRE
+    <span style={{fontWeight: "800"}}>CONTRE</span>
 </div>
 
 const pour = < div
     className={cx("flex", "align-justify-center", "shadow", "button", "pour")}
 >
-    POUR
+    <span style={{fontWeight: "800"}}>POUR</span>
 </div >
 
 function getButtons(s: string) {
@@ -119,7 +120,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                 </a>
             </div>
             <div ref={scoreHumanReadableRef} style={style}>
-                Score: 
+                Score:
                 {HumanReadable && <HumanReadable />}
             </div>
             <div className={cx("cards-container")}>
@@ -129,17 +130,17 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                         user: userResponses[q.vote_id],
                         depute: deputeResponses.votes[q.vote_id]
                     }
-                    return <div style={{ display: "flex", flexDirection: "column", padding: "10px", width: 300, margin: 10, boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.52)" }}>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 88 }}>
-                            <div style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
+                    return <div className={cx("card")} style={{ display: "flex", flexDirection: "column", paddingTop: "15px", paddingBottom: "15px", paddingLeft: "10px", paddingRight: "10px", width: 300, margin: 10 }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 95 }}>
+                            <div className={cx("card-title")} style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
-                            <div>
-                                <div style={{ fontWeight: "lighter", fontSize: 12 }}>le députée</div>
+                            <div style={{}}>
+                                <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>{deputeResponses.nameAbbrev}</div>
                                 {getButtons(d.depute)}
                             </div>
                             <div>
-                                <div style={{ fontWeight: "lighter", fontSize: 12 }}>vous</div>
+                                <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>Votre vote</div>
                                 {getButtons(d.user)}
                             </div>
                         </div>
