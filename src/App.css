@@ -136,7 +136,8 @@ a {
     width: 100%;
     height: var(--header-height);
     backdrop-filter: blur(3px);
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: var(--datan-white);
+    box-shadow: 0 2px 10px -2px rgb(0 0 0 / 10%);
 }
 
 .opacity-hidden {
