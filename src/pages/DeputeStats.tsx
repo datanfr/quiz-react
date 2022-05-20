@@ -17,19 +17,19 @@ const nspp = <div
     className={cx("flex", "align-justify-center", "shadow", "button", "osef")}
 
 >
-    <span style={{fontWeight: "800"}}>SANS&nbsp;AVIS</span>
+    <span style={{fontWeight: 800}}>SANS&nbsp;AVIS</span>
 </div>
 
 const contre = <div
     className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
 >
-    <span style={{fontWeight: "800"}}>CONTRE</span>
+    <span style={{fontWeight: 800}}>CONTRE</span>
 </div>
 
 const pour = < div
     className={cx("flex", "align-justify-center", "shadow", "button", "pour")}
 >
-    <span style={{fontWeight: "800"}}>POUR</span>
+    <span style={{fontWeight: 800}}>POUR</span>
 </div >
 
 function getButtons(s: string) {
@@ -135,7 +135,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                             <div className={cx("card-title")} style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
-                            <div style={{}}>
+                            <div>
                                 <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>{deputeResponses.nameAbbrev}</div>
                                 {getButtons(d.depute)}
                             </div>
