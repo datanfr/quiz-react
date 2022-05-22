@@ -120,7 +120,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                 </a>
             </div>
             <div>
-                Score: 
+                Score:
                 {HumanReadable && <HumanReadable />}
             </div>
             <div className={cx("cards-container")}>
@@ -135,13 +135,13 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                             <div className={cx("card-title")} style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
-                            <div>
+                            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                                 <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>{deputeResponses.nameAbbrev}</div>
-                                {getButtons(d.depute)}
+                                <div>{getButtons(d.depute)}</div>
                             </div>
-                            <div>
+                            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                                 <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>Votre vote</div>
-                                {getButtons(d.user)}
+                                <div>{getButtons(d.user)}</div>
                             </div>
                         </div>
                         <div>taux d'accord: {compareToDepute(d.user, d.depute as Reponse | null)}</div>
