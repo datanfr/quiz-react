@@ -21,21 +21,21 @@ const nspp = <div
     style={{ width: 130 }}
     className={cx("flex", "align-justify-center", "shadow", "button", "osef")}
 >
-    SANS&nbsp;AVIS
+    <span style={{fontWeight: 800}}>SANS&nbsp;AVIS</span>
 </div>
 
 const contre = <div
     style={{ width: 130 }}
     className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
 >
-    CONTRE
+    <span style={{fontWeight: 800}}>CONTRE</span>
 </div>
 
 const pour = < div
     style={{ width: 130 }}
     className={cx("flex", "align-justify-center", "shadow", "button", "pour")}
 >
-    POUR
+    <span style={{fontWeight: 800}}>POUR</span>
 </div >
 
 function getButtons(s: string) {
@@ -56,10 +56,11 @@ const SingleGroupeButton: React.FC<{ value: number, total: number, txt: string, 
 
     return <div
         style={{ backgroundColor: hwbToCss(greyedColor), display: "flex", flexDirection: "column", width: "33%" }}
-        className={cx("flex", "align-justify-center", "shadow", "button", "osef")}
+        className={cx("flex", "align-justify-center", "osef")}
+
     >
-        <div>{value}</div>
-        <div style={{ fontSize: 8 }}>{txt}</div>
+        <div style={{fontWeight: 800, textAlign: "center"}}>{value}</div>
+        <div style={{ fontSize: 8, textAlign: "center" }}>{txt}</div>
     </div>
 }
 
@@ -69,8 +70,8 @@ function groupeButtons({ pour, contre, abstention }: {
     "abstention": number;
 }) {
     const total = pour + contre + abstention
-    console.log({ pour, contre, abstention, total })
-    return <div style={{ display: "flex", width: 130 }}>
+    console.log({ pour, contre, abstention, total})
+    return <div className={cx("button", "shadow")} style={{ display: "flex", width: 130, borderRadius: "10px", overflow: "hidden" }}>
         <SingleGroupeButton value={pour} total={total} txt="POUR" color={hwb.green} />
         <SingleGroupeButton value={abstention} total={total} txt="SANS&nbsp;AVIS" color={hwb.yellow} />
         <SingleGroupeButton value={contre} total={total} txt="CONTRE" color={hwb.red} />
@@ -161,17 +162,17 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData }> = ({ groupe
                         user: userResponses[q.vote_id],
                         groupe: groupeResponses.votes[q.vote_id] || { pour: 0, contre: 0, abstention: 0 }
                     }
-                    return <div style={{ display: "flex", flexDirection: "column", padding: "10px", width: 300, margin: 10, boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.52)" }}>
+                    return <div className={(cx("card"))} style={{ display: "flex", flexDirection: "column", paddingTop: "15px", paddingBottom: "15px", paddingLeft: "10px", paddingRight: "10px", width: 300, margin: 10 }}>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 88 }}>
-                            <div style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
+                            <div className={cx("card-title")} style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
                             <div>
-                                <div style={{ fontWeight: "lighter", fontSize: 12 }}>le groupe</div>
+                                <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px",  textAlign: "center" }}>le groupe</div>
                                 {groupeButtons(d.groupe)}
                             </div>
                             <div>
-                                <div style={{ fontWeight: "lighter", fontSize: 12 }}>vous</div>
+                                <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>Votre vote</div>
                                 {getButtons(d.user)}
                             </div>
                         </div>
