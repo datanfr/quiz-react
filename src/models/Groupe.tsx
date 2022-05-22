@@ -68,12 +68,11 @@ function buildGroupe(id: number) {
             //     nonVotantsVolontaires: "0"
             //     }
             // ]
-            for (const {libelleAbrev, libelle, voteNumero, nombreMembresGroupe, nombrePours, nombreContres, nombreAbstentions, nonVotants, positionMajoritaire} of json) {
+            for (const {libelleAbrev, libelle, voteNumero, nombreMembresGroupe, nombrePours, nombreContres, nombreAbstentions, nonVotants, nonVotantsVolontaires, positionMajoritaire} of json) {
                 const obj = votesPerGroupeeById[libelleAbrev] || {
                     "id": libelleAbrev,
                     "name": libelle,
                     "page-url": `https://datan.fr/groupes/legislature-15/${libelleAbrev}`,
-                    "member-count": parseInt(nombreMembresGroupe),
                     "picture": <picture>
                         <source srcSet={`https://datan.fr/assets/imgs/groupes/webp/${libelleAbrev}.webp`} type="image/webp" />
                         <source srcSet={`https://datan.fr/assets/imgs/groupes/${libelleAbrev}.png`} type="image/png" />
@@ -81,7 +80,12 @@ function buildGroupe(id: number) {
                     </picture>,
                     "votes": {}
                 }
-                obj.votes[`VTANR5L15V${voteNumero}`] = { positionMajoritaire, "pour": parseInt(nombrePours), "contre": parseInt(nombreContres), "abstention": parseInt(nombreAbstentions)}
+                obj.votes[`VTANR5L15V${voteNumero}`] = {
+                    positionMajoritaire,
+                    "pour": parseInt(nombrePours),
+                    "contre": parseInt(nombreContres),
+                    "abstention": parseInt(nombreAbstentions)
+                }
                 votesPerGroupeeById[libelleAbrev] = obj
             }
         })

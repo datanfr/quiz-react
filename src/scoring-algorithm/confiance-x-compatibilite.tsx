@@ -5,54 +5,66 @@ import { Reponse } from "../models/Reponse";
 import { Algorithm } from "./ScoringAlgorithm";
 import { groupe as groupeSimpleLaplace } from "./simple-laplace";
 
-const pc = ["pour", "contre"]
-const allCompOutcome = ["accord", "desaccord", "nspp"] as const
-type CompOutcome = typeof allCompOutcome[number]
+const pc = ["pour", "contre", "abstention"]
+type TauxAccord = number
+
+export function compareToDepute(ur: Reponse, dr: Reponse | null) {
+    if (pc.includes(ur) && dr && pc.includes(dr)) {
+        if (ur === dr) {
+            return 1
+        } else if (ur === "abstention" || dr === "abstention") {
+            return 0.5
+        } else {
+            return 0
+        }
+    } else {
+        return 0
+    }
+}
+
+export function compareToGroupe(ur: Reponse, gr: {pour: number, contre:number, abstention:number}) {
+    const pourTauxAccord = compareToDepute(ur, "pour") * gr.pour
+    const contreTauxAccord = compareToDepute(ur, "contre") * gr.contre
+    const abstentionTauxAccord = compareToDepute(ur, "abstention") * gr.abstention
+    const tauxAccord = (pourTauxAccord + contreTauxAccord + abstentionTauxAccord) / (gr.pour + gr.contre + gr.abstention)
+
+    return tauxAccord
+}
 
 function depute(deputeResponses: Record<string, Reponse | null>, userResponses: Record<string, Reponse>, questions: Questions) {
-    const compOutcome = questions.map((q): CompOutcome => {
+    const tauxAccords = questions.map((q): TauxAccord => {
         const ur = userResponses[q.vote_id];
         const dr = deputeResponses[q.vote_id]
-        if (pc.includes(ur) && dr && pc.includes(dr)) {
-            return ur === dr ? "accord" : "desaccord"
-        } else {
-            return "nspp"
-        }
+        return compareToDepute(ur, dr)
     });
-    const counts = Object.fromEntries(allCompOutcome.map(o => [o, compOutcome.filter(x => x === o).length])) as Record<CompOutcome, number>
     const calcData = {
-        counts,
-        confiance: (counts["accord"] + counts["desaccord"]) / compOutcome.length,
-        compatibilite: counts["accord"] + counts["desaccord"] > 0 ? counts["accord"] / (counts["accord"] + counts["desaccord"]) : 0
+        tauxAccords,
+        "formula": "sum(tauxAccords) / nb_vote"
     }
     return {
-        calcData, similarity: calcData.confiance * calcData.compatibilite, HumanReadable: () => <pre>
+        calcData, similarity: tauxAccords.reduce((a,b) => a + b) / tauxAccords.length, HumanReadable: () => <pre>
             {JSON.stringify(calcData, null, " ")}
         </pre>
     }
 }
 
 export function groupe(groupe: GroupeWithVote, user_votes: Record<string, Reponse>, questions: Questions) {
-    const compOutcome = questions.map((q): CompOutcome => {
-        const ur = user_votes[q.vote_id];
-        if (!groupe.votes[q.vote_id]) console.log("missing data for", q.vote_id, groupe)
-        const gr = groupe.votes[q.vote_id]?.positionMajoritaire || "abstention"
-        if (pc.includes(ur) && pc.includes(gr)) {
-            return ur === gr ? "accord" : "desaccord"
-        } else {
-            return "nspp"
-        }
+    const tauxAccords = questions.map((q): TauxAccord => {
+        if (!groupe.votes[q.vote_id]) console.log("missing data for", groupe, q.vote_id)
+        const gr = groupe.votes[q.vote_id] || {pour: 0, contre: 0, abstention: 0};
+        const ur = user_votes[q.vote_id]
+        return compareToGroupe(ur, gr)
     });
-    const counts = Object.fromEntries(allCompOutcome.map(o => [o, compOutcome.filter(x => x === o).length])) as Record<CompOutcome, number>
     const calcData = {
-        counts,
-        confiance: (counts["accord"] + counts["desaccord"]) / compOutcome.length,
-        compatibilite: counts["accord"] + counts["desaccord"] > 0 ? counts["accord"] / (counts["accord"] + counts["desaccord"]) : 0
+        tauxAccords,
+        "formula": "avg(tauxAccords) / nb_vote"
     }
     return {
-        calcData, similarity: calcData.confiance * calcData.compatibilite, HumanReadable: () => <pre>
-            {JSON.stringify(calcData, null, " ")}
-        </pre>
+        calcData, similarity: tauxAccords.reduce((a,b) => a + b) / tauxAccords.length, HumanReadable: () => <div>
+            <pre>
+                {JSON.stringify(calcData, null, " ")}
+            </pre>
+        </div>
     }
 }
 

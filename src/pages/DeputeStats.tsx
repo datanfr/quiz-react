@@ -8,10 +8,22 @@ import { getResponses, Reponse } from "../models/Reponse"
 import classNames from 'classnames/bind';
 import classes from './DeputeStats.module.css';
 import { counter } from "@fortawesome/fontawesome-svg-core"
-import { groupBy } from "../utils"
+import { groupBy, hwb, hwbToCss } from "../utils"
 import {algorithms as scoringAlgorithms, algorithmsNames, algoFromString} from '../scoring-algorithm/ScoringAlgorithm';
+import { compareToDepute } from "../scoring-algorithm/confiance-x-compatibilite"
 
 let cx = classNames.bind(classes);
+
+const absent = <div
+    style={{
+        backgroundColor: hwbToCss(
+            Object.assign({}, hwb.green, { w: 0.5, b: 0.5 })
+        )
+    }}
+    className={cx("flex", "align-justify-center", "shadow", "button")}
+>
+    ABSENT
+</div>
 
 const nspp = <div
     className={cx("flex", "align-justify-center", "shadow", "button", "osef")}
@@ -32,10 +44,12 @@ const pour = < div
 </div >
 
 function getButtons(s: string) {
+    console.group(s)
     switch (s) {
         case "pour": return pour
         case "contre": return contre
-        default: return nspp
+        case "abstention": return nspp
+        default: return absent
     }
 }
 
@@ -67,21 +81,7 @@ export const DeputeStatsPage: React.FC = () => {
     </IonPage>
 }
 
-const pc = ["pour", "contre"]
-const allCompOutcome = ["accord", "desaccord", "nspp"] as const
-type CompOutcome = typeof allCompOutcome[number]
-
 export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ deputeStats: { deputeResponses, userResponses, questions } }) => {
-    const scoreHumanReadableRef = useRef<HTMLDivElement>(null);
-    const [style, setStyle] = useState<any>({});
-    useEffect(() => {
-        if (scoreHumanReadableRef?.current) {
-            console.log({height: scoreHumanReadableRef.current.offsetHeight})
-            if (scoreHumanReadableRef.current.offsetHeight > 20) {
-                setStyle({border: "1px solid red"})
-            }
-        }
-    }, [])
     const algorithmName = algoFromString(new URLSearchParams(window.location.search).get("algorithm"), () => "confianceXCompatibilite")
     console.log({algorithmName})
     const scoringAlgorithm = scoringAlgorithms[algorithmName]
@@ -118,7 +118,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                     </div>
                 </a>
             </div>
-            <div ref={scoreHumanReadableRef} style={style}>
+            <div>
                 Score: 
                 {HumanReadable && <HumanReadable />}
             </div>
@@ -143,6 +143,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                                 {getButtons(d.user)}
                             </div>
                         </div>
+                        <div>taux d'accord: {compareToDepute(d.user, d.depute as Reponse | null)}</div>
                     </div>
                 })}
             </div>

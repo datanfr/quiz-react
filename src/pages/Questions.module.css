@@ -1,40 +1,40 @@
-  .basis-auto {
-    flex: 1 1 auto;
-  }
+.basis-auto {
+  flex: 1 1 auto;
+}
 
-  .button {
-    color: var(--datan-white);
-    height: 60px;
-    max-width: 140px;
-    cursor: pointer;
-  }
+.button {
+  color: var(--datan-white);
+  height: 60px;
+  max-width: 140px;
+  cursor: pointer;
+}
 
-  .title-container {
-    color: var(--datan-white);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    height: calc(100vh - var(--header-height) - var(--buttons-height));
-    margin-bottom: var(--buttons-height);
-  }
+.title-container {
+  color: var(--datan-white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  height: calc(100vh - var(--header-height) - var(--buttons-height));
+  margin-bottom: var(--buttons-height);
+}
 
-  .title {
-    text-align: center;
-    padding: 20px 0px;
-    font-weight: 600;
-    font-size: calc(25px + 1vw);
-  }
+.title {
+  text-align: center;
+  padding: 20px 0px;
+  font-weight: 600;
+  font-size: calc(25px + 1vw);
+}
 
 
-  .contre {
-    background-color: var(--datan-red)
-  }
+.contre {
+  background-color: var(--datan-red)
+}
 
-  .pour {
-    background-color: var(--datan-green)
-  }
+.pour {
+  background-color: var(--datan-green)
+}
 
-  .osef {
-    background-color: var(--datan-yellow)
-  }
+.osef {
+  background-color: var(--datan-yellow)
+}

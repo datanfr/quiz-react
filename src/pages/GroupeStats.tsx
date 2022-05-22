@@ -11,6 +11,7 @@ import { counter } from "@fortawesome/fontawesome-svg-core"
 import { groupBy, Hwb, hwb, hwbLerp, hwbToCss } from "../utils"
 import { algorithms as scoringAlgorithms, algorithmsNames, algoFromString } from '../scoring-algorithm/ScoringAlgorithm';
 import { fetchingVotesPerGroupe, GroupeWithVote } from "../models/Groupe"
+import { compareToGroupe } from "../scoring-algorithm/confiance-x-compatibilite"
 
 let cx = classNames.bind(classes);
 
@@ -46,14 +47,15 @@ function getButtons(s: string) {
 }
 
 const SingleGroupeButton: React.FC<{ value: number, total: number, txt: string, color: Hwb }> = ({ value, total, txt, color }) => {
-    const taux = value/total 
-    const greyedColor = hwbLerp(taux, { start: Object.assign({}, color, {w: 0.5, b: 0.5}), end: color})
-    console.log({txt, taux, color})
+    let greyedColor = Object.assign({}, color, { w: 0.5, b: 0.5 });
+    if (total != 0) {
+        const taux = value / total
+        greyedColor = hwbLerp(taux, { start: greyedColor, end: color })
+        console.log({ txt, taux, color })
+    }
+
     return <div
         style={{ backgroundColor: hwbToCss(greyedColor), display: "flex", flexDirection: "column", width: "33%" }}
-        data-color={hwbToCss(color)}
-        data-greyed={hwbToCss(greyedColor)}
-        data-taux={taux}
         className={cx("flex", "align-justify-center", "shadow", "button", "osef")}
     >
         <div>{value}</div>
@@ -67,7 +69,7 @@ function groupeButtons({ pour, contre, abstention }: {
     "abstention": number;
 }) {
     const total = pour + contre + abstention
-    console.log({ pour, contre, abstention, total})
+    console.log({ pour, contre, abstention, total })
     return <div style={{ display: "flex", width: 130 }}>
         <SingleGroupeButton value={pour} total={total} txt="POUR" color={hwb.green} />
         <SingleGroupeButton value={abstention} total={total} txt="SANS&nbsp;AVIS" color={hwb.yellow} />
@@ -157,7 +159,7 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData }> = ({ groupe
                     const d = {
                         q,
                         user: userResponses[q.vote_id],
-                        groupe: groupeResponses.votes[q.vote_id]
+                        groupe: groupeResponses.votes[q.vote_id] || { pour: 0, contre: 0, abstention: 0 }
                     }
                     return <div style={{ display: "flex", flexDirection: "column", padding: "10px", width: 300, margin: 10, boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.52)" }}>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 88 }}>
@@ -166,13 +168,14 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData }> = ({ groupe
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
                             <div>
                                 <div style={{ fontWeight: "lighter", fontSize: 12 }}>le groupe</div>
-                                {groupeButtons(d.groupe || { pour: 0, contre: 0, abstention: groupeResponses["member-count"] })}
+                                {groupeButtons(d.groupe)}
                             </div>
                             <div>
                                 <div style={{ fontWeight: "lighter", fontSize: 12 }}>vous</div>
                                 {getButtons(d.user)}
                             </div>
                         </div>
+                        <div>taux d'accord: {compareToGroupe(d.user, d.groupe)}</div>
                     </div>
                 })}
             </div>
