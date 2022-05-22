@@ -4,9 +4,18 @@
 
   .button {
     color: var(--datan-white);
-    height: 60px;
+    height: 50px;
     max-width: 140px;
     cursor: pointer;
+    border-radius: 7px;
+    font-size: 1.1em;
+    font-weight: 800;
+    margin: 0px 8px;
+    transition: 0.3s;
+  }
+
+  .button:hover{
+    filter: brightness(0.92);
   }
 
   .title-container {
@@ -15,6 +24,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
+    padding: 0 15px;
     height: calc(100vh - var(--header-height) - var(--buttons-height));
     margin-bottom: var(--buttons-height);
   }
@@ -22,8 +32,8 @@
   .title {
     text-align: center;
     padding: 20px 0px;
-    font-weight: 600;
-    font-size: calc(25px + 1vw);
+    font-weight: 800;
+    font-size: calc(20px + 1vw);
   }
 
 
