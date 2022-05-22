@@ -167,13 +167,13 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData }> = ({ groupe
                             <div className={cx("card-title")} style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
-                            <div>
-                                <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px",  textAlign: "center" }}>le groupe</div>
-                                {groupeButtons(d.groupe)}
+                            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                                <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px",  textAlign: "center" }}>Le groupe</div>
+                                <div>{groupeButtons(d.groupe)}</div>
                             </div>
-                            <div>
+                            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                                 <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>Votre vote</div>
-                                {getButtons(d.user)}
+                                <div>{getButtons(d.user)}</div>
                             </div>
                         </div>
                         <div>taux d'accord: {compareToGroupe(d.user, d.groupe)}</div>
