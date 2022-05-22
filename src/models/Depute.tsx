@@ -70,6 +70,7 @@ export type DeputeWithVote = {
     "page-url": string,
     "groupe_name": string,
     "votes": Record<string, string>,
+    nameAbbrev : string,
     last: DeputeLast,
     cities: MpCity[]
 }
