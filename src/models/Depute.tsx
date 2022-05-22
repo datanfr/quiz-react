@@ -70,6 +70,7 @@ export type DeputeWithVote = {
     "page-url": string,
     "groupe_name": string,
     "votes": Record<string, string>,
+    nameAbbrev : string,
     last: DeputeLast,
     cities: MpCity[]
 }
@@ -161,6 +162,7 @@ function buildDepute(id: number) {
                 const obj: DeputeWithVote = votesPerDeputeById[mpId] || {
                     id: mpId.slice(2),
                     "name": nameFirst + " " + nameLast,
+                    "nameAbbrev": nameFirst.charAt(0) + ". " + nameLast,
                     "page-url": `https://datan.fr/deputes/${dptSlug}/depute_${nameUrl}`,
                     votes: {},
                     last: deputeLastByMpId[mpId],
@@ -186,4 +188,3 @@ function buildDepute(id: number) {
         return Promise.all(building)
     })
 }
-
