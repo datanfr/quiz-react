@@ -33,9 +33,10 @@
   justify-content: space-evenly;
   padding: 10px 10px;
   border-radius: 10px;
-  box-shadow: 3px 3px 10px rgb(0 0 0 / 8%);
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.08);
   width: calc(370px - 2*var(--margin));
-  margin: 10px var(--margin)
+  margin: 10px var(--margin);
+  background-color: #ffffff;
 }
 
 .data-container {
@@ -105,9 +106,10 @@ a {
   justify-content: space-evenly;
   padding: 10px 10px;
   border-radius: 10px;
-  box-shadow: 3px 3px 10px rgb(0 0 0 / 8%);
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.08);
   width: calc(370px - 2*var(--margin));
-  margin: 10px var(--margin)
+  margin: 10px var(--margin);
+  background-color: #ffffff;
 }
 
 .button {
