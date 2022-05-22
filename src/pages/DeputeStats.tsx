@@ -7,12 +7,13 @@ import { fetchQuestions, Questions } from "../models/Question"
 import { getResponses, Reponse } from "../models/Reponse"
 import classNames from 'classnames/bind';
 import classes from './DeputeStats.module.css';
+import circle from './Circle.css';
 import { counter } from "@fortawesome/fontawesome-svg-core"
 import { groupBy, hwb, hwbToCss } from "../utils"
 import {algorithms as scoringAlgorithms, algorithmsNames, algoFromString} from '../scoring-algorithm/ScoringAlgorithm';
 import { compareToDepute } from "../scoring-algorithm/confiance-x-compatibilite"
 
-let cx = classNames.bind(classes);
+let cx = classNames.bind(classes, circle);
 
 const absent = <div
     style={{
@@ -92,7 +93,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
     const groupColor = deputeResponses.last.couleurAssociee as string
     return <div style={{ overflow: "auto" }}><div className={cx("center-body")} style={{gridTemplateColumns: "auto minmax(0, 1920px) auto"}}>
         <div className={cx("body")} style={{ marginTop: "var(--header-height)"}}>
-            <div style={{ display: "flex", flexDirection: "column", height: "30vh", minHeight: "160px", justifyContent: "space-evenly" }}>
+            <div style={{ display: "flex", flexDirection: "column", minHeight: "160px", justifyContent: "space-evenly" }}>
                 <div className={cx("profile-container")}>
                     <div className={cx("profile")}>
                         <div className={cx("picture-container")}>
@@ -105,23 +106,40 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                             </div>
                         </div>
                         <div className={cx("data-container")}>
-                            <div>
-                                <div className={cx("title")} style={{ fontSize: (4 / (deputeResponses.name.length ** 0.30)) + "em" }}>{deputeResponses.name}</div>
-                                <div className={cx("groupe")} style={{ color: groupColor }}>{deputeResponses.last.libelle}</div>
-                            </div>
+                            <div className={cx("title")} style={{ fontSize: (4.5 / (deputeResponses.name.length ** 0.30)) + "em" }}>{deputeResponses.name}</div>
+                            <div className={cx("groupe")} style={{ color: groupColor }}>{deputeResponses.last.libelle}</div>
+                            <div className={cx("district")}>{deputeResponses.last.departementNom} ({deputeResponses.last.departementCode})</div>
                         </div>
                         {/* <div className={cx("badge")} style={{ backgroundColor: hwbToCss(badgeBgColor) }} >{Math.round(props.data.similarity * 100)}%</div> */}
                     </div>
                 </div>
-                <a className={cx("datan-link-container")} href={deputeResponses["page-url"]} target="_blank">
-                    <div className={cx("datan-link")}>
-                        <span>EN SAVOIR PLUS SUR</span>&nbsp;&nbsp;<img src="/assets/logo_svg.svg" width={120} />
-                    </div>
-                </a>
-            </div>
-            <div>
-                Score:
                 {HumanReadable && <HumanReadable />}
+                <div className={cx("stats-container")}>
+                    <div className={cx("stats-pie-container")}>
+                        <div style={{color: "#4D5755", fontWeight: 800, fontSize: "1.75em", textAlign: "center"}}>Score de proximité</div>
+                        <div className={cx("c100", "p91")} style={{marginTop: "1.5rem"}}>
+                            <span>[XX] %</span>
+                            <div className={cx("slice")}>
+                                <div className={cx("bar")}></div>
+                                <div className={cx("fill")}></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={cx("stats-explanation-container")}>
+                        <div className={cx("explanation-card")}>
+                            <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.2em"}}>Explication</div>
+                            <div>Votre <b>taux de proximité</b> avec {deputeResponses.last.civ == "M." ? "le" : "la"} député{deputeResponses.last.civ == "M." ? "" : "e"} {deputeResponses.name} est de [XX] %.</div>
+                            <div>Comparé aux autres parlementaires, vous avez des positions idéologiques plutôt proches {deputeResponses.last.civ == "du député" ? "" : "de la députée"} {deputeResponses.name}.</div>
+                            <div>Ce score est basé sur XX votes. C'est un nombre suffisant pour calculer le score de proximité.</div>
+                            <a className={cx("datan-link-container")} href={deputeResponses["page-url"]} target="_blank">
+                                <div className={cx("datan-link")}>
+                                    <span>EN SAVOIR PLUS SUR</span>&nbsp;&nbsp;<img src="/assets/logo_svg.svg" width={120} />
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div className={cx("cards-container")}>
                 {questions.map(q => {
