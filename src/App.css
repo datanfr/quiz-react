@@ -5,7 +5,7 @@
     --datan-orange: #ff661a;
     --datan-white: #f3f5f6;
     --datan-black: #212529;
-    --datan-yellow: #FFBA49;
+    --datan-yellow: #fb9b00;
     --datan-red: #C5283D;
 
     --header-height: 50px;
@@ -98,19 +98,6 @@ a {
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     position: relative;
 }
-
-/*
-.shadow:before {
-    Same as in previous PR --> remove this shadow and keep the other one.
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: -1;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-} */
 
 .shadow-2 {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
