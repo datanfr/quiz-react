@@ -21,6 +21,9 @@ import { highlightArray, highlightField } from '../highlightAlgo';
 import { groupBy, hexToHSL, hslaToCss, hwbLerp, hslToCss, hwbToCss } from '../utils';
 const { Storage } = Plugins;
 
+const words = ['eat', 'sleep', 'drink', 'snore', 'foo', 'buzz', 'whatever'];
+
+
 
 
 let cx = classNames.bind(classes);
@@ -89,6 +92,7 @@ class Resultat extends PureComponent<Props, State> {
     //   const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
     //   this.setState({ sortedGroupes })
     // })
+
   }
 
 
@@ -133,6 +137,17 @@ class Resultat extends PureComponent<Props, State> {
     }
     return <IonPage>
       <div id="inifinte-scroll" style={{ overflow: "auto", justifyContent: "flex-start" }} onScroll={e => this.loadMore(e)} ref={this.myRef}>
+        <div className={cx("search-container")}>
+
+          <input
+            name={cx("search")}
+            className={cx("search-input")} type="text"
+            placeholder="Rechercher un député par nom, ville, département, ou code postal"
+            defaultValue={this.state.searchTxt} onInput={e => this.onSearchTxtChange(e)}
+            style={{fontFamily:"Arial, FontAwesome"}}
+          />
+
+        </div>
         <div className={cx("center-body")}>
           <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
             {this.state.sortedGroupes.length > 0 || "Calcule des score..."}
@@ -141,12 +156,10 @@ class Resultat extends PureComponent<Props, State> {
               <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
             </div>
             {this.state.sortedDeputes.length > 0 && <div className={cx("res-depute-container")} style={{ display: !this.state.displayGroupe ? "flex" : "none" }}>
-              <input
-                className={cx("search-input")} type="text"
-                placeholder="Rechercher un député par nom, ville, département, etc.."
-                defaultValue={this.state.searchTxt} onInput={e => this.onSearchTxtChange(e)}
-              />
+            <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap",
+            justifyContent: "center", marginTop: "20px" }}>
               <DeputeResList />
+            </div>
               {everythingLoaded && <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>}
             </div>}
           </div>

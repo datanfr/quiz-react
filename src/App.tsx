@@ -59,7 +59,7 @@ const App: React.FC = () => (
         <GroupeStatsPage />
       </Route>
     </IonReactRouter>
-    
+
   </div>)
 
 export default App;
