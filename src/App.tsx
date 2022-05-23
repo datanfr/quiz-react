@@ -31,8 +31,6 @@ import { OnBoarding } from './pages/OnBoarding';
 import { DeputeStats, DeputeStatsPage } from './pages/DeputeStats';
 import { GroupeStatsPage } from './pages/GroupeStats';
 
-console.log(localStorage.onboardingDone)
-
 const App: React.FC = () => (
   <div>
     <IonReactRouter>

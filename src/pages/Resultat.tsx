@@ -128,7 +128,7 @@ class Resultat extends PureComponent<Props, State> {
         display: "flex", flexDirection: "row", flexWrap: "wrap",
         justifyContent: "center", marginTop: "20px"
       }}>
-        {currentChunk.map(x => <ResDeputeFiltered data={x} resDepute={this.state.deputeScoreById[x.item.id]} />)}
+        {currentChunk.map(x => <ResDeputeFiltered data={x} resDepute={this.state.deputeScoreById[x.item.id]} avgScore={this.state.avgScore} />)}
       </div>
     } else {
       DeputeResList = () => <div style={{
@@ -225,7 +225,7 @@ function ResDepute(props: { data: ResDeputeType }) {
   </Link>
 }
 
-function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeType }) {
+function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeType, avgScore:number | null }) {
   const badgeBgColor = hwbLerp(props.resDepute?.similarity, badgeColorGradient)
   const { h, s, l } = props.data.item.last.couleurAssociee ? hexToHSL(props.data.item.last.couleurAssociee as string) : { h: 0, s: 0, l: 0 } //Couleur député non inscrit
   const hglnom = highlightField(props.data.metadata, "name", { color: hslToCss({ h, s, l: l * 0.80 }), fontWeight: 900 }) || props.data.item.name
@@ -241,7 +241,7 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
   // }
   // const CpListHtml = () => hglCp.length ? <div className="commune-list">{hglCp.map((x) => <div className="elem">{x}</div>)}</div> : null
 
-  return <Link key={props.data.item.id} to={`depute-stats/${props.data.item.id}`} >
+  return <Link key={props.data.item.id} to={{pathname: `depute-stats/${props.data.item.id}`, state: {avgScore: props.avgScore}}}  >
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>

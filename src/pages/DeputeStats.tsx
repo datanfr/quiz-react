@@ -1,6 +1,6 @@
 import { IonPage } from "@ionic/react"
 import { useEffect, useRef, useState } from "react"
-import { useHistory, useParams } from "react-router"
+import { useHistory, useLocation, useParams } from "react-router"
 import Header from "../components/Header"
 import { DeputeWithScore, DeputeWithVote, fetchingVotesPerDepute } from "../models/Depute"
 import { fetchQuestions, Questions } from "../models/Question"
@@ -75,7 +75,9 @@ type DeputeStatsData = {
 
 export const DeputeStatsPage: React.FC = () => {
     const fetchingResponses = getResponses()
-    const history = useHistory()
+    const history = useHistory();
+    const location = useLocation<{avgScore : number|null}>()
+    const avgScore = location.state.avgScore
     const [deputeStats, setDeputeStats] = useState<DeputeStatsData | null>(null)
     const { mpId } = useParams<{ mpId: string }>();
     useEffect(() => {
@@ -90,12 +92,12 @@ export const DeputeStatsPage: React.FC = () => {
     }, [])
 
     return <IonPage>
-        {deputeStats ? <DeputeStats deputeStats={deputeStats} /> : "Loading data"}
+        {deputeStats ? <DeputeStats deputeStats={deputeStats} avgScore={avgScore}/> : "Loading data"}
         <Header onBackClick={() => history.goBack()} title={`Résultat`} />
     </IonPage>
 }
 
-export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ deputeStats: { deputeResponses, userResponses, questions } }) => {
+export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore:number|null }> = ({ deputeStats: { deputeResponses, userResponses, questions }, avgScore }) => {
     const algorithmName = algoFromString(new URLSearchParams(window.location.search).get("algorithm"), () => "confianceXCompatibilite")
     console.log({algorithmName})
     const scoringAlgorithm = scoringAlgorithms[algorithmName]
@@ -145,6 +147,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                             <div>[A FAIRE].Comparé aux autres parlementaires, vous avez des positions idéologiques plutôt proches {deputeResponses.last.civ == "du député" ? "" : "de la députée"} {deputeResponses.name}.</div>
                             {comparison(scoring.similarity * 100)}
                             {trust(voteCount)}
+                            average score: {avgScore}
                             <a className={cx("link-container")} href={deputeResponses["page-url"]} target="_blank" style={{border: "1px solid blue"}}>
                                 <div className={cx("share-link")} style={{border: "2px solid black"}}>
                                     <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>Partagez votre résultat</div>
