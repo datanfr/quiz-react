@@ -130,7 +130,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                 <div className={cx("stats-container")}>
                     <div className={cx("stats-pie-container")} title='=avg(taux_accord) * 100'>
                         <div style={{color: "#4D5755", fontWeight: 800, fontSize: "1.75em", textAlign: "center"}}>Score de proximité</div>
-                        <div className={cx("c100", "p91")} style={{marginTop: "1.5rem"}}>
+                        <div className={cx("c100", "p" + Math.round(scoring.similarity * 100) )} style={{marginTop: "1.5rem"}}>
                             <span>{Math.round(scoring.similarity * 100)} %</span>
                             <div className={cx("slice")}>
                                 <div className={cx("bar")}></div>
