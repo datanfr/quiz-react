@@ -90,6 +90,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
     const scoring = scoringAlgorithm.depute(deputeResponses.votes as Record<string, Reponse | null>, userResponses, questions)
     const HumanReadable = scoring.HumanReadable
     // const badgeBgColor = hwbLerp(props.data.similarity)
+    const voteCount = Object.values(deputeResponses.votes).length
     const groupColor = deputeResponses.last.couleurAssociee as string
     return <div style={{ overflow: "auto" }}><div className={cx("center-body")} style={{gridTemplateColumns: "auto minmax(0, 1920px) auto"}}>
         <div className={cx("body")} style={{ marginTop: "var(--header-height)"}}>
@@ -130,7 +131,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                             <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.2em"}}>Explication</div>
                             <div>Votre <b>taux de proximité</b> avec {deputeResponses.last.civ == "M." ? "le" : "la"} député{deputeResponses.last.civ == "M." ? "" : "e"} {deputeResponses.name} est de {scoring.similarity * 100} %.</div>
                             <div>Comparé aux autres parlementaires, vous avez des positions idéologiques plutôt proches {deputeResponses.last.civ == "du député" ? "" : "de la députée"} {deputeResponses.name}.</div>
-                            <div>Ce score est basé sur {questions.length} votes. C'est un nombre suffisant pour calculer le score de proximité.</div>
+                            <div>Ce score est basé sur {voteCount} votes. C'est un nombre suffisant pour calculer le score de proximité.</div>
                             <a className={cx("datan-link-container")} href={deputeResponses["page-url"]} target="_blank">
                                 <div className={cx("datan-link")}>
                                     <span>EN SAVOIR PLUS SUR</span>&nbsp;&nbsp;<img src="/assets/logo_svg.svg" width={120} />
