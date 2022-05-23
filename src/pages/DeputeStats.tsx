@@ -45,6 +45,14 @@ const pour = < div
     <span style={{fontWeight: 800}}>POUR</span>
 </div >
 
+function trust(s: number) {
+  if (s <= 10) {
+    return "Attention, ce score n'est basé que sur " + s + " votes car le député n'était pas tout le temps présent pour voter. Ce score est donc à prendre avec précaution."
+  } else {
+    return "Ce score est basé sur" + s + "questions. Nous considérons que c'est suffisant pour le calcul du score de proximité."
+  }
+}
+
 function getButtons(s: string) {
     console.group(s)
     switch (s) {
@@ -119,7 +127,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                     <div className={cx("stats-pie-container")} title='=avg(taux_accord) * 100'>
                         <div style={{color: "#4D5755", fontWeight: 800, fontSize: "1.75em", textAlign: "center"}}>Score de proximité</div>
                         <div className={cx("c100", "p91")} style={{marginTop: "1.5rem"}}>
-                            <span>{scoring.similarity * 100} %</span>
+                            <span>{Math.round(scoring.similarity * 100)} %</span>
                             <div className={cx("slice")}>
                                 <div className={cx("bar")}></div>
                                 <div className={cx("fill")}></div>
@@ -129,9 +137,11 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                     <div className={cx("stats-explanation-container")}>
                         <div className={cx("explanation-card")}>
                             <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.2em"}}>Explication</div>
-                            <div>Votre <b>taux de proximité</b> avec {deputeResponses.last.civ == "M." ? "le" : "la"} député{deputeResponses.last.civ == "M." ? "" : "e"} {deputeResponses.name} est de {scoring.similarity * 100} %.</div>
-                            <div>Comparé aux autres parlementaires, vous avez des positions idéologiques plutôt proches {deputeResponses.last.civ == "du député" ? "" : "de la députée"} {deputeResponses.name}.</div>
-                            <div>Ce score est basé sur {voteCount} votes. C'est un nombre suffisant pour calculer le score de proximité.</div>
+                            <div>Votre <b>taux de proximité</b> avec {deputeResponses.last.civ == "M." ? "le" : "la"} député{deputeResponses.last.civ == "M." ? "" : "e"} {deputeResponses.name} est de {Math.round(scoring.similarity * 100)} %.</div>
+                            <div>[A FAIRE].Comparé aux autres parlementaires, vous avez des positions idéologiques plutôt proches {deputeResponses.last.civ == "du député" ? "" : "de la députée"} {deputeResponses.name}.</div>
+                            <div>
+                                {trust(voteCount)}
+                            </div>
                             <a className={cx("datan-link-container")} href={deputeResponses["page-url"]} target="_blank">
                                 <div className={cx("datan-link")}>
                                     <span>EN SAVOIR PLUS SUR</span>&nbsp;&nbsp;<img src="/assets/logo_svg.svg" width={120} />
