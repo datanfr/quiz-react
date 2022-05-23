@@ -156,7 +156,7 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData }> = ({ groupe
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 88 }}>
                             <div className={cx("card-title")} style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }} title={`taux_accord=${compareToGroupe(d.user, d.groupe)}`}>
                             <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                                 <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px",  textAlign: "center" }}>Le groupe</div>
                                 <div>{groupeButtons(d.groupe)}</div>

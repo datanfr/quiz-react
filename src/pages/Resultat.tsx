@@ -128,10 +128,10 @@ class Resultat extends PureComponent<Props, State> {
       </div>
     } else {
       DeputeResList = () => <div style={{
-        display: "flex", flexDirection: "column", justifyContent: "center", margin: 15, marginTop: "20px", alignItems: 'center'
+        display: "flex", flexDirection: "column", justifyContent: "center", marginTop: "20px", alignItems: 'center'
       }}>
         <div><FontAwesomeIcon icon={faChevronUp} /></div>
-        <p style={{ textDecoration: "italic" }}>
+        <p style={{ fontStyle: "italic", margin: 15}}>
           Recherchez votre député grace au champ de recherche.<br />
           Vous pouvez rechercher par:
           <ul>
@@ -141,7 +141,7 @@ class Resultat extends PureComponent<Props, State> {
             <li>Code postal</li>
           </ul>
         </p>
-        <p>Ou comparez vous aux différents groupes politique</p>
+        <p style={{ fontStyle: "italic", margin: 15}}>Ou comparez vous aux différents groupes politique</p>
         <div><FontAwesomeIcon icon={faChevronDown} /></div>
         <div className={cx("res-groupe-container")}>
           {this.state.sortedGroupes.map(x => <ResGroupe data={x} />)}

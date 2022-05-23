@@ -23,11 +23,11 @@ export function compareToDepute(ur: Reponse, dr: Reponse | null) {
 }
 
 export function compareToGroupe(ur: Reponse, gr: {pour: number, contre:number, abstention:number}) {
+    if (gr.pour + gr.contre + gr.abstention <= 0) return null
     const pourTauxAccord = compareToDepute(ur, "pour") * gr.pour
     const contreTauxAccord = compareToDepute(ur, "contre") * gr.contre
     const abstentionTauxAccord = compareToDepute(ur, "abstention") * gr.abstention
     const tauxAccord = (pourTauxAccord + contreTauxAccord + abstentionTauxAccord) / (gr.pour + gr.contre + gr.abstention)
-
     return tauxAccord
 }
 
@@ -49,12 +49,12 @@ function depute(deputeResponses: Record<string, Reponse | null>, userResponses: 
 }
 
 export function groupe(groupe: GroupeWithVote, user_votes: Record<string, Reponse>, questions: Questions) {
-    const tauxAccords = questions.map((q): TauxAccord => {
+    const tauxAccords = questions.map((q): TauxAccord | null => {
         if (!groupe.votes[q.vote_id]) console.log("missing data for", groupe, q.vote_id)
         const gr = groupe.votes[q.vote_id] || {pour: 0, contre: 0, abstention: 0};
         const ur = user_votes[q.vote_id]
         return compareToGroupe(ur, gr)
-    });
+    }).filter(x => x != null) as TauxAccord[];
     const calcData = {
         tauxAccords,
         "formula": "avg(tauxAccords) / nb_vote"
