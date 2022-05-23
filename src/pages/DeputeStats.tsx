@@ -7,13 +7,13 @@ import { fetchQuestions, Questions } from "../models/Question"
 import { getResponses, Reponse } from "../models/Reponse"
 import classNames from 'classnames/bind';
 import classes from './DeputeStats.module.css';
-import circle from './Circle.css';
+import './Circle.css';
 import { counter } from "@fortawesome/fontawesome-svg-core"
 import { groupBy, hwb, hwbToCss } from "../utils"
 import {algorithms as scoringAlgorithms, algorithmsNames, algoFromString} from '../scoring-algorithm/ScoringAlgorithm';
 import { compareToDepute } from "../scoring-algorithm/confiance-x-compatibilite"
 
-let cx = classNames.bind(classes, circle);
+let cx = classNames.bind(classes);
 
 const absent = <div
     style={{
@@ -118,7 +118,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                     <div className={cx("stats-pie-container")}>
                         <div style={{color: "#4D5755", fontWeight: 800, fontSize: "1.75em", textAlign: "center"}}>Score de proximité</div>
                         <div className={cx("c100", "p91")} style={{marginTop: "1.5rem"}}>
-                            <span>[XX] %</span>
+                            <span>{scoring.similarity * 100} %</span>
                             <div className={cx("slice")}>
                                 <div className={cx("bar")}></div>
                                 <div className={cx("fill")}></div>
@@ -128,9 +128,9 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                     <div className={cx("stats-explanation-container")}>
                         <div className={cx("explanation-card")}>
                             <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.2em"}}>Explication</div>
-                            <div>Votre <b>taux de proximité</b> avec {deputeResponses.last.civ == "M." ? "le" : "la"} député{deputeResponses.last.civ == "M." ? "" : "e"} {deputeResponses.name} est de [XX] %.</div>
+                            <div>Votre <b>taux de proximité</b> avec {deputeResponses.last.civ == "M." ? "le" : "la"} député{deputeResponses.last.civ == "M." ? "" : "e"} {deputeResponses.name} est de {scoring.similarity * 100} %.</div>
                             <div>Comparé aux autres parlementaires, vous avez des positions idéologiques plutôt proches {deputeResponses.last.civ == "du député" ? "" : "de la députée"} {deputeResponses.name}.</div>
-                            <div>Ce score est basé sur XX votes. C'est un nombre suffisant pour calculer le score de proximité.</div>
+                            <div>Ce score est basé sur {questions.length} votes. C'est un nombre suffisant pour calculer le score de proximité.</div>
                             <a className={cx("datan-link-container")} href={deputeResponses["page-url"]} target="_blank">
                                 <div className={cx("datan-link")}>
                                     <span>EN SAVOIR PLUS SUR</span>&nbsp;&nbsp;<img src="/assets/logo_svg.svg" width={120} />
