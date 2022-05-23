@@ -145,9 +145,31 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                             <div>[A FAIRE].Comparé aux autres parlementaires, vous avez des positions idéologiques plutôt proches {deputeResponses.last.civ == "du député" ? "" : "de la députée"} {deputeResponses.name}.</div>
                             {comparison(scoring.similarity * 100)}
                             {trust(voteCount)}
-                            <a className={cx("datan-link-container")} href={deputeResponses["page-url"]} target="_blank">
-                                <div className={cx("datan-link")}>
-                                    <span>EN SAVOIR PLUS SUR</span>&nbsp;&nbsp;<img src="/assets/logo_svg.svg" width={120} />
+                            <a className={cx("link-container")} href={deputeResponses["page-url"]} target="_blank" style={{border: "1px solid blue"}}>
+                                <div className={cx("share-link")} style={{border: "2px solid black"}}>
+                                    <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>Partagez votre résultat</div>
+                                    <div className={cx("share-btn-container")} style={{border: "1px solid blue"}}>
+                                      <button type="button" name="button" className={cx("twitter")}>
+                                        <img src="https://datan.fr/assets/imgs/logos/twitter-no-round.png" alt="Partagez sur Twitter" />
+                                        <span>Twitter</span>
+                                      </button>
+                                      <button type="button" name="button" className={cx("facebook")}>
+                                        <img src="https://datan.fr/assets/imgs/logos/facebook-no-round.png" alt="Partagez sur Twitter" />
+                                        <span>Facebook</span>
+                                      </button>
+                                      <button type="button" name="button" className={cx("linkedin")}>
+                                        <img src="https://datan.fr/assets/imgs/logos/linkedin-no-round.png" alt="Partagez sur Linkedin" />
+                                        <span>Linkedin</span>
+                                      </button>
+                                      <button type="button" name="button" className={cx("whatsapp")}>
+                                        <img src="https://datan.fr/assets/imgs/logos/whatsapp-no-round.png" alt="Partagez sur Whatsapp" />
+                                        <span>Whatsapp</span>
+                                      </button>
+                                    </div>
+                                </div>
+                                <div className={cx("datan-link")} style={{border: "2px solid black"}}>
+                                    <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>En savoir plus sur</div>
+                                    <img src="/assets/logo_svg.svg" width={120} />
                                 </div>
                             </a>
                         </div>

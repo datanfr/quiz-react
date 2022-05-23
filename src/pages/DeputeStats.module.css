@@ -52,22 +52,60 @@
   font-size: 1em;
 }
 
-.datan-link-container {
+.link-container {
   margin-top: 1rem;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex: 1;
+  justify-content: space-around;
 }
 
 .datan-link {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  border: 1px solid red;
 }
 
 .datan-link img {
+  display: fex;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 8px;
+}
+
+.share-link {
+  display: flex;
+  flex-direction: column;
+}
+
+.share-btn-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: red;
+}
+
+.share-btn-container button {
+  width: 100px;
+  margin: 0.2rem;
+}
+
+.twitter {
+  background-color: blue;
+}
+
+.facebook {
+  background-color: yellow;
+}
+
+.linkedin {
+  background-color: purple;
+}
+
+.whatsapp {
+  background-color: green;
 }
 
 .profile {
