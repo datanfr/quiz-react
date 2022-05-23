@@ -68,17 +68,17 @@ class Resultat extends PureComponent<Props, State> {
 
   componentDidMount() {
     const fetchingResponses = getResponses()
-    const algorythmName = algoFromString(this.params.get("algorithm"), () => "confianceXCompatibilite")
-    console.log({ algorythmName })
+    // const algorythmName = algoFromString(this.params.get("algorithm"), () => "confianceXCompatibilite")
+    // console.log({ algorythmName })
     //const fetchingVotesPerDepute = Promise.resolve(votesPerDepute)
     fetchingResponses.then(userVotes => this.setState({ userVotes }))
     Promise.all([fetchingResponses, fetchingDeputes, fetchingGroupes, buildDeputeIndex, fetchQuestions]).then(([responses, deputes, groupes, deputeIndex, questions]) => {
       Object.assign(window as any, { deputes, groupes })
-      const scoredDeputes = deputes.map(depute => ({ depute, ...scoringAlgorithms[algorythmName].depute(depute.votes as Record<string, Reponse | null>, responses, questions) }))
+      const scoredDeputes = deputes.map(depute => ({ depute, ...scoringAlgorithms["confianceXCompatibilite"].depute(depute.votes as Record<string, Reponse | null>, responses, questions) }))
       const avgScore = scoredDeputes.map(x => x.similarity).reduce((a,b) => a+b) / scoredDeputes.length
       console.log({avgScore})
       const deputeScoreById = groupBy(scoredDeputes, x => x.depute.id)
-      const scoredGroupes = groupes.map(groupe => ({ groupe, ...scoringAlgorithms[algorythmName].groupe(groupe, responses, questions) }))
+      const scoredGroupes = groupes.map(groupe => ({ groupe, ...scoringAlgorithms["confianceXCompatibilite"].groupe(groupe, responses, questions) })).filter(x => x.calcData.tauxConfiance > 0.5 && x.groupe.name != "Non inscrit")
       const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
       const calculated = { deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null, avgScore}
       Object.assign(window as any, { calculated })
