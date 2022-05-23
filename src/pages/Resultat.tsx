@@ -39,7 +39,8 @@ interface State {
   filteredDeputes: SearchResponse[] | null,
   sortedGroupes: ResGroupeType[],
   chunk: number,
-  searchTxt: string
+  searchTxt: string,
+  avgScore: number | null
 }
 
 class Resultat extends PureComponent<Props, State> {
@@ -59,7 +60,8 @@ class Resultat extends PureComponent<Props, State> {
       filteredDeputes: [],
       userVotes: {},
       chunk: 1,
-      searchTxt: ""
+      searchTxt: "",
+      avgScore: null
     }
     this.myRef = React.createRef()
   }
@@ -73,10 +75,12 @@ class Resultat extends PureComponent<Props, State> {
     Promise.all([fetchingResponses, fetchingDeputes, fetchingGroupes, buildDeputeIndex, fetchQuestions]).then(([responses, deputes, groupes, deputeIndex, questions]) => {
       Object.assign(window as any, { deputes, groupes })
       const scoredDeputes = deputes.map(depute => ({ depute, ...scoringAlgorithms[algorythmName].depute(depute.votes as Record<string, Reponse | null>, responses, questions) }))
+      const avgScore = scoredDeputes.map(x => x.similarity).reduce((a,b) => a+b) / scoredDeputes.length
+      console.log({avgScore})
       const deputeScoreById = groupBy(scoredDeputes, x => x.depute.id)
       const scoredGroupes = groupes.map(groupe => ({ groupe, ...scoringAlgorithms[algorythmName].groupe(groupe, responses, questions) }))
       const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
-      const calculated = { deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null }
+      const calculated = { deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null, avgScore}
       Object.assign(window as any, { calculated })
       this.setState(calculated)
     })
