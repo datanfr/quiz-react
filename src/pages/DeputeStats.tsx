@@ -53,6 +53,10 @@ function trust(s: number) {
   }
 }
 
+function comparison(s: number) {
+  return 'A FAIRE'
+}
+
 function getButtons(s: string) {
     console.group(s)
     switch (s) {
@@ -139,6 +143,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                             <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.2em"}}>Explication</div>
                             <div>Votre <b>taux de proximité</b> avec {deputeResponses.last.civ == "M." ? "le" : "la"} député{deputeResponses.last.civ == "M." ? "" : "e"} {deputeResponses.name} est de {Math.round(scoring.similarity * 100)} %.</div>
                             <div>[A FAIRE].Comparé aux autres parlementaires, vous avez des positions idéologiques plutôt proches {deputeResponses.last.civ == "du député" ? "" : "de la députée"} {deputeResponses.name}.</div>
+                            {comparison(scoring.similarity * 100)}
                             {trust(voteCount)}
                             <a className={cx("datan-link-container")} href={deputeResponses["page-url"]} target="_blank">
                                 <div className={cx("datan-link")}>
