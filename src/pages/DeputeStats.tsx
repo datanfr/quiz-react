@@ -47,9 +47,9 @@ const pour = < div
 
 function trust(s: number) {
   if (s <= 10) {
-    return "Attention, ce score n'est basé que sur " + s + " votes car le député n'était pas tout le temps présent pour voter. Ce score est donc à prendre avec précaution."
+    return <div><b>Attention</b>, ce score n'est basé que sur {s} votes car le ou la députée n'était pas tout le temps présent pour voter. <span style={{color: "red", fontWeight: 800}}>Ce score est donc à prendre avec précaution</span>.</div>
   } else {
-    return "Ce score est basé sur" + s + "questions. Nous considérons que c'est suffisant pour le calcul du score de proximité."
+    return <div>Ce score est basé sur {s} questions. Nous considérons que c'est suffisant pour le calcul du score de proximité.</div>
   }
 }
 
@@ -139,9 +139,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                             <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.2em"}}>Explication</div>
                             <div>Votre <b>taux de proximité</b> avec {deputeResponses.last.civ == "M." ? "le" : "la"} député{deputeResponses.last.civ == "M." ? "" : "e"} {deputeResponses.name} est de {Math.round(scoring.similarity * 100)} %.</div>
                             <div>[A FAIRE].Comparé aux autres parlementaires, vous avez des positions idéologiques plutôt proches {deputeResponses.last.civ == "du député" ? "" : "de la députée"} {deputeResponses.name}.</div>
-                            <div>
-                                {trust(voteCount)}
-                            </div>
+                            {trust(voteCount)}
                             <a className={cx("datan-link-container")} href={deputeResponses["page-url"]} target="_blank">
                                 <div className={cx("datan-link")}>
                                     <span>EN SAVOIR PLUS SUR</span>&nbsp;&nbsp;<img src="/assets/logo_svg.svg" width={120} />
