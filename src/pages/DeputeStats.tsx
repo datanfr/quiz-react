@@ -114,9 +114,9 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                         {/* <div className={cx("badge")} style={{ backgroundColor: hwbToCss(badgeBgColor) }} >{Math.round(props.data.similarity * 100)}%</div> */}
                     </div>
                 </div>
-                {HumanReadable && <HumanReadable />}
+                {/* {HumanReadable && <HumanReadable />} */}
                 <div className={cx("stats-container")}>
-                    <div className={cx("stats-pie-container")}>
+                    <div className={cx("stats-pie-container")} title='=avg(taux_accord) * 100'>
                         <div style={{color: "#4D5755", fontWeight: 800, fontSize: "1.75em", textAlign: "center"}}>Score de proximité</div>
                         <div className={cx("c100", "p91")} style={{marginTop: "1.5rem"}}>
                             <span>{scoring.similarity * 100} %</span>
@@ -153,7 +153,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 95 }}>
                             <div className={cx("card-title")} style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }} title={`taux_accord=${compareToDepute(d.user, d.depute as Reponse | null)}`}>
                             <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                                 <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>{deputeResponses.nameAbbrev}</div>
                                 <div>{getButtons(d.depute)}</div>
@@ -163,7 +163,6 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData }> = ({ depute
                                 <div>{getButtons(d.user)}</div>
                             </div>
                         </div>
-                        <div>taux d'accord: {compareToDepute(d.user, d.depute as Reponse | null)}</div>
                     </div>
                 })}
             </div>

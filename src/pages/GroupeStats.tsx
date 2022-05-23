@@ -111,16 +111,6 @@ const allCompOutcome = ["accord", "desaccord", "nspp"] as const
 type CompOutcome = typeof allCompOutcome[number]
 
 export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData }> = ({ groupeStats: { groupeResponses, userResponses, questions } }) => {
-    const scoreHumanReadableRef = useRef<HTMLDivElement>(null);
-    const [style, setStyle] = useState<any>({});
-    useEffect(() => {
-        if (scoreHumanReadableRef?.current) {
-            console.log({ height: scoreHumanReadableRef.current.offsetHeight })
-            if (scoreHumanReadableRef.current.offsetHeight > 20) {
-                setStyle({ border: "1px solid red" })
-            }
-        }
-    }, [])
     const algorithmName = algoFromString(new URLSearchParams(window.location.search).get("algorithm"), () => "confianceXCompatibilite")
     console.log({ algorithmName })
     const scoringAlgorithm = scoringAlgorithms[algorithmName]
@@ -151,10 +141,10 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData }> = ({ groupe
                     </div>
                 </a>
             </div>
-            <div ref={scoreHumanReadableRef} style={style}>
+            {/* <div>
                 Score:
                 {HumanReadable && <HumanReadable />}
-            </div>
+            </div> */}
             <div className={cx("cards-container")}>
                 {questions.map(q => {
                     const d = {
@@ -176,7 +166,6 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData }> = ({ groupe
                                 <div>{getButtons(d.user)}</div>
                             </div>
                         </div>
-                        <div>taux d'accord: {compareToGroupe(d.user, d.groupe)}</div>
                     </div>
                 })}
             </div>
