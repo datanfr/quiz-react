@@ -1,4 +1,4 @@
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { IonPage } from '@ionic/react';
@@ -34,7 +34,6 @@ type ResGroupeType = { groupe: GroupeWithVote, similarity: number }
 interface Props extends RouteComponentProps { }
 interface State {
   userVotes: Record<string, Reponse>,
-  sortedDeputes: ResDeputeType[],
   deputeScoreById: Record<string, ResDeputeType>;
   deputeIndex: SearchIndex | null,
   filteredDeputes: SearchResponse[] | null,
@@ -55,7 +54,6 @@ class Resultat extends PureComponent<Props, State> {
     this.params = new URLSearchParams(window.location.search)
     this.timeoutHandle = null;
     this.state = {
-      sortedDeputes: [],
       deputeScoreById: {},
       deputeIndex: null,
       sortedGroupes: [],
@@ -77,11 +75,10 @@ class Resultat extends PureComponent<Props, State> {
     Promise.all([fetchingResponses, fetchingDeputes, fetchingGroupes, buildDeputeIndex, fetchQuestions]).then(([responses, deputes, groupes, deputeIndex, questions]) => {
       Object.assign(window as any, { deputes, groupes })
       const scoredDeputes = deputes.map(depute => ({ depute, ...scoringAlgorithms[algorythmName].depute(depute.votes as Record<string, Reponse | null>, responses, questions) }))
-      const sortedDeputes = scoredDeputes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
-      const deputeScoreById = groupBy(sortedDeputes, x => x.depute.id)
+      const deputeScoreById = groupBy(scoredDeputes, x => x.depute.id)
       const scoredGroupes = groupes.map(groupe => ({ groupe, ...scoringAlgorithms[algorythmName].groupe(groupe, responses, questions) }))
       const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
-      const calculated = { sortedDeputes, deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null }
+      const calculated = { deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null }
       Object.assign(window as any, { calculated })
       this.setState(calculated)
     })
@@ -125,15 +122,28 @@ class Resultat extends PureComponent<Props, State> {
     if (this.state.filteredDeputes) {
       const currentChunk = this.state.filteredDeputes.slice(0, 20 * this.state.chunk)
       everythingLoaded = 20 * this.state.chunk > this.state.filteredDeputes.length
-      DeputeResList = () => <>
+      DeputeResList = () => <div style={{
+        display: "flex", flexDirection: "row", flexWrap: "wrap",
+        justifyContent: "center", marginTop: "20px"
+      }}>
         {currentChunk.map(x => <ResDeputeFiltered data={x} resDepute={this.state.deputeScoreById[x.item.id]} />)}
-      </>
+      </div>
     } else {
-      const currentChunk = this.state.sortedDeputes.slice(0, 20 * this.state.chunk)
-      everythingLoaded = 20 * this.state.chunk > this.state.sortedDeputes.length
-      DeputeResList = () => <>
-        {currentChunk.map(x => <ResDepute data={x} />)}
-      </>
+      DeputeResList = () => <div style={{
+        display: "flex", flexDirection: "column", justifyContent: "center", margin: 15, marginTop: "20px", alignItems: 'center'
+      }}>
+          <div><FontAwesomeIcon icon={faChevronUp} /></div>
+          <p>
+            Recherchez votre député grace au champ de recherche.<br/>
+            Vous pouvez rechercher par:
+            <ul>
+              <li>Nom</li>
+              <li>Ville</li>
+              <li>Département</li>
+              <li>Code postal</li>
+            </ul>
+          </p>
+      </div>
     }
     return <IonPage>
       <div id="inifinte-scroll" style={{ overflow: "auto", justifyContent: "flex-start" }} onScroll={e => this.loadMore(e)} ref={this.myRef}>
@@ -144,22 +154,19 @@ class Resultat extends PureComponent<Props, State> {
             className={cx("search-input")} type="text"
             placeholder="Rechercher un député par nom, ville, département, ou code postal"
             defaultValue={this.state.searchTxt} onInput={e => this.onSearchTxtChange(e)}
-            style={{fontFamily:"Arial, FontAwesome"}}
+            style={{ fontFamily: "Arial, FontAwesome" }}
           />
 
         </div>
-        <div className={cx("center-body")}>
+        <div className={cx("center-body")} style={{ gridTemplateColumns: "auto minmax(0, 1920px) auto" }}>
           <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
             {this.state.sortedGroupes.length > 0 || "Calcule des score..."}
             <div className={cx("res-groupe-container")} style={{ display: this.state.displayGroupe ? "flex" : "none" }}>
               {this.state.sortedGroupes.map(x => <ResGroupe data={x} />)}
               <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
             </div>
-            {this.state.sortedDeputes.length > 0 && <div className={cx("res-depute-container")} style={{ display: !this.state.displayGroupe ? "flex" : "none" }}>
-            <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap",
-            justifyContent: "center", marginTop: "20px" }}>
+            {Object.values(this.state.deputeScoreById).length > 0 && <div className={cx("res-depute-container")} style={{ display: !this.state.displayGroupe ? "flex" : "none" }}>
               <DeputeResList />
-            </div>
               {everythingLoaded && <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>}
             </div>}
           </div>
@@ -179,20 +186,20 @@ class Resultat extends PureComponent<Props, State> {
           </div>
         </div>
       </div>
-    </IonPage>
+    </IonPage >
   }
 }
 
 const badgeColorGradient = { //colorGradient
   start: {//similar
-      h: 169,
-      w: 1,
-      b: 0.28
+    h: 169,
+    w: 1,
+    b: 0.28
   },
   end: {//different
-      h: 169,
-      w: 0,
-      b: 0.28
+    h: 169,
+    w: 0,
+    b: 0.28
   }
 }
 
