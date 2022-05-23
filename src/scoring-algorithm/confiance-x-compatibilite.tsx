@@ -49,14 +49,19 @@ function depute(deputeResponses: Record<string, Reponse | null>, userResponses: 
 }
 
 export function groupe(groupe: GroupeWithVote, user_votes: Record<string, Reponse>, questions: Questions) {
-    const tauxAccords = questions.map((q): TauxAccord | null => {
+    const tauxAccordsWithNull = questions.map((q): TauxAccord | null => {
         if (!groupe.votes[q.vote_id]) console.log("missing data for", groupe, q.vote_id)
         const gr = groupe.votes[q.vote_id] || {pour: 0, contre: 0, abstention: 0};
         const ur = user_votes[q.vote_id]
         return compareToGroupe(ur, gr)
-    }).filter(x => x != null) as TauxAccord[];
+    })
+
+
+    const tauxAccords = tauxAccordsWithNull.filter(x => x != null) as TauxAccord[];
+    const tauxConfiance = tauxAccords.length / tauxAccordsWithNull.length
     const calcData = {
         tauxAccords,
+        tauxConfiance,
         "formula": "avg(tauxAccords) / nb_vote"
     }
     return {
