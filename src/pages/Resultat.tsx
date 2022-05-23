@@ -1,4 +1,4 @@
-import { faChevronLeft, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faChevronLeft, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { IonPage } from '@ionic/react';
@@ -38,7 +38,6 @@ interface State {
   deputeIndex: SearchIndex | null,
   filteredDeputes: SearchResponse[] | null,
   sortedGroupes: ResGroupeType[],
-  displayGroupe: boolean,
   chunk: number,
   searchTxt: string
 }
@@ -59,7 +58,6 @@ class Resultat extends PureComponent<Props, State> {
       sortedGroupes: [],
       filteredDeputes: [],
       userVotes: {},
-      displayGroupe: false,
       chunk: 1,
       searchTxt: ""
     }
@@ -94,7 +92,7 @@ class Resultat extends PureComponent<Props, State> {
 
 
   loadMore(e: React.UIEvent<HTMLDivElement, UIEvent>) {
-    if (!this.state.displayGroupe && window.innerHeight + e.currentTarget.scrollTop >= (e.currentTarget.scrollHeight - window.innerHeight)) {
+    if (window.innerHeight + e.currentTarget.scrollTop >= (e.currentTarget.scrollHeight - window.innerHeight)) {
       this.setState({ chunk: this.state.chunk + 1 })
     }
   }
@@ -132,17 +130,23 @@ class Resultat extends PureComponent<Props, State> {
       DeputeResList = () => <div style={{
         display: "flex", flexDirection: "column", justifyContent: "center", margin: 15, marginTop: "20px", alignItems: 'center'
       }}>
-          <div><FontAwesomeIcon icon={faChevronUp} /></div>
-          <p>
-            Recherchez votre député grace au champ de recherche.<br/>
-            Vous pouvez rechercher par:
-            <ul>
-              <li>Nom</li>
-              <li>Ville</li>
-              <li>Département</li>
-              <li>Code postal</li>
-            </ul>
-          </p>
+        <div><FontAwesomeIcon icon={faChevronUp} /></div>
+        <p style={{ textDecoration: "italic" }}>
+          Recherchez votre député grace au champ de recherche.<br />
+          Vous pouvez rechercher par:
+          <ul>
+            <li>Nom</li>
+            <li>Ville</li>
+            <li>Département</li>
+            <li>Code postal</li>
+          </ul>
+        </p>
+        <p>Ou comparez vous aux différents groupes politique</p>
+        <div><FontAwesomeIcon icon={faChevronDown} /></div>
+        <div className={cx("res-groupe-container")}>
+          {this.state.sortedGroupes.map(x => <ResGroupe data={x} />)}
+          <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
+        </div>
       </div>
     }
     return <IonPage>
@@ -161,11 +165,7 @@ class Resultat extends PureComponent<Props, State> {
         <div className={cx("center-body")} style={{ gridTemplateColumns: "auto minmax(0, 1920px) auto" }}>
           <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
             {this.state.sortedGroupes.length > 0 || "Calcule des score..."}
-            <div className={cx("res-groupe-container")} style={{ display: this.state.displayGroupe ? "flex" : "none" }}>
-              {this.state.sortedGroupes.map(x => <ResGroupe data={x} />)}
-              <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
-            </div>
-            {Object.values(this.state.deputeScoreById).length > 0 && <div className={cx("res-depute-container")} style={{ display: !this.state.displayGroupe ? "flex" : "none" }}>
+            {Object.values(this.state.deputeScoreById).length > 0 && <div className={cx("res-depute-container")}>
               <DeputeResList />
               {everythingLoaded && <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>}
             </div>}
@@ -178,12 +178,6 @@ class Resultat extends PureComponent<Props, State> {
           <Link to="/questions" className={cx("datan-green-bg", "flex", "align-justify-center", "shadow", "button")} style={{ height: "60px" }}>
             Recommencer le test
           </Link>
-          <div className={cx("datan-blue-bg", "flex", "align-justify-center", "shadow", "button")} style={{ height: "60px" }} onClick={() => {
-            this.myRef.current?.scrollTo(0, 0);
-            return this.setState({ displayGroupe: !this.state.displayGroupe })
-          }}>
-            {this.state.displayGroupe ? "Afficher les députés" : "Afficher les groupes"}
-          </div>
         </div>
       </div>
     </IonPage >
