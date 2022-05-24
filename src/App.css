@@ -13,7 +13,7 @@
     color: var(--datan-black);
     background-color: var(--datan-white);
     font-family: "Open Sans";
-    --buttons-height: calc(max(var(--h-btn-ctn), 60px));
+    --buttons-height: calc( clamp(100px, var(--h-btn-ctn), 160px)) ;
 }
 
 a {
@@ -39,9 +39,7 @@ a {
     left: 0;
     width: 100%;
     flex-grow: 10;
-    height: var(--h-btn-ctn);
-    max-height: 160px;
-    min-height: 60px;
+    height: var(--buttons-height);
 }
 
 .cursor-pointer {

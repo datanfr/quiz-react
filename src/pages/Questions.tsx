@@ -17,8 +17,8 @@ export type QuestionModel = typeof questions[number]
 let cx = classNames.bind(classes);
 
 
-function Question(props: { question: QuestionModel }) {
-  const { question } = props
+function Question(props: { question: QuestionModel, cqi: number, questionsDataLength: number }) {
+  const { question, cqi, questionsDataLength } = props
   return <div>
     <div style={{
       "backgroundImage": `linear-gradient(130deg, rgba(0, 183, 148, 0.85) 0.65%, rgba(36, 107, 150, 0.85) 112%), url("https://datan.fr/assets/imgs/cover/hemicycle-from-back.jpg")`,
@@ -26,12 +26,22 @@ function Question(props: { question: QuestionModel }) {
       "backgroundSize": "cover"
     }}>
       <div className={cx("center-body")}>
-        <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
+        <div className={cx("body")} style={{ marginTop: "var(--header-height)"}}>
           <div className={cx("title-container")}>
-            <div className={cx("title")}>
-              {question.voteTitre}
-              <div style={{ position: "relative", top: "10vh", fontSize: "0.5em", display: "flex", justifyContent: "center" }}>
-                <div onClick={() => document.querySelector("#for")?.scrollIntoView({ behavior: "smooth" })} style={{ cursor: "pointer" }}>
+            <div style={{display: "flex", justifyContent: "center", alignItems: 'flex-end', height: "25%", fontSize: "0.7em"}}>
+              {"Question" + '\u00A0' + `${cqi + 1}/${questionsDataLength}`}
+            </div>
+            <div className={cx("title")}  style={{display: "flex", justifyContent: "center", alignItems: 'center', height: "50%"}}>
+              <div style={{ margin: "0 10px"}}>
+                {question.voteTitre}
+              </div>
+            </div>
+            <div style={{display: "flex", justifyContent: "center", alignItems: 'flex-start', height: "25%", fontSize: "0.5em"}}>
+              <div
+                onClick={() => document.querySelector("#for")?.scrollIntoView({ behavior: "smooth" })}
+                style={{ cursor: "pointer", border: "2px white solid", borderRadius: "7px"}}
+              >
+                <div style={{display: "flex", flexDirection: "column", justifyContent: "center",alignItems: 'center',  margin: "10px 18px"}}>
                   <div>En savoir plus</div>
                   <div><FontAwesomeIcon icon={faChevronDown} /></div>
                 </div>
@@ -41,12 +51,12 @@ function Question(props: { question: QuestionModel }) {
         </div>
       </div>
     </div>
-    <div id="for" className="flex" style={{ justifyContent: "center", scrollMarginTop: "var(--header-height)" }}>
+    <div id="for" className="flex" style={{ justifyContent: "center", scrollMarginTop: "var(--header-height)", marginBottom: "calc(var(--buttons-height) + 15px)" }}>
       <div>
         <p style={{ padding: "0px 10px", fontSize: "17px", fontWeight: 800, color: "var(--datan-green)" }}>LES ARGUMENTS POUR</p>
         {question.arguments.filter((argument: any) => argument.opinion === "POUR").map((argument: any) => <div style={{ borderLeft: "2px solid var(--datan-green)", padding: "10px", margin: "10px", maxWidth: "600px" }}>{argument.texte}</div>)}
       </div>
-      <div style={{ marginBottom: "calc(var(--buttons-height) + 15px)" }}>
+      <div style={{}}>
         <p style={{ padding: "0px 10px", fontSize: "17px", fontWeight: 800, color: "var(--datan-red)" }}>LES ARGUMENTS CONTRE</p>
         {question.arguments.filter((argument: any) => argument.opinion === "CONTRE").map((argument: any) => <div style={{ borderLeft: "2px solid var(--datan-red)", padding: "10px", margin: "10px", maxWidth: "600px" }}>{argument.texte}</div>)}
       </div>
@@ -60,7 +70,7 @@ interface ButtonsProps {
   onPour: () => void
 }
 function Buttons(p: ButtonsProps) {
-  return <div className={cx("buttons", "center-body")} style={{paddingBottom: "15px"}}>
+  return <div className={cx("buttons", "center-body")}>
     <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
       <div
         className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
@@ -139,9 +149,9 @@ class Questions extends PureComponent<Props, State> {
     if (this.state.questionsData) {
       return <IonPage key={this.state.cqi}>
         <div style={{ overflow: "auto", justifyContent: "flex-start" }}>
-          <Question question={this.state.questionsData[this.state.cqi]} />
+          <Question question={this.state.questionsData[this.state.cqi]} cqi={this.state.cqi} questionsDataLength={this.state.questionsData.length} />
         </div>
-        <Header title={"Question" + '\u00A0' + `${this.state.cqi + 1}/${this.state.questionsData.length}`} onBackClick={this.state.cqi - 1 >= 0 ? () => this.back() : undefined} />
+        <Header onBackClick={this.state.cqi - 1 >= 0 ? () => this.back() : undefined} />
         <Buttons
           onPour={async () => await this.saveAndGoToNextQuestion("pour")}
           onContre={async () => await this.saveAndGoToNextQuestion("contre")}
