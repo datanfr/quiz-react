@@ -55,6 +55,7 @@
 .link-container {
   margin-top: 1rem;
   display: flex;
+  flex-wrap: wrap;
   flex: 1;
   justify-content: space-around;
 }
@@ -65,7 +66,6 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  border: 1px solid red;
 }
 
 .datan-link img {
@@ -78,12 +78,15 @@
 .share-link {
   display: flex;
   flex-direction: column;
+  width: 300px;
+  margin-top: 1rem;
 }
 
 .share-btn-container{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .share-btn-container button {

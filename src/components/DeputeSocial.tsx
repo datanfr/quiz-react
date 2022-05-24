@@ -37,9 +37,9 @@ export const DeputeSocials = () => {
         socialWindow(url);
     }
 
-    return <div className={cx("share-link")} style={{ border: "2px solid black" }}>
+    return <div className={cx("share-link")}>
         <div style={{ fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center" }}>Invite tes amis à faire ce quizz</div>
-        <div className={cx("share-btn-container")} style={{ border: "1px solid blue" }}>
+        <div className={cx("share-btn-container")}>
             <button type="button" name="button" className={cx("twitter")} onClick={twitterClick}>
                 <img src="/assets/social-media/twitter-no-round.png" alt="Partagez sur Twitter" />
                 <span>Twitter</span>

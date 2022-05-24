@@ -12,6 +12,7 @@ import { groupBy, Hwb, hwb, hwbLerp, hwbToCss } from "../utils"
 import { algorithms as scoringAlgorithms, algorithmsNames, algoFromString } from '../scoring-algorithm/ScoringAlgorithm';
 import { fetchingVotesPerGroupe, GroupeWithVote } from "../models/Groupe"
 import { compareToGroupe } from "../scoring-algorithm/confiance-x-compatibilite"
+import { DeputeSocials } from "../components/DeputeSocial"
 
 let cx = classNames.bind(classes);
 
@@ -162,29 +163,9 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData }> = ({ groupe
                             <div>Votre <b>taux de proximité</b> avec le groupe {groupeResponses.name} ({groupeResponses.id}) est de {Math.round(scoring.similarity * 100)} %.</div>
                             <div>Autrement dit, sur vos réponses aux questions du quizz, vous avez la même position politique que le groupe {groupeResponses.id} dans {Math.round(scoring.similarity * 100)} % des cas.</div>
                             {trust(voteCount)}
-                            <a className={cx("link-container")} target="_blank" style={{border: "1px solid blue"}}>
-                                <div className={cx("share-link")} style={{border: "2px solid black"}}>
-                                    <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>Partagez votre résultat</div>
-                                    <div className={cx("share-btn-container")} style={{border: "1px solid blue"}}>
-                                      <button type="button" name="button" className={cx("twitter")}>
-                                        <img src="/assets/social-media/twitter-no-round.png" alt="Partagez sur Twitter" />
-                                        <span>Twitter</span>
-                                      </button>
-                                      <button type="button" name="button" className={cx("facebook")}>
-                                        <img src="/assets/social-media/facebook-no-round.png" alt="Partagez sur Facebook" />
-                                        <span>Facebook</span>
-                                      </button>
-                                      <button type="button" name="button" className={cx("linkedin")}>
-                                        <img src="/assets/social-media/linkedin-no-round.png" alt="Partagez sur Linkedin" />
-                                        <span>Linkedin</span>
-                                      </button>
-                                      <button type="button" name="button" className={cx("whatsapp")}>
-                                        <img src="/assets/social-media/whatsapp-no-round.png" alt="Partagez sur Whatsapp" />
-                                        <span>Whatsapp</span>
-                                      </button>
-                                    </div>
-                                </div>
-                                <div className={cx("datan-link")} style={{border: "2px solid black"}}>
+                            <a className={cx("link-container")} target="_blank">
+                                <DeputeSocials />
+                                <div className={cx("datan-link")}>
                                     <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>En savoir plus sur</div>
                                     <a href={groupeResponses["page-url"]} target="_blank">
                                         <img src="/assets/logo_svg.svg" width={120} />
