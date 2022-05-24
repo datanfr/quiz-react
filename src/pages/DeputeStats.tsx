@@ -153,19 +153,19 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore:numb
                                     <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>Partagez votre résultat</div>
                                     <div className={cx("share-btn-container")} style={{border: "1px solid blue"}}>
                                       <button type="button" name="button" className={cx("twitter")}>
-                                        <img src="https://datan.fr/assets/imgs/logos/twitter-no-round.png" alt="Partagez sur Twitter" />
+                                        <img src="/assets/social-media/twitter-no-round.png" alt="Partagez sur Twitter" />
                                         <span>Twitter</span>
                                       </button>
                                       <button type="button" name="button" className={cx("facebook")}>
-                                        <img src="https://datan.fr/assets/imgs/logos/facebook-no-round.png" alt="Partagez sur Twitter" />
+                                        <img src="/assets/social-media/facebook-no-round.png" alt="Partagez sur Facebook" />
                                         <span>Facebook</span>
                                       </button>
                                       <button type="button" name="button" className={cx("linkedin")}>
-                                        <img src="https://datan.fr/assets/imgs/logos/linkedin-no-round.png" alt="Partagez sur Linkedin" />
+                                        <img src="/assets/social-media/linkedin-no-round.png" alt="Partagez sur Linkedin" />
                                         <span>Linkedin</span>
                                       </button>
                                       <button type="button" name="button" className={cx("whatsapp")}>
-                                        <img src="https://datan.fr/assets/imgs/logos/whatsapp-no-round.png" alt="Partagez sur Whatsapp" />
+                                        <img src="/assets/social-media/whatsapp-no-round.png" alt="Partagez sur Whatsapp" />
                                         <span>Whatsapp</span>
                                       </button>
                                     </div>

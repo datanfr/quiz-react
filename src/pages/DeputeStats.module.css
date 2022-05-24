@@ -84,28 +84,46 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  background-color: red;
 }
 
 .share-btn-container button {
-  width: 100px;
   margin: 0.2rem;
+  padding: 0.3rem 0.6rem;
+  text-align: center;
+  font-weight: 800;
+  border-radius: 0.25rem;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  border: none;
+}
+
+.share-btn-container button img {
+  height: 20px;
+  width: auto;
+}
+
+.share-btn-container button span {
+  font-size: 0.85rem;
+  margin-left: 0.25rem;
 }
 
 .twitter {
-  background-color: blue;
+  background-color: #1DA1F2;
 }
 
 .facebook {
-  background-color: yellow;
+  background-color: #4267B2;
 }
 
 .linkedin {
-  background-color: purple;
+  background-color: #2867B2;
 }
 
 .whatsapp {
-  background-color: green;
+  background-color: #128C7E;
 }
 
 .profile {
