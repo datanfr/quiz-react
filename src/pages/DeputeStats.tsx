@@ -152,14 +152,15 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
                             <div>Votre <b>taux de proximité</b> avec {deputeResponses.last.civ == "M." ? "le" : "la"} député{deputeResponses.last.civ == "M." ? "" : "e"} {deputeResponses.name} est de {Math.round(scoring.similarity * 100)} %.</div>
                             {avgScore && comparison(scoring.similarity * 100, Math.round(avgScore * 100), deputeResponses.name)}
                             {trust(voteCount)}
-                            average score: {avgScore}
-                            <a className={cx("link-container")} href={deputeResponses["page-url"]} target="_blank" style={{ border: "1px solid blue" }}>
+                            <div className={cx("link-container")} style={{ border: "1px solid blue" }}>
                                 <DeputeSocials />
                                 <div className={cx("datan-link")} style={{ border: "2px solid black" }}>
                                     <div style={{ fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center" }}>En savoir plus sur</div>
-                                    <img src="/assets/logo_svg.svg" width={120} />
+                                    <a href={deputeResponses["page-url"]} target="_blank">
+                                        <img src="/assets/logo_svg.svg" width={120} />
+                                    </a>
                                 </div>
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -192,6 +193,3 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
     </div >
     </div >
 }
-
-
-
