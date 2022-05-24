@@ -1,14 +1,14 @@
-import {fetchQuestions} from "./Question"
+import { fetchQuestions } from "./Question"
 
 import { ReactElement } from "react"
 
 export type GroupeWithVote = {
     "id": string,
-    "name": string, 
+    "name": string,
     "page-url": string,
     "member-count": number,
     "picture": ReactElement,
-    "votes": Record<string, {positionMajoritaire:string, "pour": number, "contre": number, "abstention": number }>
+    "votes": Record<string, { positionMajoritaire: string, "pour": number, "contre": number, "abstention": number }>
 }
 export const exVoteGroupe: GroupeWithVote = {
     "id": "MoDem",
@@ -21,10 +21,10 @@ export const exVoteGroupe: GroupeWithVote = {
         <img src="https://datan.fr/assets/imgs/groupes/LAREM.png" width="150" height="150" alt="La République en Marche" />
     </picture>,
     "votes": {
-        "VTANR5L15V2948": { positionMajoritaire: "pour", "pour": 12, "contre": 6, "abstention": 2},
-        "VTANR5L15V3484": { positionMajoritaire: "pour",  "pour": 12, "contre": 6, "abstention": 2},
-        "VTANR5L15V3485": { positionMajoritaire: "pour",  "pour": 12, "contre": 6, "abstention": 2},
-        "VTANR5L15V3486": { positionMajoritaire: "pour",  "pour": 12, "contre": 6, "abstention": 2}
+        "VTANR5L15V2948": { positionMajoritaire: "pour", "pour": 12, "contre": 6, "abstention": 2 },
+        "VTANR5L15V3484": { positionMajoritaire: "pour", "pour": 12, "contre": 6, "abstention": 2 },
+        "VTANR5L15V3485": { positionMajoritaire: "pour", "pour": 12, "contre": 6, "abstention": 2 },
+        "VTANR5L15V3486": { positionMajoritaire: "pour", "pour": 12, "contre": 6, "abstention": 2 }
     }
 }
 
@@ -43,9 +43,73 @@ function buildGroupes() {
                 return buildGroupe(vote.voteNumero)
             })
             return Promise.all(promisePerVote).then(() => votesPerGroupeeById)
+        }).then(votesPerGroupeeById => {
+            //SOC = SOC + NG
+            votesPerGroupeeById["SOC"] = mergeGroupe(votesPerGroupeeById["SOC"], votesPerGroupeeById["NG"])
+            delete votesPerGroupeeById["NG"]
+
+            // UDI_I = UDI_I + UDI-I + UDI-AGIR
+            votesPerGroupeeById["UDI_I"] = mergeGroupe(votesPerGroupeeById["UDI_I"], votesPerGroupeeById["UDI-I"])
+            delete votesPerGroupeeById["UDI-I"]
+            votesPerGroupeeById["UDI_I"] = mergeGroupe(votesPerGroupeeById["UDI_I"], votesPerGroupeeById["UDI-AGIR"])
+
+            // AGIR-E = AGIR-E + UDI-AGIR
+            votesPerGroupeeById["AGIR-E"] = mergeGroupe(votesPerGroupeeById["AGIR-E"], votesPerGroupeeById["UDI-AGIR"])
+
+            console.log({ t: Object.values(votesPerGroupeeById), SOC: votesPerGroupeeById["SOC"], merged: mergeGroupe(votesPerGroupeeById["SOC"], votesPerGroupeeById["SOC"]) })
+            return votesPerGroupeeById
         })
 }
 
+type Vote = {
+    positionMajoritaire: string;
+    pour: number;
+    contre: number;
+    abstention: number;
+}
+
+function mergeGroupeVote(v1: Vote, v2: Vote) : Vote {
+    return {
+        positionMajoritaire: "merged",
+        pour: v1.pour + v2.pour,
+        contre: v1.contre + v2.contre,
+        abstention: v1.abstention + v2.abstention
+    }
+}
+
+function mergeGroupe(g1: GroupeWithVote, g2: GroupeWithVote): GroupeWithVote {
+    const allVotesKeys = [...Object.keys(g1.votes), ...Object.keys(g2.votes)]
+    const mergedVotes : Record<string, Vote> = {}
+    for (const voteKey of allVotesKeys) {
+        const v1 = g1.votes[voteKey]
+        const v2 = g2.votes[voteKey]
+        if (v1 && v2) {
+            mergedVotes[voteKey] = mergeGroupeVote(v1, v2)
+        } else if (v1) {
+            mergedVotes[voteKey] = v1
+        } else if (v2) {
+            mergedVotes[voteKey] = v2
+        } else {
+            mergedVotes[voteKey] = {
+                positionMajoritaire: "merged",
+                pour: 0,
+                contre: 0,
+                abstention: 0
+            }
+        }
+
+    }
+    const merged = {
+        id: g1.id,
+        name: g1.name,
+        "page-url": g1["page-url"],
+        "member-count": g1["member-count"],
+        picture: g1.picture,
+        votes: mergedVotes
+    }
+    console.log({g1, g2, merged})
+    return merged;
+}
 
 function buildGroupe(id: number) {
     return fetch(`https://datan.fr/api/votes/get_vote_groupes_simplified?num=${id}&legislature=15`)
@@ -68,7 +132,7 @@ function buildGroupe(id: number) {
             //     nonVotantsVolontaires: "0"
             //     }
             // ]
-            for (const {libelleAbrev, libelle, voteNumero, nombreMembresGroupe, nombrePours, nombreContres, nombreAbstentions, nonVotants, nonVotantsVolontaires, positionMajoritaire} of json) {
+            for (const { libelleAbrev, libelle, voteNumero, nombreMembresGroupe, nombrePours, nombreContres, nombreAbstentions, nonVotants, nonVotantsVolontaires, positionMajoritaire } of json) {
                 const obj = votesPerGroupeeById[libelleAbrev] || {
                     "id": libelleAbrev,
                     "name": libelle,
@@ -76,7 +140,7 @@ function buildGroupe(id: number) {
                     "picture": <picture>
                         <source srcSet={`https://datan.fr/assets/imgs/groupes/webp/${libelleAbrev}.webp`} type="image/webp" />
                         <source srcSet={`https://datan.fr/assets/imgs/groupes/${libelleAbrev}.png`} type="image/png" />
-                        <img src={`https://datan.fr/assets/imgs/groupes/${libelleAbrev}.png`} width="150" height="150" alt={libelleAbrev }/>
+                        <img src={`https://datan.fr/assets/imgs/groupes/${libelleAbrev}.png`} width="150" height="150" alt={libelleAbrev} />
                     </picture>,
                     "votes": {}
                 }
