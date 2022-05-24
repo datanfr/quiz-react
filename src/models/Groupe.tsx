@@ -4,7 +4,7 @@ import { ReactElement } from "react"
 
 export type GroupeWithVote = {
     "id": string,
-    "name": string, 
+    "name": string,
     "page-url": string,
     "member-count": number,
     "picture": ReactElement,
@@ -72,7 +72,7 @@ function buildGroupe(id: number) {
                 const obj = votesPerGroupeeById[libelleAbrev] || {
                     "id": libelleAbrev,
                     "name": libelle,
-                    "page-url": `https://datan.fr/groupes/legislature-15/${libelleAbrev}`,
+                    "page-url": `https://datan.fr/groupes/legislature-15/${libelleAbrev.toLowerCase()}`,
                     "picture": <picture>
                         <source srcSet={`https://datan.fr/assets/imgs/groupes/webp/${libelleAbrev}.webp`} type="image/webp" />
                         <source srcSet={`https://datan.fr/assets/imgs/groupes/${libelleAbrev}.png`} type="image/png" />
