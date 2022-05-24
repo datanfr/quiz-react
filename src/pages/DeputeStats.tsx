@@ -163,7 +163,6 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
                         </div>
                     </div>
                 </div>
-
             </div>
             <div className={cx("cards-container")}>
                 {questions.map(q => {
