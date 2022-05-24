@@ -50,11 +50,17 @@ function buildGroupes() {
 
             // UDI_I = UDI_I + UDI-I + UDI-AGIR
             votesPerGroupeeById["UDI_I"] = mergeGroupe(votesPerGroupeeById["UDI_I"], votesPerGroupeeById["UDI-I"])
-            delete votesPerGroupeeById["UDI-I"]
             votesPerGroupeeById["UDI_I"] = mergeGroupe(votesPerGroupeeById["UDI_I"], votesPerGroupeeById["UDI-AGIR"])
+            votesPerGroupeeById["UDI_I"] = mergeGroupe(votesPerGroupeeById["UDI_I"], votesPerGroupeeById["LC"])
 
             // AGIR-E = AGIR-E + UDI-AGIR
+            votesPerGroupeeById["AGIR-E"] = mergeGroupe(votesPerGroupeeById["AGIR-E"], votesPerGroupeeById["UDI-I"])
             votesPerGroupeeById["AGIR-E"] = mergeGroupe(votesPerGroupeeById["AGIR-E"], votesPerGroupeeById["UDI-AGIR"])
+            votesPerGroupeeById["AGIR-E"] = mergeGroupe(votesPerGroupeeById["AGIR-E"], votesPerGroupeeById["LC"])
+
+            delete votesPerGroupeeById["UDI-I"]
+            delete votesPerGroupeeById["UDI-AGIR"]
+            delete votesPerGroupeeById["LC"]
 
             console.log({ t: Object.values(votesPerGroupeeById), SOC: votesPerGroupeeById["SOC"], merged: mergeGroupe(votesPerGroupeeById["SOC"], votesPerGroupeeById["SOC"]) })
             return votesPerGroupeeById
