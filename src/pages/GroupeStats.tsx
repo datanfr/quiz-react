@@ -38,6 +38,14 @@ const pour = < div
     <span style={{fontWeight: 800}}>POUR</span>
 </div >
 
+function trust(s: number) {
+  if (s <= 15) {
+    return <div><b>Attention</b>, ce score n'est basé que sur {s} votes car le ou la députée n'était pas tout le temps présent pour voter. <span style={{color: "red", fontWeight: 800}}>Ce score est donc à prendre avec précaution</span>.</div>
+  } else {
+    return <div>Ce score est basé sur {s} questions. Nous considérons que c'est suffisant pour le calcul du score de proximité.</div>
+  }
+}
+
 function getButtons(s: string) {
     switch (s) {
         case "pour": return pour
@@ -116,10 +124,11 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData }> = ({ groupe
     const scoringAlgorithm = scoringAlgorithms[algorithmName]
     const scoring = scoringAlgorithm.groupe(groupeResponses, userResponses, questions)
     const HumanReadable = scoring.HumanReadable
+    const voteCount = Object.values(groupeResponses.votes).length
     // const badgeBgColor = hwbLerp(props.data.similarity)
     return <div style={{ overflow: "auto" }}><div className={cx("center-body")} style={{ gridTemplateColumns: "auto minmax(0, 1920px) auto" }}>
         <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
-            <div style={{ display: "flex", flexDirection: "column", height: "30vh", minHeight: "160px", justifyContent: "space-evenly" }}>
+            <div style={{ display: "flex", flexDirection: "column", minHeight: "160px", justifyContent: "space-evenly" }}>
                 <div className={cx("profile-container")}>
                     <div className={cx("profile")}>
                         <div className={cx("picture-container")}>
@@ -130,16 +139,61 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData }> = ({ groupe
                         <div className={cx("data-container")}>
                             <div>
                                 <div className={cx("title")} style={{ fontSize: (4 / (groupeResponses.name.length ** 0.30)) + "em" }}>{groupeResponses.name}</div>
+                                <div className={cx("district")}>{groupeResponses.id}</div>
                             </div>
                         </div>
                         {/* <div className={cx("badge")} style={{ backgroundColor: hwbToCss(badgeBgColor) }} >{Math.round(props.data.similarity * 100)}%</div> */}
                     </div>
                 </div>
-                <a className={cx("datan-link-container")} href={groupeResponses["page-url"]} target="_blank">
-                    <div className={cx("datan-link")}>
-                        <span>EN SAVOIR PLUS SUR</span>&nbsp;&nbsp;<img src="/assets/logo_svg.svg" width={120} />
+                <div className={cx("stats-container")}>
+                    <div className={cx("stats-pie-container")} title='=avg(taux_accord) * 100'>
+                        <div style={{color: "#4D5755", fontWeight: 800, fontSize: "1.75em", textAlign: "center"}}>Score de proximité</div>
+                        <div className={cx("c100", "p" + Math.round(scoring.similarity * 100) )} style={{marginTop: "1.5rem"}}>
+                            <span>{Math.round(scoring.similarity * 100)} %</span>
+                            <div className={cx("slice")}>
+                                <div className={cx("bar")}></div>
+                                <div className={cx("fill")}></div>
+                            </div>
+                        </div>
                     </div>
-                </a>
+                    <div className={cx("stats-explanation-container")}>
+                        <div className={cx("explanation-card")}>
+                            <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.2em"}}>Explication</div>
+                            <div>Votre <b>taux de proximité</b> avec le groupe {groupeResponses.name} ({groupeResponses.id}) est de {Math.round(scoring.similarity * 100)} %.</div>
+                            <div>Autrement dit, sur vos réponses aux questions du quizz, vous avez la même position politique que le groupe {groupeResponses.id} dans {Math.round(scoring.similarity * 100)} % des cas.</div>
+                            {trust(voteCount)}
+                            <a className={cx("link-container")} target="_blank" style={{border: "1px solid blue"}}>
+                                <div className={cx("share-link")} style={{border: "2px solid black"}}>
+                                    <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>Partagez votre résultat</div>
+                                    <div className={cx("share-btn-container")} style={{border: "1px solid blue"}}>
+                                      <button type="button" name="button" className={cx("twitter")}>
+                                        <img src="/assets/social-media/twitter-no-round.png" alt="Partagez sur Twitter" />
+                                        <span>Twitter</span>
+                                      </button>
+                                      <button type="button" name="button" className={cx("facebook")}>
+                                        <img src="/assets/social-media/facebook-no-round.png" alt="Partagez sur Facebook" />
+                                        <span>Facebook</span>
+                                      </button>
+                                      <button type="button" name="button" className={cx("linkedin")}>
+                                        <img src="/assets/social-media/linkedin-no-round.png" alt="Partagez sur Linkedin" />
+                                        <span>Linkedin</span>
+                                      </button>
+                                      <button type="button" name="button" className={cx("whatsapp")}>
+                                        <img src="/assets/social-media/whatsapp-no-round.png" alt="Partagez sur Whatsapp" />
+                                        <span>Whatsapp</span>
+                                      </button>
+                                    </div>
+                                </div>
+                                <div className={cx("datan-link")} style={{border: "2px solid black"}}>
+                                    <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>En savoir plus sur</div>
+                                    <a href={groupeResponses["page-url"]} target="_blank">
+                                        <img src="/assets/logo_svg.svg" width={120} />
+                                    </a>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
             {/* <div>
                 Score:
