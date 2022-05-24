@@ -10,8 +10,9 @@ import classes from './DeputeStats.module.css';
 import './Circle.css';
 import { counter } from "@fortawesome/fontawesome-svg-core"
 import { groupBy, hwb, hwbToCss } from "../utils"
-import {algorithms as scoringAlgorithms, algorithmsNames, algoFromString} from '../scoring-algorithm/ScoringAlgorithm';
+import { algorithms as scoringAlgorithms, algorithmsNames, algoFromString } from '../scoring-algorithm/ScoringAlgorithm';
 import { compareToDepute } from "../scoring-algorithm/confiance-x-compatibilite"
+import { DeputeSocials } from "../components/DeputeSocial"
 
 let cx = classNames.bind(classes);
 
@@ -30,27 +31,27 @@ const nspp = <div
     className={cx("flex", "align-justify-center", "shadow", "button", "osef")}
 
 >
-    <span style={{fontWeight: 800}}>SANS&nbsp;AVIS</span>
+    <span style={{ fontWeight: 800 }}>SANS&nbsp;AVIS</span>
 </div>
 
 const contre = <div
     className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
 >
-    <span style={{fontWeight: 800}}>CONTRE</span>
+    <span style={{ fontWeight: 800 }}>CONTRE</span>
 </div>
 
 const pour = < div
     className={cx("flex", "align-justify-center", "shadow", "button", "pour")}
 >
-    <span style={{fontWeight: 800}}>POUR</span>
+    <span style={{ fontWeight: 800 }}>POUR</span>
 </div >
 
 function trust(s: number) {
-  if (s <= 10) {
-    return <div><b>Attention</b>, ce score n'est basé que sur {s} votes car le ou la députée n'était pas tout le temps présent pour voter. <span style={{color: "red", fontWeight: 800}}>Ce score est donc à prendre avec précaution</span>.</div>
-  } else {
-    return <div>Ce score est basé sur {s} questions. Nous considérons que c'est suffisant pour le calcul du score de proximité.</div>
-  }
+    if (s <= 10) {
+        return <div><b>Attention</b>, ce score n'est basé que sur {s} votes car le ou la députée n'était pas tout le temps présent pour voter. <span style={{ color: "red", fontWeight: 800 }}>Ce score est donc à prendre avec précaution</span>.</div>
+    } else {
+        return <div>Ce score est basé sur {s} questions. Nous considérons que c'est suffisant pour le calcul du score de proximité.</div>
+    }
 }
 
 function comparison(score: number, average: number, depute: string) {
@@ -64,7 +65,6 @@ function comparison(score: number, average: number, depute: string) {
 }
 
 function getButtons(s: string) {
-    console.group(s)
     switch (s) {
         case "pour": return pour
         case "contre": return contre
@@ -82,7 +82,7 @@ type DeputeStatsData = {
 export const DeputeStatsPage: React.FC = () => {
     const fetchingResponses = getResponses()
     const history = useHistory();
-    const location = useLocation<{avgScore : number|null}>()
+    const location = useLocation<{ avgScore: number | null }>()
     const avgScore = location.state.avgScore
     const [deputeStats, setDeputeStats] = useState<DeputeStatsData | null>(null)
     const { mpId } = useParams<{ mpId: string }>();
@@ -98,22 +98,22 @@ export const DeputeStatsPage: React.FC = () => {
     }, [])
 
     return <IonPage>
-        {deputeStats ? <DeputeStats deputeStats={deputeStats} avgScore={avgScore}/> : "Loading data"}
+        {deputeStats ? <DeputeStats deputeStats={deputeStats} avgScore={avgScore} /> : "Loading data"}
         <Header onBackClick={() => history.goBack()} title={`Résultat`} />
     </IonPage>
 }
 
-export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore:number|null }> = ({ deputeStats: { deputeResponses, userResponses, questions }, avgScore }) => {
+export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: number | null }> = ({ deputeStats: { deputeResponses, userResponses, questions }, avgScore }) => {
     const algorithmName = algoFromString(new URLSearchParams(window.location.search).get("algorithm"), () => "confianceXCompatibilite")
-    console.log({algorithmName})
+    console.log({ algorithmName })
     const scoringAlgorithm = scoringAlgorithms[algorithmName]
     const scoring = scoringAlgorithm.depute(deputeResponses.votes as Record<string, Reponse | null>, userResponses, questions)
     const HumanReadable = scoring.HumanReadable
     // const badgeBgColor = hwbLerp(props.data.similarity)
     const voteCount = Object.values(deputeResponses.votes).length
     const groupColor = deputeResponses.last.couleurAssociee as string
-    return <div style={{ overflow: "auto" }}><div className={cx("center-body")} style={{gridTemplateColumns: "auto minmax(0, 1920px) auto"}}>
-        <div className={cx("body")} style={{ marginTop: "var(--header-height)"}}>
+    return <div style={{ overflow: "auto" }}><div className={cx("center-body")} style={{ gridTemplateColumns: "auto minmax(0, 1920px) auto" }}>
+        <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
             <div style={{ display: "flex", flexDirection: "column", minHeight: "160px", justifyContent: "space-evenly" }}>
                 <div className={cx("profile-container")}>
                     <div className={cx("profile")}>
@@ -137,8 +137,8 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore:numb
                 {/* {HumanReadable && <HumanReadable />} */}
                 <div className={cx("stats-container")}>
                     <div className={cx("stats-pie-container")} title='=avg(taux_accord) * 100'>
-                        <div style={{color: "#4D5755", fontWeight: 800, fontSize: "1.75em", textAlign: "center"}}>Score de proximité</div>
-                        <div className={cx("c100", "p" + Math.round(scoring.similarity * 100) )} style={{marginTop: "1.5rem"}}>
+                        <div style={{ color: "#4D5755", fontWeight: 800, fontSize: "1.75em", textAlign: "center" }}>Score de proximité</div>
+                        <div className={cx("c100", "p" + Math.round(scoring.similarity * 100))} style={{ marginTop: "1.5rem" }}>
                             <span>{Math.round(scoring.similarity * 100)} %</span>
                             <div className={cx("slice")}>
                                 <div className={cx("bar")}></div>
@@ -148,34 +148,15 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore:numb
                     </div>
                     <div className={cx("stats-explanation-container")}>
                         <div className={cx("explanation-card")}>
-                            <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.2em"}}>Explication</div>
+                            <div style={{ fontWeight: 800, color: "#4D5755", fontSize: "1.2em" }}>Explication</div>
                             <div>Votre <b>taux de proximité</b> avec {deputeResponses.last.civ == "M." ? "le" : "la"} député{deputeResponses.last.civ == "M." ? "" : "e"} {deputeResponses.name} est de {Math.round(scoring.similarity * 100)} %.</div>
-                            {comparison(scoring.similarity * 100, Math.round(avgScore * 100), deputeResponses.name)}
+                            {avgScore && comparison(scoring.similarity * 100, Math.round(avgScore * 100), deputeResponses.name)}
                             {trust(voteCount)}
-                            <a className={cx("link-container")} href={deputeResponses["page-url"]} target="_blank" style={{border: "1px solid blue"}}>
-                                <div className={cx("share-link")} style={{border: "2px solid black"}}>
-                                    <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>Partagez votre résultat</div>
-                                    <div className={cx("share-btn-container")} style={{border: "1px solid blue"}}>
-                                      <button type="button" name="button" className={cx("twitter")}>
-                                        <img src="/assets/social-media/twitter-no-round.png" alt="Partagez sur Twitter" />
-                                        <span>Twitter</span>
-                                      </button>
-                                      <button type="button" name="button" className={cx("facebook")}>
-                                        <img src="/assets/social-media/facebook-no-round.png" alt="Partagez sur Facebook" />
-                                        <span>Facebook</span>
-                                      </button>
-                                      <button type="button" name="button" className={cx("linkedin")}>
-                                        <img src="/assets/social-media/linkedin-no-round.png" alt="Partagez sur Linkedin" />
-                                        <span>Linkedin</span>
-                                      </button>
-                                      <button type="button" name="button" className={cx("whatsapp")}>
-                                        <img src="/assets/social-media/whatsapp-no-round.png" alt="Partagez sur Whatsapp" />
-                                        <span>Whatsapp</span>
-                                      </button>
-                                    </div>
-                                </div>
-                                <div className={cx("datan-link")} style={{border: "2px solid black"}}>
-                                    <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>En savoir plus sur</div>
+                            average score: {avgScore}
+                            <a className={cx("link-container")} href={deputeResponses["page-url"]} target="_blank" style={{ border: "1px solid blue" }}>
+                                <DeputeSocials />
+                                <div className={cx("datan-link")} style={{ border: "2px solid black" }}>
+                                    <div style={{ fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center" }}>En savoir plus sur</div>
                                     <img src="/assets/logo_svg.svg" width={120} />
                                 </div>
                             </a>
@@ -195,11 +176,11 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore:numb
                             <div className={cx("card-title")} style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }} title={`taux_accord=${compareToDepute(d.user, d.depute as Reponse | null)}`}>
-                            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                                 <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>{deputeResponses.nameAbbrev}</div>
                                 <div>{getButtons(d.depute)}</div>
                             </div>
-                            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                                 <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>Votre vote</div>
                                 <div>{getButtons(d.user)}</div>
                             </div>
@@ -208,6 +189,9 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore:numb
                 })}
             </div>
         </div>
-    </div>
-    </div>
+    </div >
+    </div >
 }
+
+
+
