@@ -53,8 +53,14 @@ function trust(s: number) {
   }
 }
 
-function comparison(s: number) {
-  return 'A FAIRE'
+function comparison(score: number, average: number, depute: string) {
+  if (score == average) {
+    return <div>Comparé aux autres parlementaires, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont relativement proches</span> de celles de {depute}.</div>
+  } else if (score < average) {
+    return <div>Comparé aux autres parlementaires, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-red)"}}>ne sont pas proches</span> de celles de {depute}.</div>
+  } else {
+    return <div>Comparé aux autres parlementaires, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont proches</span> de celles de {depute}.</div>
+  }
 }
 
 function getButtons(s: string) {
@@ -144,10 +150,8 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore:numb
                         <div className={cx("explanation-card")}>
                             <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.2em"}}>Explication</div>
                             <div>Votre <b>taux de proximité</b> avec {deputeResponses.last.civ == "M." ? "le" : "la"} député{deputeResponses.last.civ == "M." ? "" : "e"} {deputeResponses.name} est de {Math.round(scoring.similarity * 100)} %.</div>
-                            <div>[A FAIRE].Comparé aux autres parlementaires, vous avez des positions idéologiques plutôt proches {deputeResponses.last.civ == "du député" ? "" : "de la députée"} {deputeResponses.name}.</div>
-                            {comparison(scoring.similarity * 100)}
+                            {comparison(scoring.similarity * 100, Math.round(avgScore * 100), deputeResponses.name)}
                             {trust(voteCount)}
-                            average score: {avgScore}
                             <a className={cx("link-container")} href={deputeResponses["page-url"]} target="_blank" style={{border: "1px solid blue"}}>
                                 <div className={cx("share-link")} style={{border: "2px solid black"}}>
                                     <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>Partagez votre résultat</div>
