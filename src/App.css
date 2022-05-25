@@ -40,6 +40,15 @@ a {
     width: 100%;
     flex-grow: 10;
     height: var(--buttons-height);
+    pointer-events: none;
+}
+
+.buttons > .body {
+    pointer-events: none;
+}
+
+.buttons > .body > * {
+    pointer-events: auto;
 }
 
 .cursor-pointer {
