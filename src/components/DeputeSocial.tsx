@@ -40,22 +40,30 @@ export const DeputeSocials = () => {
     return <div className={cx("share-link")}>
         <div style={{ fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center" }}>Invite tes amis à faire ce quizz</div>
         <div className={cx("share-btn-container")}>
-            <button type="button" name="button" className={cx("twitter")} onClick={twitterClick}>
-                <img src="/assets/social-media/twitter-no-round.png" alt="Partagez sur Twitter" />
-                <span>Twitter</span>
-            </button>
-            <button type="button" name="button" className={cx("facebook")} onClick={facebookClick} >
-                <img src="/assets/social-media/facebook-no-round.png" alt="Partagez sur Facebook" />
-                <span>Facebook</span>
-            </button>
-            <button type="button" name="button" className={cx("linkedin")} onClick={linkedinClick}>
-                <img src="/assets/social-media/linkedin-no-round.png" alt="Partagez sur Linkedin" />
-                <span>Linkedin</span>
-            </button>
-            <button type="button" name="button" className={cx("whatsapp")} onClick={whatsappClick}>
-                <img src="/assets/social-media/whatsapp-no-round.png" alt="Partagez sur Whatsapp" />
-                <span>Whatsapp</span>
-            </button>
+            <div>
+                <button type="button" name="button" className={cx("twitter")} onClick={twitterClick}>
+                    <img src="/assets/social-media/twitter-no-round.png" alt="Partagez sur Twitter" />
+                    <span>Twitter</span>
+                </button>
+            </div>
+            <div>
+                <button type="button" name="button" className={cx("facebook")} onClick={facebookClick} >
+                    <img src="/assets/social-media/facebook-no-round.png" alt="Partagez sur Facebook" />
+                    <span>Facebook</span>
+                </button>
+            </div>
+            <div>
+                <button type="button" name="button" className={cx("linkedin")} onClick={linkedinClick}>
+                    <img src="/assets/social-media/linkedin-no-round.png" alt="Partagez sur Linkedin" />
+                    <span>Linkedin</span>
+                </button>
+            </div>
+            <div className={cx("mobileShow")}>
+                <button type="button" name="button" className={cx("whatsapp")} onClick={whatsappClick}>
+                    <img src="/assets/social-media/whatsapp-no-round.png" alt="Partagez sur Whatsapp" />
+                    <span>Whatsapp</span>
+                </button>
+            </div>
         </div>
     </div>
 }
