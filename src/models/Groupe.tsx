@@ -152,7 +152,7 @@ function buildGroupe(id: string, swapPourContre : boolean | undefined) {
                 }
                 if (id === "3433" || swapPourContre) {
                     obj.votes[`VTANR5L15V${voteNumero}`] = {
-                        positionMajoritaire,
+                        positionMajoritaire: "swapped",
                         "pour": parseInt(nombreContres),
                         "contre": parseInt(nombrePours),
                         "abstention": parseInt(nombreAbstentions)

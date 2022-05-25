@@ -40,7 +40,8 @@ interface State {
   sortedGroupes: ResGroupeType[],
   chunk: number,
   searchTxt: string,
-  avgScore: number | null
+  avgScore: number | null,
+  avgScoreGroupe: number | null
 }
 
 class Resultat extends PureComponent<Props, State> {
@@ -61,7 +62,8 @@ class Resultat extends PureComponent<Props, State> {
       userVotes: {},
       chunk: 1,
       searchTxt: "",
-      avgScore: null
+      avgScore: null,
+      avgScoreGroupe: null
     }
     this.myRef = React.createRef()
   }
@@ -80,7 +82,8 @@ class Resultat extends PureComponent<Props, State> {
       const deputeScoreById = groupBy(scoredDeputes, x => x.depute.id)
       const scoredGroupes = groupes.map(groupe => ({ groupe, ...scoringAlgorithms["confianceXCompatibilite"].groupe(groupe, responses, questions) })).filter(x => /*x.calcData.tauxConfiance > 0.5 && */x.groupe.name != "Non inscrit")
       const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
-      const calculated = { deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null, avgScore }
+      const avgScoreGroupe = scoredGroupes.map(x => x.similarity).reduce((a, b) => a + b) / scoredGroupes.length
+      const calculated = { deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null, avgScore, avgScoreGroupe }
       Object.assign(window as any, { calculated })
       this.setState(calculated)
     })
@@ -148,7 +151,7 @@ class Resultat extends PureComponent<Props, State> {
         <p style={{ fontStyle: "italic", margin: 15 }}>Ou comparez vous aux différents groupes politique</p>
         <div><FontAwesomeIcon icon={faChevronDown} /></div>
         <div className={cx("res-groupe-container")}>
-          {this.state.sortedGroupes.map(x => <ResGroupe data={x} />)}
+          {this.state.sortedGroupes.map(x => <ResGroupe data={x} avgScoreGroupe={this.state.avgScoreGroupe} />)}
           <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
         </div>
       </div>
@@ -264,11 +267,14 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
 
 
 
-function ResGroupe(props: { data: ResGroupeType }) {
+function ResGroupe(props: { data: ResGroupeType, avgScoreGroupe: number | null }) {
 
   const badgeBgColor = hwbLerp(props.data.similarity, badgeColorGradient)
 
-  return <Link className={cx("res-groupe")} key={props.data.groupe.id} to={`groupe-stats/${props.data.groupe.id}`} >
+  return <Link className={cx("res-groupe")} key={props.data.groupe.id} to={{
+    pathname: `groupe-stats/${props.data.groupe.id}`,
+    state: {avgScoreGroupe: props.avgScoreGroupe}
+  }} >
     <div className={cx("picture-container")}>
       <div className={cx("groupe-img-circle")}>
         {props.data.groupe.picture}
