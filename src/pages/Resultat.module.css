@@ -104,6 +104,7 @@ a {
   --margin: 35px;
   --padding-x: 10px;
   position: relative;
+
   display: flex;
   justify-content: space-evenly;
   padding: 10px var(--padding-x);
@@ -116,10 +117,20 @@ a {
 
 .button {
   color: var(--datan-white);
-  height: 60px;
-  max-width: 240px;
+  height: 50px;
+  max-width: 140px;
   cursor: pointer;
+  border-radius: 7px;
+  font-size: 1.1em;
+  font-weight: 800;
+  margin: 0px 8px;
+  transition: 0.3s;
+  max-width: 240px;
   text-align: center;
+}
+
+.button:hover{
+  filter: brightness(0.92);
 }
 
 .search-container{

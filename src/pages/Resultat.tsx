@@ -75,12 +75,12 @@ class Resultat extends PureComponent<Props, State> {
     Promise.all([fetchingResponses, fetchingDeputes, fetchingGroupes, buildDeputeIndex, fetchQuestions]).then(([responses, deputes, groupes, deputeIndex, questions]) => {
       Object.assign(window as any, { deputes, groupes })
       const scoredDeputes = deputes.map(depute => ({ depute, ...scoringAlgorithms["confianceXCompatibilite"].depute(depute.votes as Record<string, Reponse | null>, responses, questions) }))
-      const avgScore = scoredDeputes.map(x => x.similarity).reduce((a,b) => a+b) / scoredDeputes.length
-      console.log({avgScore})
+      const avgScore = scoredDeputes.map(x => x.similarity).reduce((a, b) => a + b) / scoredDeputes.length
+      console.log({ avgScore })
       const deputeScoreById = groupBy(scoredDeputes, x => x.depute.id)
       const scoredGroupes = groupes.map(groupe => ({ groupe, ...scoringAlgorithms["confianceXCompatibilite"].groupe(groupe, responses, questions) })).filter(x => /*x.calcData.tauxConfiance > 0.5 && */x.groupe.name != "Non inscrit")
       const sortedGroupes = scoredGroupes.sort((a, b) => (a.similarity < b.similarity) ? 1 : (a.similarity > b.similarity) ? -1 : 0)
-      const calculated = { deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null, avgScore}
+      const calculated = { deputeIndex, deputeScoreById, sortedGroupes, filteredDeputes: null, avgScore }
       Object.assign(window as any, { calculated })
       this.setState(calculated)
     })
@@ -135,7 +135,7 @@ class Resultat extends PureComponent<Props, State> {
         display: "flex", flexDirection: "column", justifyContent: "center", marginTop: "20px", alignItems: 'center'
       }}>
         <div><FontAwesomeIcon icon={faChevronUp} /></div>
-        <p style={{ fontStyle: "italic", margin: 15}}>
+        <p style={{ fontStyle: "italic", margin: 15 }}>
           Recherchez votre député grace au champ de recherche.<br />
           Vous pouvez rechercher par:
           <ul>
@@ -145,7 +145,7 @@ class Resultat extends PureComponent<Props, State> {
             <li>Code postal</li>
           </ul>
         </p>
-        <p style={{ fontStyle: "italic", margin: 15}}>Ou comparez vous aux différents groupes politique</p>
+        <p style={{ fontStyle: "italic", margin: 15 }}>Ou comparez vous aux différents groupes politique</p>
         <div><FontAwesomeIcon icon={faChevronDown} /></div>
         <div className={cx("res-groupe-container")}>
           {this.state.sortedGroupes.map(x => <ResGroupe data={x} />)}
@@ -177,9 +177,9 @@ class Resultat extends PureComponent<Props, State> {
         </div>
       </div>
       <Header title={`Résultat`} />
-      <div className={cx("buttons", "center-body")} >
+      <div className={cx("buttons", "center-body")} style={{ gridTemplateColumns: "auto minmax(0, 1920px) auto" }}>
         <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
-          <Link to="/questions" className={cx("datan-green-bg", "flex", "align-justify-center", "shadow", "button")} style={{ height: "60px" }}>
+          <Link to="/questions" className={cx("datan-green-bg", "flex", "align-justify-center", "shadow", "button")}>
             Recommencer le test
           </Link>
         </div>
@@ -225,7 +225,7 @@ function ResDepute(props: { data: ResDeputeType }) {
   </Link>
 }
 
-function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeType, avgScore:number | null }) {
+function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeType, avgScore: number | null }) {
   const badgeBgColor = hwbLerp(props.resDepute?.similarity, badgeColorGradient)
   const { h, s, l } = props.data.item.last.couleurAssociee ? hexToHSL(props.data.item.last.couleurAssociee as string) : { h: 0, s: 0, l: 0 } //Couleur député non inscrit
   const hglnom = highlightField(props.data.metadata, "name", { color: hslToCss({ h, s, l: l * 0.80 }), fontWeight: 900 }) || props.data.item.name
@@ -241,7 +241,7 @@ function ResDeputeFiltered(props: { data: SearchResponse, resDepute: ResDeputeTy
   // }
   // const CpListHtml = () => hglCp.length ? <div className="commune-list">{hglCp.map((x) => <div className="elem">{x}</div>)}</div> : null
 
-  return <Link key={props.data.item.id} to={{pathname: `depute-stats/${props.data.item.id}`, state: {avgScore: props.avgScore}}}  >
+  return <Link key={props.data.item.id} to={{ pathname: `depute-stats/${props.data.item.id}`, state: { avgScore: props.avgScore } }}  >
     <div className={cx("res-depute")}>
       <div className={cx("picture-container")}>
         <div className={cx("depute-img-circle")}>
@@ -268,22 +268,21 @@ function ResGroupe(props: { data: ResGroupeType }) {
 
   const badgeBgColor = hwbLerp(props.data.similarity, badgeColorGradient)
 
-  return <Link key={props.data.groupe.id} to={`groupe-stats/${props.data.groupe.id}`} >
-    <div className={cx("res-groupe")}>
-      <div className={cx("picture-container")}>
-        <div className={cx("groupe-img-circle")}>
-          {props.data.groupe.picture}
-        </div>
+  return <Link className={cx("res-groupe")} key={props.data.groupe.id} to={`groupe-stats/${props.data.groupe.id}`} >
+    <div className={cx("picture-container")}>
+      <div className={cx("groupe-img-circle")}>
+        {props.data.groupe.picture}
       </div>
-      <div className={cx("data-container")}>
-        <div className={cx("title")} style={{ fontSize: (3 / (props.data.groupe.name.length ** 0.30)) + "em" }}>
-          {props.data.groupe.name}
-        </div>
+    </div>
+    <div className={cx("data-container")}>
+      <div className={cx("title")} style={{ fontSize: (3 / (props.data.groupe.name.length ** 0.30)) + "em" }}>
+        {props.data.groupe.name}
       </div>
-      <div className={cx("badge")} style={{ backgroundColor: hwbToCss(badgeBgColor) }} onMouseEnter={() => console.log(props.data)}>
-        {Math.round(props.data.similarity * 100)}%
-      </div>
-    </div >
+    </div>
+    <div className={cx("badge")} style={{ backgroundColor: hwbToCss(badgeBgColor) }} onMouseEnter={() => console.log(props.data)}>
+      {Math.round(props.data.similarity * 100)}%
+    </div>
   </Link >
+
 }
 export default withRouter(Resultat)
