@@ -307,3 +307,11 @@ a {
 .osef {
   background-color: var(--datan-yellow)
 }
+
+.mobileShow{
+  display: none;
+}
+
+@media only screen and (max-width: 767.98px) {
+  .mobileShow {display: block}
+}
