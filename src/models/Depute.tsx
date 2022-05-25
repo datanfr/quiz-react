@@ -116,6 +116,11 @@ export const fetchingVotesPerDepute = buildDeputes()
 export const fetchingDeputes = fetchingVotesPerDepute.then(x => Object.values(x))
 export const buildDeputeIndex = fetchingDeputes.then(deputes => buildIndex(deputes/*, sortedGroupes*/))
 
+const swapPourContreMap : Record<string, string> = {
+    "pour": "contre",
+    "contre": "pour",
+    "abstention": "abstention"
+}
 
 function buildDeputes() {
     return fetchQuestions
@@ -123,7 +128,7 @@ function buildDeputes() {
             //console.log("Size fetched", json.length)
             const promisePerVote: Promise<void[]>[] = json.map((vote: any) => {
                 //console.log("Fetching ", vote.voteNumero)
-                return buildDepute(vote.voteNumero)
+                return buildDepute(vote.voteNumero, vote.swapPourContre)
             })
             console.log("Starting building vote per depute")
             return Promise.all(promisePerVote).then(() => {
@@ -151,7 +156,7 @@ const fetchCitiesFromLocalStorage = Storage.get({ key: "cities" }).then(cities =
         })
 });
 
-function buildDepute(id: number) {
+function buildDepute(id: string, swapPourContre : boolean | undefined) {
     return Promise.all([
         fetch(`https://datan.fr/api/votes/get_vote_deputes?num=${id}&legislature=15`).then(resp => resp.json()),
         fetchDeputeLast,
@@ -180,7 +185,11 @@ function buildDepute(id: number) {
                         })
                     }()
                 }
-                obj.votes[`VTANR5L15V${id}`] = vote_libelle
+                if (id === "3433" || swapPourContre) {
+                    obj.votes[`VTANR5L15V${id}`] = swapPourContreMap[vote_libelle]
+                } else {
+                    obj.votes[`VTANR5L15V${id}`] = vote_libelle
+                }
                 votesPerDeputeById[mpId] = obj
                 res()
             }));

@@ -40,7 +40,7 @@ function buildGroupes() {
             //console.log("Size fetched", json.length)
             const promisePerVote: Promise<void>[] = json.map((vote: any) => {
                 //console.log("Fetching ", vote.voteNumero)
-                return buildGroupe(vote.voteNumero)
+                return buildGroupe(vote.voteNumero, vote.swapPourContre)
             })
             return Promise.all(promisePerVote).then(() => votesPerGroupeeById)
         }).then(votesPerGroupeeById => {
@@ -117,7 +117,7 @@ function mergeGroupe(g1: GroupeWithVote, g2: GroupeWithVote): GroupeWithVote {
     return merged;
 }
 
-function buildGroupe(id: number) {
+function buildGroupe(id: string, swapPourContre : boolean | undefined) {
     return fetch(`https://datan.fr/api/votes/get_vote_groupes_simplified?num=${id}&legislature=15`)
         .then(resp => resp.json())
         .then(json => {
@@ -150,11 +150,21 @@ function buildGroupe(id: number) {
                     </picture>,
                     "votes": {}
                 }
-                obj.votes[`VTANR5L15V${voteNumero}`] = {
-                    positionMajoritaire,
-                    "pour": parseInt(nombrePours),
-                    "contre": parseInt(nombreContres),
-                    "abstention": parseInt(nombreAbstentions)
+                if (id === "3433" || swapPourContre) {
+                    obj.votes[`VTANR5L15V${voteNumero}`] = {
+                        positionMajoritaire,
+                        "pour": parseInt(nombreContres),
+                        "contre": parseInt(nombrePours),
+                        "abstention": parseInt(nombreAbstentions)
+                    }    
+                } else {
+                    obj.votes[`VTANR5L15V${voteNumero}`] = {
+                        positionMajoritaire,
+                        "pour": parseInt(nombrePours),
+                        "contre": parseInt(nombreContres),
+                        "abstention": parseInt(nombreAbstentions)
+                    }
+    
                 }
                 votesPerGroupeeById[libelleAbrev] = obj
             }
