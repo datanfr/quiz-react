@@ -30,6 +30,8 @@ import { BuildVotes } from './pages/BuildVotes';
 import { OnBoarding } from './pages/OnBoarding';
 import { DeputeStats, DeputeStatsPage } from './pages/DeputeStats';
 import { GroupeStatsPage } from './pages/GroupeStats';
+import { BasicPage } from './pages/BasicPage';
+import { AlgorithmPage } from './pages/AlgorithmPage';
 
 const App: React.FC = () => (
   <div>
@@ -40,6 +42,12 @@ const App: React.FC = () => (
       </Route>
       <Route exact path="/questions">
         <Questions />
+      </Route>
+      <Route exact path="/a-basic-page">
+        <BasicPage name="Awening" />
+      </Route>
+      <Route exact path="/algorithme-info">
+        <AlgorithmPage />
       </Route>
       <Route exact path="/questions/:no">
         <Questions />
