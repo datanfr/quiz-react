@@ -48,7 +48,7 @@ const pour = < div
 
 function trust(s: number) {
     if (s <= 10) {
-        return <div><b>Attention</b>, ce score n'est basé que sur {s} votes car le ou la députée n'était pas tout le temps présent pour voter. <span style={{ color: "red", fontWeight: 800 }}>Ce score est donc à prendre avec précaution</span>.</div>
+        return <div><b>Attention</b>, ce score n'est basé uniquement sur {s} votes car le ou la députée n'était pas tout le temps présent pour voter. <span style={{ color: "red", fontWeight: 800 }}>Ce score est donc à prendre avec précaution</span>.</div>
     } else {
         return <div>Ce score est basé sur {s} questions. Nous considérons que c'est suffisant pour le calcul du score de proximité.</div>
     }

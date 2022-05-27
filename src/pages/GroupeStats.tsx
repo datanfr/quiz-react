@@ -1,6 +1,6 @@
 import { IonPage } from "@ionic/react"
 import { useEffect, useRef, useState } from "react"
-import { useHistory, useParams } from "react-router"
+import { useHistory, useLocation, useParams } from "react-router"
 import Header from "../components/Header"
 import { DeputeWithScore, DeputeWithVote, fetchingVotesPerDepute } from "../models/Depute"
 import { fetchQuestions, Questions } from "../models/Question"
@@ -41,9 +41,19 @@ const pour = < div
 
 function trust(s: number) {
   if (s <= 15) {
-    return <div><b>Attention</b>, ce score n'est basé que sur {s} votes car le ou la députée n'était pas tout le temps présent pour voter. <span style={{color: "red", fontWeight: 800}}>Ce score est donc à prendre avec précaution</span>.</div>
+    return <div><b>Attention</b>, ce score n'est basé uniquement sur {s} votes car le groupe n'était pas tout le temps présent pour voter. <span style={{color: "red", fontWeight: 800}}>Ce score est donc à prendre avec précaution</span>.</div>
   } else {
     return <div>Ce score est basé sur {s} questions. Nous considérons que c'est suffisant pour le calcul du score de proximité.</div>
+  }
+}
+
+function comparison(score: number, average: number, groupe: string) {
+  if (score == average) {
+    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont relativement proches</span> de celles du groupe {groupe}.</div>
+  } else if (score < average) {
+    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-red)"}}>ne sont pas proches</span> de celles du groupe {groupe}.</div>
+  } else {
+    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont proches</span> de celles du groupe {groupe}.</div>
   }
 }
 
@@ -96,6 +106,8 @@ type GroupeStatsData = {
 export const GroupeStatsPage: React.FC = () => {
     const fetchingResponses = getResponses()
     const history = useHistory()
+    const location = useLocation<{ avgScoreGroupe: number | null }>()
+    const avgScoreGroupe = location.state.avgScoreGroupe
     const [groupeStats, setGroupeStats] = useState<GroupeStatsData | null>(null)
     const { id } = useParams<{ id: string }>();
     useEffect(() => {
@@ -110,7 +122,7 @@ export const GroupeStatsPage: React.FC = () => {
     }, [])
 
     return <IonPage>
-        {groupeStats ? <GroupeStats groupeStats={groupeStats} /> : "Loading data"}
+        {groupeStats ? <GroupeStats groupeStats={groupeStats} avgScoreGroupe={avgScoreGroupe} /> : "Loading data"}
         <Header onBackClick={() => history.goBack()} title={`Résultat`} />
     </IonPage>
 }
@@ -119,7 +131,7 @@ const pc = ["pour", "contre"]
 const allCompOutcome = ["accord", "desaccord", "nspp"] as const
 type CompOutcome = typeof allCompOutcome[number]
 
-export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData }> = ({ groupeStats: { groupeResponses, userResponses, questions } }) => {
+export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData, avgScoreGroupe: number | null }> = ({ groupeStats: { groupeResponses, userResponses, questions }, avgScoreGroupe }) => {
     const algorithmName = algoFromString(new URLSearchParams(window.location.search).get("algorithm"), () => "confianceXCompatibilite")
     console.log({ algorithmName })
     const scoringAlgorithm = scoringAlgorithms[algorithmName]
@@ -162,6 +174,7 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData }> = ({ groupe
                             <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.2em"}}>Explication</div>
                             <div>Votre <b>taux de proximité</b> avec le groupe {groupeResponses.name} ({groupeResponses.id}) est de {Math.round(scoring.similarity * 100)} %.</div>
                             <div>Autrement dit, sur vos réponses aux questions du quizz, vous avez la même position politique que le groupe {groupeResponses.id} dans {Math.round(scoring.similarity * 100)} % des cas.</div>
+                            {avgScoreGroupe && comparison(scoring.similarity * 100, Math.round(avgScoreGroupe * 100), groupeResponses.id)}
                             {trust(voteCount)}
                             <a className={cx("link-container")} target="_blank">
                                 <DeputeSocials />
