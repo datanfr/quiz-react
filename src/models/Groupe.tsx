@@ -40,7 +40,7 @@ function buildGroupes() {
             //console.log("Size fetched", json.length)
             const promisePerVote: Promise<void>[] = json.map((vote: any) => {
                 //console.log("Fetching ", vote.voteNumero)
-                return buildGroupe(vote.voteNumero, vote.swapPourContre)
+                return buildGroupe(vote.voteNumero, vote.swap)
             })
             return Promise.all(promisePerVote).then(() => votesPerGroupeeById)
         }).then(votesPerGroupeeById => {
@@ -150,13 +150,13 @@ function buildGroupe(id: string, swapPourContre : boolean | undefined) {
                     </picture>,
                     "votes": {}
                 }
-                if (id === "3433" || swapPourContre) {
+                if (swapPourContre) {
                     obj.votes[`VTANR5L15V${voteNumero}`] = {
                         positionMajoritaire,
                         "pour": parseInt(nombreContres),
                         "contre": parseInt(nombrePours),
                         "abstention": parseInt(nombreAbstentions)
-                    }    
+                    }
                 } else {
                     obj.votes[`VTANR5L15V${voteNumero}`] = {
                         positionMajoritaire,
@@ -164,7 +164,7 @@ function buildGroupe(id: string, swapPourContre : boolean | undefined) {
                         "contre": parseInt(nombreContres),
                         "abstention": parseInt(nombreAbstentions)
                     }
-    
+
                 }
                 votesPerGroupeeById[libelleAbrev] = obj
             }

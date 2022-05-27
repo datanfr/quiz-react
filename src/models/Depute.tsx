@@ -128,7 +128,7 @@ function buildDeputes() {
             //console.log("Size fetched", json.length)
             const promisePerVote: Promise<void[]>[] = json.map((vote: any) => {
                 //console.log("Fetching ", vote.voteNumero)
-                return buildDepute(vote.voteNumero, vote.swapPourContre)
+                return buildDepute(vote.voteNumero, vote.swap)
             })
             console.log("Starting building vote per depute")
             return Promise.all(promisePerVote).then(() => {
@@ -185,7 +185,7 @@ function buildDepute(id: string, swapPourContre : boolean | undefined) {
                         })
                     }()
                 }
-                if (id === "3433" || swapPourContre) {
+                if (swapPourContre) {
                     obj.votes[`VTANR5L15V${id}`] = swapPourContreMap[vote_libelle]
                 } else {
                     obj.votes[`VTANR5L15V${id}`] = vote_libelle
