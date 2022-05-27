@@ -20,13 +20,17 @@ class Header extends PureComponent<Props, State> {
     const { onBackClick, ...remains } = this.props
     const borderRight = !!onBackClick ? "1px solid rgba(0,0,0,0.3" : "none"
     return <div className={cx("shadow", "header")}>
-      <div className={cx("flex")} style={{justifyContent: "center", alignContent: "center", flex: "0 0 50px", cursor: "pointer", borderRight}}  onClick={() => onBackClick && onBackClick()}>
-        <div className={cx("flex", 'margin', {"opacity-hidden ": !onBackClick})} style={{justifyContent: "center"}}>
-          <FontAwesomeIcon icon={faChevronLeft}/>
-        </div>
+      <div className={cx({"opacity-hidden ": !onBackClick})} style={{position: "relative", float: "left", left: 0, height: "100%", display: "flex", width: "var(--header-height)", cursor: "pointer", zIndex: 999}} onClick={() => onBackClick && onBackClick()}>
+          <div style={{backgroundColor: "var(--datan-blue)", display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%"}}  >
+            <div style={{justifyContent: "center", color: "#ffffff"}}>
+              <FontAwesomeIcon icon={faChevronLeft}/>
+            </div>
+          </div>
       </div>
-      <div className={cx("flex", 'margin')} style={{justifyContent: "center", alignContent: "center", flexGrow: 1}}><b>{this.props.title}</b></div>
-      <div className={cx("flex", 'margin')} style={{justifyContent: "flex-end", alignContent: "center", flexGrow: 0}}>
+      <div style={{width: "100%", position: "absolute", height: "100%", textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <b>{this.props.title}</b>
+      </div>
+      <div style={{position: "relative", float: "right", right: "0px", height: "100%",  display: "flex", justifyContent: "center", alignItems: "center", marginRight: "10px"}}>
         <img src="https://datan.fr/assets/imgs/datan/logo_svg.svg" width="150" alt="Logo Datan"></img>
       </div>
     </div>

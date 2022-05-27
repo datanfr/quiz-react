@@ -10,26 +10,125 @@
 }
 
 .profile-container {
+  margin-top: 3rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.datan-link-container {
+.stats-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.stats-pie-container {
+  display: flex;
+  margin: 0 2rem;
+  margin-top: 3rem;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 1.25rem;
+  border-radius: 10px;
+  border: 1.5px solid var(--datan-green);
+}
+
+.explanation-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  word-wrap: break-word;
+  margin: 0 2rem;
+  margin-top: 3rem;
+  /*background-color:  rgb(0, 183, 148, 0.2);*/
+  /*padding: 1.5rem;*/
+  max-width: 600px;
+}
+
+.explanation-card div {
+  margin-bottom: 0.5rem;
+  font-size: 1em;
+}
+
+.link-container {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: space-around;
 }
 
 .datan-link {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   flex-wrap: wrap;
 }
 
 .datan-link img {
+  display: fex;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 8px;
+}
+
+.share-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  width: 300px;
+}
+
+.share-btn-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.share-btn-container button {
+  margin: 0.2rem;
+  padding: 0.3rem 0.6rem;
+  text-align: center;
+  font-weight: 800;
+  border-radius: 0.25rem;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.share-btn-container button img {
+  height: 20px;
+  width: auto;
+}
+
+.share-btn-container button span {
+  font-size: 0.85rem;
+  margin-left: 0.25rem;
+}
+
+.twitter {
+  background-color: #1DA1F2;
+}
+
+.facebook {
+  background-color: #4267B2;
+}
+
+.linkedin {
+  background-color: #2867B2;
+}
+
+.whatsapp {
+  background-color: #128C7E;
 }
 
 .profile {
@@ -76,12 +175,12 @@
   margin-left: 25px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: start;
   flex: 1 1 auto;
 }
 
 .data-container .title {
-  text-align: center;
   color: #4D5755;
   line-height: 41px;
   font-size: 30px;
@@ -89,10 +188,14 @@
 }
 
 .data-container .groupe {
-  text-align: center;
   line-height: 22px;
   font-size: 16px;
   font-weight: 700;
+}
+
+.data-container .district {
+  color: #4D5755;
+  font-size: 16px;
 }
 
 .res-depute .badge,
@@ -168,6 +271,8 @@ a {
 }
 
 .cards-container {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
@@ -182,7 +287,7 @@ a {
 .card-title{
   color: #4C4C4C;
   font-weight: 600;
-  font-size: 0.95em;
+  font-size: 1em;
 }
 
 .button {
@@ -202,4 +307,12 @@ a {
 
 .osef {
   background-color: var(--datan-yellow)
+}
+
+.mobileShow{
+  display: none;
+}
+
+@media only screen and (max-width: 767.98px) {
+  .mobileShow {display: block}
 }
