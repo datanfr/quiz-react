@@ -99,7 +99,8 @@ class Resultat extends PureComponent<Props, State> {
 
 
   loadMore(e: React.UIEvent<HTMLDivElement, UIEvent>) {
-    if (window.innerHeight + e.currentTarget.scrollTop >= (e.currentTarget.scrollHeight - window.innerHeight)) {
+    const everythingLoaded = this.state.filteredDeputes ? 20 * this.state.chunk > this.state.filteredDeputes.length : true
+    if (!everythingLoaded && window.innerHeight + e.currentTarget.scrollTop >= (e.currentTarget.scrollHeight - window.innerHeight)) {
       this.setState({ chunk: this.state.chunk + 1 })
     }
   }
@@ -157,7 +158,7 @@ class Resultat extends PureComponent<Props, State> {
       </div>
     }
     return <IonPage>
-      <div id="inifinte-scroll" style={{ overflow: "auto", justifyContent: "flex-start" }} onScroll={e => this.loadMore(e)} ref={this.myRef}>
+      <div id="inifinte-scroll" style={{ overflow: "auto", justifyContent: "flex-start" }} onScroll={this.state.filteredDeputes ? e => this.loadMore(e) : undefined} ref={this.myRef}>
         <div className={cx("search-container")}>
 
           <input
