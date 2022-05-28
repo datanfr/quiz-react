@@ -28,24 +28,31 @@ function Question(props: { question: QuestionModel, cqi: number, questionsDataLe
       <div className={cx("center-body")}>
         <div className={cx("body")} style={{ marginTop: "var(--header-height)"}}>
           <div className={cx("title-container")}>
-            <div style={{display: "flex", justifyContent: "center", alignItems: 'flex-end', height: "25%", fontSize: "0.7em"}}>
-              {"Question" + '\u00A0' + `${cqi + 1}/${questionsDataLength}`}
-            </div>
-            <div className={cx("title")}  style={{display: "flex", justifyContent: "center", alignItems: 'center', height: "50%"}}>
-              <div style={{ margin: "0 10px"}}>
-                {question.voteTitre}
-              </div>
-            </div>
-            <div style={{display: "flex", justifyContent: "center", alignItems: 'flex-start', height: "25%", fontSize: "0.5em"}}>
-              <div
-                onClick={() => document.querySelector("#for")?.scrollIntoView({ behavior: "smooth" })}
-                style={{ cursor: "pointer", border: "2px white solid", borderRadius: "7px"}}
-              >
-                <div style={{display: "flex", flexDirection: "column", justifyContent: "center",alignItems: 'center',  margin: "10px 18px"}}>
-                  <div>En savoir plus</div>
-                  <div><FontAwesomeIcon icon={faChevronDown} /></div>
+            <div className={cx("content-container")}>
+                <div style={{display: "flex", justifyContent: "center", alignItems: 'flex-end', fontSize: "0.7em"}}>
+                  {"Question" + '\u00A0' + `${cqi + 1}/${questionsDataLength}`}
                 </div>
-              </div>
+                <div className={cx("title")}  style={{display: "flex", justifyContent: "center", alignItems: 'center'}}>
+                  <div style={{ margin: "0 10px"}}>
+                    {question.voteTitre}
+                  </div>
+                </div>
+                <div className={cx("explication")}  style={{display: "flex", justifyContent: "center", alignItems: 'center'}}>
+                  <div style={{ margin: "0 10px"}}>
+                    {question.explication}
+                  </div>
+                </div>
+                <div style={{display: "flex", justifyContent: "center", alignItems: 'flex-start', fontSize: "0.5em"}}>
+                  <div
+                    onClick={() => document.querySelector("#for")?.scrollIntoView({ behavior: "smooth" })}
+                    style={{ cursor: "pointer", border: "2px white solid", borderRadius: "7px"}}
+                  >
+                    <div style={{display: "flex", flexDirection: "column", justifyContent: "center",alignItems: 'center',  margin: "3px 15px"}}>
+                      <div>En savoir plus</div>
+                      <div><FontAwesomeIcon icon={faChevronDown} /></div>
+                    </div>
+                  </div>
+                </div>
             </div>
           </div>
         </div>
@@ -71,7 +78,7 @@ interface ButtonsProps {
 }
 function Buttons(p: ButtonsProps) {
   return <div className={cx("buttons", "center-body")}>
-    <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
+    <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "start" }}>
       <div
         className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
         onClick={p.onContre}

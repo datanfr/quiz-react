@@ -13,7 +13,7 @@
     color: var(--datan-black);
     background-color: var(--datan-white);
     font-family: "Open Sans";
-    --buttons-height: calc( clamp(100px, var(--h-btn-ctn), 160px)) ;
+    --buttons-height: calc( clamp(70px, var(--h-btn-ctn), 80px)) ;
 }
 
 a {
