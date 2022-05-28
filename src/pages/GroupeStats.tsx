@@ -91,9 +91,9 @@ function groupeButtons({ pour, contre, abstention }: {
     const total = pour + contre + abstention
     console.log({ pour, contre, abstention, total})
     return <div className={cx("button", "shadow")} style={{ display: "flex", width: 130, borderRadius: "10px", overflow: "hidden" }}>
-        <SingleGroupeButton value={pour} total={total} txt="POUR" color={hwb.green} />
-        <SingleGroupeButton value={abstention} total={total} txt="SANS&nbsp;AVIS" color={hwb.yellow} />
         <SingleGroupeButton value={contre} total={total} txt="CONTRE" color={hwb.red} />
+        <SingleGroupeButton value={abstention} total={total} txt="SANS&nbsp;AVIS" color={hwb.yellow} />
+        <SingleGroupeButton value={pour} total={total} txt="POUR" color={hwb.green} />
     </div>
 }
 
