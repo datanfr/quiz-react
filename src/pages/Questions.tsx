@@ -48,7 +48,7 @@ function Question(props: { question: QuestionModel, cqi: number, questionsDataLe
                     style={{ cursor: "pointer", border: "2px white solid", borderRadius: "7px"}}
                   >
                     <div style={{display: "flex", flexDirection: "column", justifyContent: "center",alignItems: 'center',  margin: "3px 15px"}}>
-                      <div>En savoir plus</div>
+                      <div>Les arguments</div>
                       <div><FontAwesomeIcon icon={faChevronDown} /></div>
                     </div>
                   </div>
