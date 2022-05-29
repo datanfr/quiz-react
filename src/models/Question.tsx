@@ -1,4 +1,6 @@
+import { Plugins } from "@capacitor/core";
 import question from "../data/questions.json"
+const { Storage } = Plugins;
 
 //https://datan.fr/api/votes/get_vote_deputes?num=1&legislature=15
 //https://datan.fr/api/votes/get_vote_groupes_simplified?num=1&legislature=15
@@ -45,4 +47,29 @@ export type Questions = typeof question
 export type Question = Questions[number]
 export type Argument = Question["arguments"][number]
 
-export const fetchQuestions = fetch('https://datan.fr/api/quizz/get_questions_api?quizz=1').then(resp => resp.json() as Promise<Questions>)
+//Totally not uniform but easy
+async function fetchSeed() {
+    const storedSeed = await Storage.get({ key: "seed" })
+    let seed: number;
+    if (storedSeed.value == null) {
+        seed = Math.floor(Math.random() * 10000)
+        Storage.set({ key: "seed", value: seed.toString() })
+    } else {
+        seed = parseFloat(storedSeed.value)
+    }
+    return seed;
+}
+
+
+const randomWithFixedSeed = (seed:number) => {
+    var x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+}
+
+export const fetchQuestions = fetch('https://datan.fr/api/quizz/get_questions_api?quizz=1')
+    .then(resp => resp.json() as Promise<Questions>)
+    .then(resp => fetchSeed().then(seed => {return {resp, seed}}))
+    .then(({resp, seed}) => resp.sort((a, b) => {
+        const random = randomWithFixedSeed(seed)
+        return 0.5 - random;
+    }))
