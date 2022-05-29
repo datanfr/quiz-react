@@ -41,7 +41,7 @@ function Question(props: { question: QuestionModel, cqi: number, questionsDataLe
                 </div>
                 <div className={cx("explication")}  style={{display: "flex", justifyContent: "center", alignItems: 'center', flex: "1 0 25%"}}>
                   <div style={{ margin: "10px 10px"}}>
-                    {question.explication}
+                    {question.explication || <div style={{borderTop: "2px solid var(--datan-white)", width: "100px", opacity: 0.5}}></div>}
                   </div>
                 </div>
                 <div style={{display: "flex", justifyContent: "center", alignItems: 'center', fontSize: "0.5em", flex: "0 5 22%"}}>
