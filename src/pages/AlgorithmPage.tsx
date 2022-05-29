@@ -15,9 +15,13 @@ type AlgorithmPageProps = {
 export const AlgorithmPage: React.FC<AlgorithmPageProps> = ({}) => {
     return <IonPage>
         <div className={cx("center-body")}>
-            <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>Explication ICI</div>
+            <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
+                <div style={{marginTop: "40px", border: "1px solid red"}}>
+                    Explication ici
+                </div>
+            </div>
         </div>
-        <Header title={`Explication de l'algorithme`} />
+        <Header title={`Méthodologie du quiz`} />
     </IonPage>
 }
 
