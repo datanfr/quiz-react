@@ -46,7 +46,7 @@ const App: React.FC = () => (
       <Route exact path="/a-basic-page">
         <BasicPage name="Awening" />
       </Route>
-      <Route exact path="/algorithme-info">
+      <Route exact path="/methodologie">
         <AlgorithmPage />
       </Route>
       <Route exact path="/questions/:no">
