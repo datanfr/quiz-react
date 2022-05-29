@@ -41,7 +41,7 @@ const pour = < div
 
 function trust(s: number) {
   if (s <= 15) {
-    return <div><b>Attention</b>, ce score n'est basé uniquement sur {s} votes car le groupe n'était pas tout le temps présent pour voter. <span style={{color: "red", fontWeight: 800}}>Ce score est donc à prendre avec précaution</span>.</div>
+    return <div><b>Attention</b>, ce score est basé que sur {s} votes car le groupe n'était pas tout le temps présent pour voter. <span style={{color: "var(--datan-red)", fontWeight: 800}}>Ce score est donc à prendre avec précaution</span>.</div>
   } else {
     return <div>Ce score est basé sur {s} questions. Nous considérons que c'est suffisant pour le calcul du score de proximité.</div>
   }
@@ -49,11 +49,11 @@ function trust(s: number) {
 
 function comparison(score: number, average: number, groupe: string) {
   if (score == average) {
-    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont relativement proches</span> de celles du groupe {groupe}.</div>
+    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont relativement proches</span> de celles du groupe {groupe}. En effet, ton taux de proximité moyen avec tous les groupes est de {average} %.</div>
   } else if (score < average) {
-    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-red)"}}>ne sont pas proches</span> de celles du groupe {groupe}.</div>
+    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-red)"}}>ne sont pas proches</span> de celles du groupe {groupe}. En effet, ton taux de proximité moyen avec tous les groupes est de {average} %.</div>
   } else {
-    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont proches</span> de celles du groupe {groupe}.</div>
+    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont proches</span> de celles du groupe {groupe}. En effet, ton taux de proximité moyen avec tous les groupes est de {average} %.</div>
   }
 }
 
@@ -171,9 +171,7 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData, avgScoreGroup
                     </div>
                     <div className={cx("stats-explanation-container")}>
                         <div className={cx("explanation-card")}>
-                            <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.2em"}}>Explication</div>
-                            <div>Votre <b>taux de proximité</b> avec le groupe {groupeResponses.name} ({groupeResponses.id}) est de {Math.round(scoring.similarity * 100)} %.</div>
-                            <div>Autrement dit, sur vos réponses aux questions du quizz, vous avez la même position politique que le groupe {groupeResponses.id} dans {Math.round(scoring.similarity * 100)} % des cas.</div>
+                            <div>Ton <b>taux de proximité</b> avec le groupe {groupeResponses.name} ({groupeResponses.id}) est de {Math.round(scoring.similarity * 100)} %.</div>
                             {avgScoreGroupe && comparison(scoring.similarity * 100, Math.round(avgScoreGroupe * 100), groupeResponses.id)}
                             {trust(voteCount)}
                             <a className={cx("link-container")} target="_blank">

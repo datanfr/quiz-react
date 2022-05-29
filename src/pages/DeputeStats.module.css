@@ -19,7 +19,7 @@
 .stats-container {
   display: flex;
   justify-content: space-around;
-  align-items: center;
+  align-items: start;
   flex-wrap: wrap;
 }
 

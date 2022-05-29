@@ -46,9 +46,9 @@ const pour = < div
     <span style={{ fontWeight: 800 }}>POUR</span>
 </div >
 
-function trust(s: number) {
+function trust(s: number, depute: DeputeWithVote) {
     if (s <= 10) {
-        return <div><b>Attention</b>, ce score n'est basé uniquement sur {s} votes car le ou la députée n'était pas tout le temps présent pour voter. <span style={{ color: "red", fontWeight: 800 }}>Ce score est donc à prendre avec précaution</span>.</div>
+        return <div><b>Attention</b>, ce score est basé que sur {s} votes car {depute.name} n'était pas tout le temps présent{depute.last.civ == 'Mme' ? 'e' : ''} pour voter. <span style={{ color: "var(--datan-red)", fontWeight: 800 }}>Ce score est donc à prendre avec précaution</span>.</div>
     } else {
         return <div>Ce score est basé sur {s} questions. Nous considérons que c'est suffisant pour le calcul du score de proximité.</div>
     }
@@ -56,11 +56,11 @@ function trust(s: number) {
 
 function comparison(score: number, average: number, depute: string) {
   if (score == average) {
-    return <div>Comparé aux autres parlementaires, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont relativement proches</span> de celles de {depute}.</div>
+    return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont relativement proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
   } else if (score < average) {
-    return <div>Comparé aux autres parlementaires, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-red)"}}>ne sont pas proches</span> de celles de {depute}.</div>
+    return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{fontWeight: 800, color: "var(--datan-red)"}}>ne sont pas proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
   } else {
-    return <div>Comparé aux autres parlementaires, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont proches</span> de celles de {depute}.</div>
+    return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
   }
 }
 
@@ -148,10 +148,9 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
                     </div>
                     <div className={cx("stats-explanation-container")}>
                         <div className={cx("explanation-card")}>
-                            <div style={{ fontWeight: 800, color: "#4D5755", fontSize: "1.2em" }}>Explication</div>
-                            <div>Votre <b>taux de proximité</b> avec {deputeResponses.last.civ == "M." ? "le" : "la"} député{deputeResponses.last.civ == "M." ? "" : "e"} {deputeResponses.name} est de {Math.round(scoring.similarity * 100)} %.</div>
+                            <div>Ton <b>taux de proximité</b> avec {deputeResponses.name} est de <u>{Math.round(scoring.similarity * 100)} %</u>.</div>
                             {avgScore && comparison(scoring.similarity * 100, Math.round(avgScore * 100), deputeResponses.name)}
-                            {trust(voteCount)}
+                            {trust(voteCount, deputeResponses)}
                             <div className={cx("link-container")}>
                                 <DeputeSocials />
                                 <div className={cx("datan-link")}>
