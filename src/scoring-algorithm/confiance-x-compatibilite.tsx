@@ -22,8 +22,9 @@ export function compareToDepute(ur: Reponse, dr: Reponse | null) {
     }
 }
 
-export function compareToGroupe(ur: Reponse, gr: {pour: number, contre:number, abstention:number}) {
-    if (gr.pour + gr.contre + gr.abstention <= 0) return null
+export function compareToGroupe(ur: Reponse, gr: {pour: number, contre:number, abstention:number} | null | undefined) {
+    if (gr == null || gr == undefined) return 0.5
+    if (gr.pour + gr.contre + gr.abstention <= 0) return 0.5
     const pourTauxAccord = compareToDepute(ur, "pour") * gr.pour
     const contreTauxAccord = compareToDepute(ur, "contre") * gr.contre
     const abstentionTauxAccord = compareToDepute(ur, "abstention") * gr.abstention
@@ -51,7 +52,7 @@ function depute(deputeResponses: Record<string, Reponse | null>, userResponses: 
 export function groupe(groupe: GroupeWithVote, user_votes: Record<string, Reponse>, questions: Questions) {
     const tauxAccordsWithNull = questions.map((q): TauxAccord | null => {
         if (!groupe.votes[q.vote_id]) console.log("missing data for", groupe, q.vote_id)
-        const gr = groupe.votes[q.vote_id] || {pour: 0, contre: 0, abstention: 0};
+        const gr = groupe.votes[q.vote_id];
         const ur = user_votes[q.vote_id]
         return compareToGroupe(ur, gr)
     })
