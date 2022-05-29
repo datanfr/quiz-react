@@ -179,7 +179,7 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData, avgScoreGroup
                             <a className={cx("link-container")} target="_blank">
                                 <DeputeSocials />
                                 <div className={cx("datan-link")}>
-                                    <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>En savoir plus sur</div>
+                                    <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>Découvre ce groupe sur</div>
                                     <a href={groupeResponses["page-url"]} target="_blank">
                                         <img src="/assets/logo_svg.svg" width={120} />
                                     </a>

@@ -155,7 +155,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
                             <div className={cx("link-container")}>
                                 <DeputeSocials />
                                 <div className={cx("datan-link")}>
-                                    <div style={{ fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center" }}>En savoir plus sur</div>
+                                    <div style={{ fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center" }}>Découvre {deputeResponses.last.civ == "M." ? "ce" : "cette"} député{deputeResponses.last.civ == "M." ? "" : "e"} sur</div>
                                     <a href={deputeResponses["page-url"]} target="_blank">
                                         <img src="/assets/logo_svg.svg" width={120} />
                                     </a>
