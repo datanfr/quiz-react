@@ -91,9 +91,9 @@ function groupeButtons({ pour, contre, abstention }: {
     const total = pour + contre + abstention
     console.log({ pour, contre, abstention, total})
     return <div className={cx("button", "shadow")} style={{ display: "flex", width: 130, borderRadius: "10px", overflow: "hidden" }}>
-        <SingleGroupeButton value={pour} total={total} txt="POUR" color={hwb.green} />
-        <SingleGroupeButton value={abstention} total={total} txt="SANS&nbsp;AVIS" color={hwb.yellow} />
         <SingleGroupeButton value={contre} total={total} txt="CONTRE" color={hwb.red} />
+        <SingleGroupeButton value={abstention} total={total} txt="SANS&nbsp;AVIS" color={hwb.yellow} />
+        <SingleGroupeButton value={pour} total={total} txt="POUR" color={hwb.green} />
     </div>
 }
 
@@ -179,7 +179,7 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData, avgScoreGroup
                             <a className={cx("link-container")} target="_blank">
                                 <DeputeSocials />
                                 <div className={cx("datan-link")}>
-                                    <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>En savoir plus sur</div>
+                                    <div style={{fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center"}}>Découvre ce groupe sur</div>
                                     <a href={groupeResponses["page-url"]} target="_blank">
                                         <img src="/assets/logo_svg.svg" width={120} />
                                     </a>
