@@ -84,7 +84,7 @@ export function OnBoarding() {
         </>,
         <>
             <div className="top-half" style={{ display: 'flex', flexDirection: "column", justifyContent: 'space-evenly', flex: "1 1 50%", position: 'relative', backgroundColor: "rgba(0, 183, 148, 0.15)"}}>
-                <img  src="/assets/icon-step1.svg" style={{height: 240}}/>
+                <img  src="/assets/icon-step1.svg" style={{height: 220}}/>
             </div>
             <div className="bottom-half" style={{ display: 'flex', justifyContent: 'center', flex: "1 1 50%" }}>
                 <div style={{ display: "flex", flexDirection: "column", justifyContent: 'center', textAlign: 'center', maxWidth: 300 }}>
@@ -103,7 +103,7 @@ export function OnBoarding() {
         </>,
         <>
             <div className="top-half" style={{ display: 'flex', flexDirection: "column", justifyContent: 'space-evenly', flex: "1 1 50%", position: 'relative', backgroundColor: "rgba(0, 183, 148, 0.15)"}}>
-                <img  src="/assets/icon-step2.svg" style={{height: 240}}/>
+                <img  src="/assets/icon-step2.svg" style={{height: 220}}/>
             </div>
             <div className="bottom-half" style={{ display: 'flex', justifyContent: 'center', flex: "1 1 50%" }}>
                 <div style={{ display: "flex", flexDirection: "column", justifyContent: 'center', textAlign: 'center', maxWidth: 300 }}>
