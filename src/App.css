@@ -9,11 +9,11 @@
     --datan-red: #C5283D;
 
     --header-height: 50px;
-    --h-btn-ctn: 15vw;
+    --h-btn-ctn: 20vh - 100px;
     color: var(--datan-black);
     background-color: var(--datan-white);
     font-family: "Open Sans";
-    --buttons-height: calc( clamp(70px, var(--h-btn-ctn), 80px)) ;
+    --buttons-height: calc( clamp(85px, var(--h-btn-ctn), 500px)) ;
 }
 
 a {

@@ -21,7 +21,7 @@ function Question(props: { question: QuestionModel, cqi: number, questionsDataLe
   const { question, cqi, questionsDataLength } = props
   return <div>
     <div style={{
-      "backgroundImage": `linear-gradient(130deg, rgba(0, 183, 148, 0.85) 0.65%, rgba(36, 107, 150, 0.85) 112%), url("https://datan.fr/assets/imgs/cover/hemicycle-from-back.jpg")`,
+      "backgroundImage": `linear-gradient(130deg, rgba(0, 183, 148, 1) 10%, rgba(36, 107, 150, 0.85) 112%), url("https://datan.fr/assets/imgs/cover/hemicycle-from-back.jpg")`,
       "backgroundPosition": "center",
       "backgroundSize": "cover"
     }}>
@@ -29,20 +29,22 @@ function Question(props: { question: QuestionModel, cqi: number, questionsDataLe
         <div className={cx("body")} style={{ marginTop: "var(--header-height)"}}>
           <div className={cx("title-container")}>
             <div className={cx("content-container")}>
-                <div style={{display: "flex", justifyContent: "center", alignItems: 'flex-end', fontSize: "0.7em"}}>
+                <div style={{display: "flex", justifyContent: "center", alignItems: 'flex-end', fontSize: "0.7em", flex: "0 10 17%"}}>
+                  <div style={{margin: 10}}>
                   {"Question" + '\u00A0' + `${cqi + 1}/${questionsDataLength}`}
+                  </div>
                 </div>
-                <div className={cx("title")}  style={{display: "flex", justifyContent: "center", alignItems: 'center'}}>
-                  <div style={{ margin: "0 10px"}}>
+                <div className={cx("title")}  style={{display: "flex", justifyContent: "center", alignItems: 'center', flex: "1 0 35%"}}>
+                  <div style={{ margin: "10px 10px"}}>
                     {question.voteTitre}
                   </div>
                 </div>
-                <div className={cx("explication")}  style={{display: "flex", justifyContent: "center", alignItems: 'center'}}>
-                  <div style={{ margin: "0 10px"}}>
+                <div className={cx("explication")}  style={{display: "flex", justifyContent: "center", alignItems: 'center', flex: "1 0 25%"}}>
+                  <div style={{ margin: "10px 10px"}}>
                     {question.explication}
                   </div>
                 </div>
-                <div style={{display: "flex", justifyContent: "center", alignItems: 'flex-start', fontSize: "0.5em"}}>
+                <div style={{display: "flex", justifyContent: "center", alignItems: 'center', fontSize: "0.5em", flex: "0 5 22%"}}>
                   <div
                     onClick={() => document.querySelector("#for")?.scrollIntoView({ behavior: "smooth" })}
                     style={{ cursor: "pointer", border: "2px white solid", borderRadius: "7px"}}
@@ -58,13 +60,13 @@ function Question(props: { question: QuestionModel, cqi: number, questionsDataLe
         </div>
       </div>
     </div>
-    <div id="for" className="flex" style={{ justifyContent: "center", scrollMarginTop: "var(--header-height)", marginBottom: "calc(var(--buttons-height) + 15px)" }}>
+    <div id="for" className="flex" style={{ justifyContent: "center", scrollMarginTop: "var(--header-height)", marginBottom: "calc(var(--buttons-height) + 15px)", marginTop: "calc(var(--buttons-height)/2 - 25px  + 15px - 1em)"}}>
       <div>
-        <p style={{ padding: "0px 10px", fontSize: "17px", fontWeight: 800, color: "var(--datan-green)" }}>LES ARGUMENTS POUR</p>
+        <p style={{fontSize: "17px", fontWeight: 800, color: "var(--datan-green)", marginLeft: "1em"}}>LES ARGUMENTS POUR</p>
         {question.arguments.filter((argument: any) => argument.opinion === "POUR").map((argument: any) => <div style={{ borderLeft: "2px solid var(--datan-green)", padding: "10px", margin: "10px", maxWidth: "600px" }}>{argument.texte}</div>)}
       </div>
       <div style={{}}>
-        <p style={{ padding: "0px 10px", fontSize: "17px", fontWeight: 800, color: "var(--datan-red)" }}>LES ARGUMENTS CONTRE</p>
+        <p style={{fontSize: "17px", fontWeight: 800, color: "var(--datan-red)", marginLeft: "1em"}}>LES ARGUMENTS CONTRE</p>
         {question.arguments.filter((argument: any) => argument.opinion === "CONTRE").map((argument: any) => <div style={{ borderLeft: "2px solid var(--datan-red)", padding: "10px", margin: "10px", maxWidth: "600px" }}>{argument.texte}</div>)}
       </div>
     </div>
@@ -78,7 +80,7 @@ interface ButtonsProps {
 }
 function Buttons(p: ButtonsProps) {
   return <div className={cx("buttons", "center-body")}>
-    <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "start" }}>
+    <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
       <div
         className={cx("flex", "align-justify-center", "shadow", "button", "contre")}
         onClick={p.onContre}
