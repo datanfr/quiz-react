@@ -67,16 +67,16 @@ export function OnBoarding() {
             </div>
             <div className="bottom-half pattern_background" style={{ display: 'flex', justifyContent: 'center', flex: "1 1 50%" }}>
                 <div style={{ display: "flex", flexDirection: "column", justifyContent: 'center', textAlign: 'center', maxWidth: 300 }}>
-                    <div className="titre" style={{ display: "flex", justifyContent: 'center' }}>
-                        <h3>
-                            Êtes-vous proche <br />
-                            de votre député ?
-                        </h3>
+                    <div style={{ display: "flex", justifyContent: 'center' }}>
+                        <h2 className={cx("sousTitre")}>
+                            Suis-je proche<br />
+                            de mon député ?
+                        </h2>
                     </div>
                     <div className="text" style={{ display: "flex", justifyContent: 'center' }}>
                         <p className={cx("text")}>
-                            Découvrez en 3 minutes <br />
-                            si vous votez comme votre député
+                            Découvre en 3 minutes <br />
+                            si tu votes comme ton député
                         </p>
                     </div>
                 </div>
@@ -88,14 +88,14 @@ export function OnBoarding() {
             </div>
             <div className="bottom-half" style={{ display: 'flex', justifyContent: 'center', flex: "1 1 50%" }}>
                 <div style={{ display: "flex", flexDirection: "column", justifyContent: 'center', textAlign: 'center', maxWidth: 300 }}>
-                    <div className="titre" style={{ display: "flex", justifyContent: 'center' }}>
-                        <h3>
+                    <div style={{ display: "flex", justifyContent: 'center' }}>
+                        <h2 className={cx("sousTitre")}>
                             Je vote sur des propositions débattues à l'Assemblée
-                        </h3>
+                        </h2>
                     </div>
                     <div className="text" style={{ display: "flex", justifyContent: 'center' }}>
                         <p className={cx("text")}>
-                            A l'Assemblée nationale, les députés votent des propositions de loi précises. Comme eux, prenez position et votez.
+                            A l'Assemblée nationale, les députés votent des loi précises. Comme eux, prend position et vote des lois discutées à l'Assemblée.
                         </p>
                     </div>
                 </div>
@@ -107,14 +107,14 @@ export function OnBoarding() {
             </div>
             <div className="bottom-half" style={{ display: 'flex', justifyContent: 'center', flex: "1 1 50%" }}>
                 <div style={{ display: "flex", flexDirection: "column", justifyContent: 'center', textAlign: 'center', maxWidth: 300 }}>
-                    <div className="titre" style={{ display: "flex", justifyContent: 'center' }}>
-                        <h3>
+                    <div style={{ display: "flex", justifyContent: 'center' }}>
+                        <h2 className={cx("sousTitre")}>
                             Mon député vote-t-il comme moi ?
-                        </h3>
+                        </h2>
                     </div>
                     <div className="text" style={{ display: "flex", justifyContent: 'center' }}>
                         <p className={cx("text")}>
-                            Découvrez votre proximité politique avec votre député, ainsi qu’avec tous les groupes parlementaires de l’Assemblée nationale.
+                            Découvre ta proximité politique avec ton député, ainsi qu’avec tous les groupes parlementaires de l’Assemblée.
                         </p>
                     </div>
                 </div>

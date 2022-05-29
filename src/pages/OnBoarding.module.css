@@ -9,9 +9,13 @@
     margin: 20px;
 }
 
+.sousTitre{
+  font-size: 20px;
+}
+
 .text {
     font-style: normal;
     font-weight: 400;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 24px;
 }
