@@ -180,7 +180,7 @@ class Resultat extends PureComponent<Props, State> {
           </div>
         </div>
       </div>
-      <Header title={`Résultat`} />
+      <Header />
       <div className={cx("buttons", "center-body")} style={{ gridTemplateColumns: "auto minmax(0, 1920px) auto" }}>
         <div className={cx("body", "flex")} style={{ justifyContent: "space-evenly", alignContent: "center" }}>
           <Link to="/questions" className={cx("datan-green-bg", "flex", "align-justify-center", "shadow", "button")}>
