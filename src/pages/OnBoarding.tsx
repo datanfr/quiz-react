@@ -57,7 +57,7 @@ export function OnBoarding() {
         <>
             <div className="top-half" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'start', flex: "1 1 50%" }}>
                 <div className="logo" style={{ display: 'flex', justifyContent: 'center' }}>
-                    <img src='assets/datan.png' />
+                    <img style={{margin: 25}} width="100" src='https://datan.fr/assets/imgs/datan/logo_svg.svg' />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", flex: 1 }}>
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
