@@ -55,15 +55,21 @@ export function OnBoarding() {
 
     const pages = [
         <>
-            <div className="top-half" style={{ display: 'flex', flexDirection: "column", justifyContent: 'space-evenly', flex: "1 1 50%" }}>
-                <div className="logo" style={{ display: "flex", justifyContent: 'center' }}>
+            <div className="top-half" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'start', flex: "1 1 50%" }}>
+                <div className="logo" style={{ display: 'flex', justifyContent: 'center' }}>
                     <img src='assets/datan.png' />
                 </div>
-                <div style={{ display: "flex", justifyContent: 'center' }}>
-                    <h1 className={cx("titre")}>
-                        <span style={{ color: "var(--datan-green)" }}>Mon député.e</span><br />et moi
-                    </h1>
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", flex: 1 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                        <h1 className={cx("surtitre")} style={{ marginBottom: "15px" }}>
+                            LE QUIZ
+                        </h1>
+                        <h1 className={cx("titre")}>
+                            <span style={{ color: "var(--datan-green)" }}>Mon député</span><br />et moi
+                        </h1>
+                    </div>
                 </div>
+
             </div>
             <div className="bottom-half pattern_background" style={{ display: 'flex', justifyContent: 'center', flex: "1 1 50%" }}>
                 <div style={{ display: "flex", flexDirection: "column", justifyContent: 'center', textAlign: 'center', maxWidth: 300 }}>
