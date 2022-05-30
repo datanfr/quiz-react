@@ -57,11 +57,11 @@ function trust(s: number, depute: DeputeWithVote) {
 
 function comparison(score: number, average: number, depute: string) {
     if (score == average) {
-        return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{ fontWeight: 800, color: "var(--datan-green)" }}>sont relativement proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
+        return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{ fontWeight: 800, color: "var(--datan-green)" }}>sont relativement proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average}&nbsp;%.</div>
     } else if (score < average) {
-        return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{ fontWeight: 800, color: "var(--datan-red)" }}>ne sont pas proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
+        return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{ fontWeight: 800, color: "var(--datan-red)" }}>ne sont pas proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average}&nbsp;%.</div>
     } else {
-        return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{ fontWeight: 800, color: "var(--datan-green)" }}>sont proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
+        return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{ fontWeight: 800, color: "var(--datan-green)" }}>sont proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average}&nbsp;%.</div>
     }
 }
 
@@ -137,7 +137,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
                 </div>
                 {/* {HumanReadable && <HumanReadable />} */}
                 <div className={cx("stats-container")}>
-                    <div style={{ position: "relative" }} className={cx("stats-pie-container")} title='=avg(taux_accord) * 100'>
+                    <div style={{ position: "relative" }} className={cx("stats-pie-container")}>
                         <div style={{ position: "absolute", bottom: 5, right: 5, fontSize: "0.6em", opacity: 0.8, textDecoration: "underline" }}>
                             <Link to={{ pathname: `/methodologie` }}>
                                 Comment ce score est-il calculé ?
@@ -154,7 +154,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
                     </div>
                     <div className={cx("stats-explanation-container")}>
                         <div className={cx("explanation-card")}>
-                            <div>Ton <b>taux de proximité</b> avec {deputeResponses.name} est de <u>{Math.round(scoring.similarity * 100)} %</u>.</div>
+                            <div>Ton <b>taux de proximité</b> avec {deputeResponses.name} est de <u>{Math.round(scoring.similarity * 100)}&nbsp;%</u>.</div>
                             {avgScore && comparison(scoring.similarity * 100, Math.round(avgScore * 100), deputeResponses.name)}
                             {trust(voteCount, deputeResponses)}
                             <div className={cx("link-container")}>
