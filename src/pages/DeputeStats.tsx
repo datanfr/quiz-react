@@ -198,7 +198,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
                 </div>
             </div>
             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "30px 0" }}>
-                <Link to={{ pathname: `/methodologie` }} className={cx("shadow")} style={{ padding: "8px 14px", backgroundColor: "#D3D3D3", color: "var(--datan-grey)", textAlign: "center", borderRadius: "7px" }} >
+                <Link to={{ pathname: `/methodologie` }} className={cx("shadow")} style={{ padding: "8px 14px", backgroundColor: "var(--datan-green)", color: "#ffffff", textAlign: "center", borderRadius: "7px", fontWeight: 800 }} >
                     Découvrir notre méthodologie
                 </Link>
             </div>
