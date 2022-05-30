@@ -48,6 +48,10 @@ function buildGroupes() {
             votesPerGroupeeById["SOC"] = mergeGroupe(votesPerGroupeeById["SOC"], votesPerGroupeeById["NG"])
             delete votesPerGroupeeById["NG"]
 
+            //SOC = SOC + NG
+            votesPerGroupeeById["DEM"] = mergeGroupe(votesPerGroupeeById["DEM"], votesPerGroupeeById["MODEM"])
+            delete votesPerGroupeeById["MODEM"]
+
             // UDI_I = UDI_I + UDI-I + UDI-AGIR
             votesPerGroupeeById["UDI_I"] = mergeGroupe(votesPerGroupeeById["UDI_I"], votesPerGroupeeById["UDI-I"])
             votesPerGroupeeById["UDI_I"] = mergeGroupe(votesPerGroupeeById["UDI_I"], votesPerGroupeeById["UDI-AGIR"])
