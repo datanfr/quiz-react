@@ -141,9 +141,12 @@ class Resultat extends PureComponent<Props, State> {
         <div><FontAwesomeIcon icon={faChevronUp} /></div>
         <div className={cx("pattern_background")} style={{ border: "1px solid var(--datan-green)", borderRadius: "10px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", flex: "0 0 100%", padding: "0 20px", margin: "20px 20px" }}>
           <p style={{ fontWeight: 800, fontSize: "1.4rem", textAlign: "center", marginTop: "32px", color: "var(--datan-grey)" }}>🎉 Félicitations 🎉</p>
-          <p style={{ textAlign: "center" }}>Vous venez de répondre à toutes les questions !</p>
+          <p style={{ textAlign: "center" }}>Tu viens de répondre à toutes les questions !</p>
           <p style={{ textAlign: "center" }}><span style={{ color: "var(--datan-green)", fontWeight: 800 }}>Cherche ton député dans la barre ci-dessus</span> et découvre s'il partage tes positions politiques.</p>
-          <p style={{ textAlign: "center", marginBottom: "32px" }}>Tu peux aussi te comparer avec les groupes politiques de l'Assemblée nationale. <span style={{ color: "var(--datan-green)", fontWeight: 800 }}>Découvre le classement ci-dessous !</span></p>
+          <p style={{ textAlign: "center" }}>Tu peux aussi te comparer avec les groupes politiques de l'Assemblée nationale. <span style={{ color: "var(--datan-green)", fontWeight: 800 }}>Découvre le classement ci-dessous !</span></p>
+          <p style={{ textAlign: "center", marginBottom: "32px" }}>
+              Tu veux en savoir plus sur notre méthodologie ? <Link to={{ pathname: `methodologie` }} style={{ textDecoration: "underline" }}>Clique ici !</Link >
+          </p>
         </div>
 
         <div><FontAwesomeIcon icon={faChevronDown} /></div>

@@ -4,6 +4,8 @@ import { IonPage } from '@ionic/react';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
+import { useHistory } from "react-router"
+
 
 //App.css imported in App.tsx is globally available 🤢
 import classes from './AlgorithmPage.module.css'; //Page specific css
@@ -13,7 +15,9 @@ let cx = classNames.bind(classes);
 type AlgorithmPageProps = {
 }
 
-export const AlgorithmPage: React.FC<AlgorithmPageProps> = ({}) => {
+export const AlgorithmPage: React.FC<AlgorithmPageProps> = () => {
+    const history = useHistory();
+
     return <IonPage>
         <div className={cx("center-body")} style={{overflow: "auto"}}>
             <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
@@ -92,7 +96,7 @@ export const AlgorithmPage: React.FC<AlgorithmPageProps> = ({}) => {
                 </div>
             </div>
         </div>
-        <Header />
+        <Header onBackClick={() => history.goBack()} />
     </IonPage>
 }
 
