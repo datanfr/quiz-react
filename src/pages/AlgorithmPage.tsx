@@ -53,7 +53,7 @@ export const AlgorithmPage: React.FC<AlgorithmPageProps> = ({}) => {
                     <p>
                         De plus, afin d'avoir un quiz le plus neutre possible, nous nous sommes assurés de la diversité politique des votes (certains votes ont été portés par des groupes de gauche, d'autres par des groupes de droite, d'autres par la majorité présidentielle), ainsi que de la diversité des clivages (certains votes on fait l'objet d'un clivage gauche-droite tandis que d'autres ont fait l'objet d'un clivage majorité-opposition).
                     </p>
-                    <h2>Calcul du score de proximité</h2>
+                    <h2>3. Calcul du score de proximité</h2>
                     <h3>Score de proximité avec un député</h3>
                     <p>
                         Le score de proximité avec un <b>député</b> est le pourcentage de questions sur lesquelles vous avez la même position que celle défendue par ce député à l'Assemblée nationale.
@@ -66,12 +66,18 @@ export const AlgorithmPage: React.FC<AlgorithmPageProps> = ({}) => {
                     </p>
                     <h3>Score de proximité avec un groupe</h3>
                     <p>
-                        Le score de proximité avec un <b>groupe</b> est le pourcentage de questions pour lesquelles vous avez la même position que celle défendue par ce groupe à l'Assemblée nationale.
+                        Le score de proximité avec un <b>groupe</b> est le pourcentage de questions sur lesquelles vous avez la même position que celle défendue par ce groupe à l'Assemblée nationale.
                     </p>
                     <p>
-                        Afin de prendre en compte les divisions internes au sein des groupes politiques, ce score est calculé de la manière suivante : [A FAIRE !]
+                        Ce score prend en compte les divisions internes au sein des groupes politiques.
                     </p>
-                    <h2>Comment ont été rédigé les arguments ?</h2>
+                    <p>
+                        Pour chaque question, votre position est comparée avec celle de tous les membres du groupe. Prenons un exemple concret. Vous avez voté "Pour". Au sein du groupe LaREM, 100 députés ont également voté "Pour" et 50 députés ont voté "Contre". Au total, 1 point est attribué à chaque député ayant votre position (100 points) et 0 point est attribué aux députés n'ayant pas votre position. On calcule ensuite un score général pour le groupe comme ceci : nombre de points divisés par le nombre de députés (dans notre exemple, 100 / 150 = 0,67). Ainsi, votre score de proximité avec le groupe LaREM, pour cette question, est de 67%. Pour avoir le score de proximité global pour un groupe, nous calculons la moyenne de toutes les questions.
+                    </p>
+                    <p>
+                        Comme pour les députés, nous prenons en compte les abstentions. La moitié des points (0,5) est accordée quand vous vous abstenez mais qu'un député a voté "pour" ou "contre".
+                    </p>
+                    <h2>4. Comment ont été rédigé les arguments ?</h2>
                     <p>
                         Pour chaque vote, nous avons répertorié trois arguments "pour" et trois arguments "contre". Tous les arguments présents sont tirés des comptes rendus de séance de l'Assemblée nationale. Ce sont donc des arguments présentés et défendus par des députés lors de débats parlementaires.
                     </p>
