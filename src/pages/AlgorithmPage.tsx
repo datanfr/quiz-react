@@ -14,9 +14,9 @@ type AlgorithmPageProps = {
 
 export const AlgorithmPage: React.FC<AlgorithmPageProps> = ({}) => {
     return <IonPage>
-        <div className={cx("center-body")}>
+        <div className={cx("center-body")} style={{overflow: "auto"}}>
             <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
-                <div style={{marginTop: "50px"}}>
+                <div style={{margin: "50px 0"}}>
                     <h1 className={cx("title")}>Méthodologie du quiz</h1>
                     <p>
                         Ce quiz politique <b>mesure votre proximité idéologique</b> avec votre député.
