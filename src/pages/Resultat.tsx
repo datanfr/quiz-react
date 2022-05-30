@@ -140,19 +140,19 @@ class Resultat extends PureComponent<Props, State> {
       }}>
         <div><FontAwesomeIcon icon={faChevronUp} /></div>
         <div className={cx("pattern_background")} style={{ border: "1px solid var(--datan-green)", borderRadius: "10px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", flex: "0 0 100%", padding: "0 20px", margin: "20px 20px" }}>
-            <p style={{ fontWeight: 800, fontSize: "1.4rem", textAlign: "center", marginTop: "32px", color: "var(--datan-grey)" }}>🎉 Félicitations 🎉</p>
-            <p style={{ textAlign: "center" }}>Vous venez de répondre à toutes les questions !</p>
-            <p style={{ textAlign: "center" }}><span style={{ color: "var(--datan-green)", fontWeight: 800 }}>Cherche ton député dans la barre ci-dessus</span> et découvre s'il partage tes positions politiques.</p>
-            <p style={{ textAlign: "center", marginBottom: "32px" }}>Tu peux aussi te comparer avec les groupes politiques de l'Assemblée nationale. <span style={{ color: "var(--datan-green)", fontWeight: 800 }}>Découvre le classement ci-dessous !</span></p>
+          <p style={{ fontWeight: 800, fontSize: "1.4rem", textAlign: "center", marginTop: "32px", color: "var(--datan-grey)" }}>🎉 Félicitations 🎉</p>
+          <p style={{ textAlign: "center" }}>Vous venez de répondre à toutes les questions !</p>
+          <p style={{ textAlign: "center" }}><span style={{ color: "var(--datan-green)", fontWeight: 800 }}>Cherche ton député dans la barre ci-dessus</span> et découvre s'il partage tes positions politiques.</p>
+          <p style={{ textAlign: "center", marginBottom: "32px" }}>Tu peux aussi te comparer avec les groupes politiques de l'Assemblée nationale. <span style={{ color: "var(--datan-green)", fontWeight: 800 }}>Découvre le classement ci-dessous !</span></p>
         </div>
 
         <div><FontAwesomeIcon icon={faChevronDown} /></div>
         <div style={{ display: "flex", flexDirection: "column", marginTop: "30px" }}>
-            <div style={{ textAlign: "center", fontWeight: 800, color: "var(--datan-grey)", fontSize: "1.3rem" }}>Ta proximité avec les groupes politiques</div>
-            <div className={cx("res-groupe-container")}>
-              {this.state.sortedGroupes.map(x => <ResGroupe data={x} avgScoreGroupe={this.state.avgScoreGroupe} />)}
-              <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
-            </div>
+          <div style={{ textAlign: "center", fontWeight: 800, color: "var(--datan-grey)", fontSize: "1.3rem" }}>Ta proximité avec les groupes politiques</div>
+          <div className={cx("res-groupe-container")}>
+            {this.state.sortedGroupes.map(x => <ResGroupe data={x} avgScoreGroupe={this.state.avgScoreGroupe} />)}
+            <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>
+          </div>
         </div>
 
       </div>
@@ -162,20 +162,22 @@ class Resultat extends PureComponent<Props, State> {
         <div className={cx("search-container")} style={{ padding: "20px 0" }}>
           <div style={{ margin: "0 35px", marginBottom: "10px", color: "#ffffff", fontWeight: 800, fontSize: "1.4rem", textAlign: "center" }}>Recherche ton député</div>
           <div style={{ display: "flex" }}>
-              <input
-                name={cx("search")}
-                className={cx("search-input")} type="text"
-                placeholder="Cherchez un député, une ville, un département, un code postal"
-                defaultValue={this.state.searchTxt} onInput={e => this.onSearchTxtChange(e)}
-                style={{ fontFamily: "Arial, FontAwesome" }}
-              />
+            <input
+              name={cx("search")}
+              className={cx("search-input")} type="text"
+              placeholder="Cherchez un député, une ville, un département, un code postal"
+              defaultValue={this.state.searchTxt} onInput={e => this.onSearchTxtChange(e)}
+              style={{ fontFamily: "Arial, FontAwesome" }}
+            />
           </div>
 
 
         </div>
         <div className={cx("center-body")} style={{ gridTemplateColumns: "auto minmax(0, 1920px) auto" }}>
           <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
-            {this.state.sortedGroupes.length > 0 || "Calcule des score..."}
+            {this.state.sortedGroupes.length > 0 || <div className="flex align-justify-center" style={{height: "calc(100vh - 125px - var(--header-height))"}}>
+              Calcule des score en cours...
+            </div>}
             {Object.values(this.state.deputeScoreById).length > 0 && <div className={cx("res-depute-container")}>
               <DeputeResList />
               {everythingLoaded && <div style={{ height: "var(--buttons-height)", width: "100%" }}></div>}
@@ -277,7 +279,7 @@ function ResGroupe(props: { data: ResGroupeType, avgScoreGroupe: number | null }
 
   return <Link className={cx("res-groupe")} key={props.data.groupe.id} to={{
     pathname: `groupe-stats/${props.data.groupe.id}`,
-    state: {avgScoreGroupe: props.avgScoreGroupe}
+    state: { avgScoreGroupe: props.avgScoreGroupe }
   }} >
     <div className={cx("picture-container")}>
       <div className={cx("groupe-img-circle")}>
