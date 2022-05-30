@@ -41,9 +41,7 @@ const pour = < div
 
 function trust(s: number) {
   if (s <= 15) {
-    return <div><b>Attention</b>, ce score est basé que sur {s} votes car le groupe n'était pas tout le temps présent pour voter. <span style={{color: "var(--datan-red)", fontWeight: 800}}>Ce score est donc à prendre avec précaution</span>.</div>
-  } else {
-    return <div>Ce score est basé sur {s} questions. Nous considérons que c'est suffisant pour le calcul du score de proximité.</div>
+    return <div><b>Attention</b>, ce score est basé que sur {s} votes car le groupe n'a pas existé tout au long de la législature 2017-2022. <span style={{color: "var(--datan-red)", fontWeight: 800}}>Ce score est donc à prendre avec précaution</span>.</div>
   }
 }
 
