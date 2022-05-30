@@ -68,8 +68,8 @@ const randomWithFixedSeed = (seed:number) => {
 
 export const fetchQuestions = fetch('https://datan.fr/api/quizz/get_questions_api?quizz=1')
     .then(resp => resp.json() as Promise<Questions>)
-    .then(resp => fetchSeed().then(seed => {return {resp, seed}}))
-    .then(({resp, seed}) => resp.sort((a, b) => {
-        const random = randomWithFixedSeed(seed)
-        return 0.5 - random;
-    }))
+    // .then(resp => fetchSeed().then(seed => {return {resp, seed}}))
+    // .then(({resp, seed}) => resp.sort((a, b) => {
+    //     const random = randomWithFixedSeed(seed)
+    //     return 0.5 - random;
+    // }))
