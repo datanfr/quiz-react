@@ -13,6 +13,7 @@ import { groupBy, hwb, hwbToCss } from "../utils"
 import { algorithms as scoringAlgorithms, algorithmsNames, algoFromString } from '../scoring-algorithm/ScoringAlgorithm';
 import { compareToDepute } from "../scoring-algorithm/confiance-x-compatibilite"
 import { DeputeSocials } from "../components/DeputeSocial"
+import { Link } from 'react-router-dom';
 
 let cx = classNames.bind(classes);
 
@@ -190,6 +191,11 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
                         </div>
                     })}
                 </div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "30px 0" }}>
+                <Link to={{ pathname: `/methodologie` }} className={cx("shadow")} style={{ padding: "8px 14px", backgroundColor: "#D3D3D3", color: "var(--datan-grey)", textAlign: "center", borderRadius: "7px" }} >
+                    Découvrir notre méthodologie
+                </Link>
             </div>
         </div>
     </div >
