@@ -71,6 +71,10 @@ export const AlgorithmPage: React.FC<AlgorithmPageProps> = ({}) => {
                     <p>
                         Afin de prendre en compte les divisions internes au sein des groupes politiques, ce score est calculé de la manière suivante : [A FAIRE !]
                     </p>
+                    <h2>Comment ont été rédigé les arguments ?</h2>
+                    <p>
+                        Pour chaque vote, nous avons répertorié trois arguments "pour" et trois arguments "contre". Tous les arguments présents sont tirés des comptes rendus de séance de l'Assemblée nationale. Ce sont donc des arguments présentés et défendus par des députés lors de débats parlementaires.
+                    </p>
                     <p>Des questions supplémentaires ? Contactez-nous : <a href="mailto:info@datan.fr">info@datan.fr</a></p>
                 </div>
             </div>
