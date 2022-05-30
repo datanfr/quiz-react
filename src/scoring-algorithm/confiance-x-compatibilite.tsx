@@ -23,7 +23,7 @@ export function compareToDepute(ur: Reponse, dr: Reponse | null) {
 }
 
 export function compareToGroupe(ur: Reponse, gr: {pour: number, contre:number, abstention:number} | null | undefined) {
-    if (gr == null || gr == undefined) return 0.5
+    if (gr == null || gr == undefined) return null
     if (gr.pour + gr.contre + gr.abstention <= 0) return 0.5
     const pourTauxAccord = compareToDepute(ur, "pour") * gr.pour
     const contreTauxAccord = compareToDepute(ur, "contre") * gr.contre

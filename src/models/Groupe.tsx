@@ -61,6 +61,7 @@ function buildGroupes() {
             delete votesPerGroupeeById["UDI-I"]
             delete votesPerGroupeeById["UDI-AGIR"]
             delete votesPerGroupeeById["LC"]
+            delete votesPerGroupeeById["EDS"]
 
             console.log({ t: Object.values(votesPerGroupeeById), SOC: votesPerGroupeeById["SOC"], merged: mergeGroupe(votesPerGroupeeById["SOC"], votesPerGroupeeById["SOC"]) })
             return votesPerGroupeeById
