@@ -4,6 +4,7 @@ import { IonPage } from '@ionic/react';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
+
 //App.css imported in App.tsx is globally available 🤢
 import classes from './AlgorithmPage.module.css'; //Page specific css
 
@@ -76,6 +77,9 @@ export const AlgorithmPage: React.FC<AlgorithmPageProps> = ({}) => {
                     </p>
                     <p>
                         Comme pour les députés, nous prenons en compte les abstentions. La moitié des points (0,5) est accordée quand vous vous abstenez mais qu'un député a voté "pour" ou "contre".
+                    </p>
+                    <p style={{fontSize: "0.8em"}}>
+                        <i>Si vous avez l'âme d'un développeur vous pouvez trouver <a href="https://github.com/datanfr/quiz-react/blob/main/src/scoring-algorithm/confiance-x-compatibilite.tsx" target="_blanck" style={{textDecoration: "underline"}}>le code correspondant sur github</a></i>
                     </p>
                     <h2>4. Comment ont été rédigé les arguments ?</h2>
                     <p>
