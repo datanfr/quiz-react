@@ -8,7 +8,7 @@ let cx = classNames.bind(classes);
 export const DeputeSocials = () => {
 
     const urlQuizz = "https://datan.fr" // A CHANGER
-    const message = "Je viens de faire le nouveau quizz politique sur Datan. Son objectif ? Savoir si j'ai les mêmes idées politiques que mon député ! Découvre aussi ce quizz :";
+    const message = "Je viens de faire le nouveau quiz politique sur Datan. Son objectif ? Savoir si j'ai les mêmes idées politiques que mon député ! Découvre aussi ce quiz :";
 
     function socialWindow(url: string) {
         const left = (window.screen.width - 570) / 2;
@@ -38,7 +38,7 @@ export const DeputeSocials = () => {
     }
 
     return <div className={cx("share-link")}>
-        <div style={{ fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center" }}>Invite tes amis à faire ce quizz</div>
+        <div style={{ fontWeight: 800, color: "#4D5755", fontSize: "1.1em", textAlign: "center" }}>Invite tes amis à faire ce quiz</div>
         <div className={cx("share-btn-container")}>
             <div>
                 <button type="button" name="button" className={cx("twitter")} onClick={twitterClick}>
