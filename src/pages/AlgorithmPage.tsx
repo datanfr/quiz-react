@@ -16,7 +16,7 @@ export const AlgorithmPage: React.FC<AlgorithmPageProps> = ({}) => {
     return <IonPage>
         <div className={cx("center-body")}>
             <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
-                <div style={{marginTop: "50px", border: "1px solid red"}}>
+                <div style={{marginTop: "50px"}}>
                     <h1 className={cx("title")}>Méthodologie du quiz</h1>
                     <p>
                         Ce quiz politique <b>mesure votre proximité idéologique</b> avec votre député.
