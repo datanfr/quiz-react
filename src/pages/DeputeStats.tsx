@@ -56,13 +56,13 @@ function trust(s: number, depute: DeputeWithVote) {
 }
 
 function comparison(score: number, average: number, depute: string) {
-  if (score == average) {
-    return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont relativement proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
-  } else if (score < average) {
-    return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{fontWeight: 800, color: "var(--datan-red)"}}>ne sont pas proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
-  } else {
-    return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
-  }
+    if (score == average) {
+        return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{ fontWeight: 800, color: "var(--datan-green)" }}>sont relativement proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
+    } else if (score < average) {
+        return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{ fontWeight: 800, color: "var(--datan-red)" }}>ne sont pas proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
+    } else {
+        return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{ fontWeight: 800, color: "var(--datan-green)" }}>sont proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
+    }
 }
 
 function getButtons(s: string) {
@@ -137,7 +137,12 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
                 </div>
                 {/* {HumanReadable && <HumanReadable />} */}
                 <div className={cx("stats-container")}>
-                    <div className={cx("stats-pie-container")} title='=avg(taux_accord) * 100'>
+                    <div style={{ position: "relative" }} className={cx("stats-pie-container")} title='=avg(taux_accord) * 100'>
+                        <div style={{ position: "absolute", bottom: 5, right: 5, fontSize: "0.6em", opacity: 0.8, textDecoration: "underline" }}>
+                            <Link to={{ pathname: `/methodologie` }}>
+                                Comment ce score est-il calculé ?
+                            </Link>
+                        </div>
                         <div style={{ color: "#4D5755", fontWeight: 800, fontSize: "1.75em", textAlign: "center" }}>Score de proximité</div>
                         <div className={cx("c100", "p" + Math.round(scoring.similarity * 100))} style={{ marginTop: "1.5rem" }}>
                             <span>{Math.round(scoring.similarity * 100)} %</span>
@@ -165,8 +170,8 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
                     </div>
                 </div>
             </div>
-            <div className={cx("pattern_background")} style={{padding: "3rem 0", marginTop: "1.5rem"}}>
-                <div style={{ textAlign: "center", fontWeight: 800, color: "var(--datan-grey)", fontSize: "1.4rem"}}>Compare tes positions avec celles de {deputeResponses.name}</div>
+            <div className={cx("pattern_background")} style={{ padding: "3rem 0", marginTop: "1.5rem" }}>
+                <div style={{ textAlign: "center", fontWeight: 800, color: "var(--datan-grey)", fontSize: "1.4rem" }}>Compare tes positions avec celles de {deputeResponses.name}</div>
                 <div className={cx("cards-container")}>
                     {questions.map(q => {
                         const d = {
