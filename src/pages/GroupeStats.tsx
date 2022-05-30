@@ -123,7 +123,7 @@ export const GroupeStatsPage: React.FC = () => {
 
     return <IonPage>
         {groupeStats ? <GroupeStats groupeStats={groupeStats} avgScoreGroupe={avgScoreGroupe} /> : "Loading data"}
-        <Header onBackClick={() => history.goBack()} title={`Résultat`} />
+        <Header onBackClick={() => history.goBack()} />
     </IonPage>
 }
 

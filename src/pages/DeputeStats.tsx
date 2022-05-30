@@ -99,7 +99,7 @@ export const DeputeStatsPage: React.FC = () => {
 
     return <IonPage>
         {deputeStats ? <DeputeStats deputeStats={deputeStats} avgScore={avgScore} /> : "Loading data"}
-        <Header onBackClick={() => history.goBack()} title={`Résultat`} />
+        <Header onBackClick={() => history.goBack()} />
     </IonPage>
 }
 
