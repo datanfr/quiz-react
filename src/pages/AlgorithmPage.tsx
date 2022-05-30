@@ -85,7 +85,10 @@ export const AlgorithmPage: React.FC<AlgorithmPageProps> = ({}) => {
                     <p>
                         Pour chaque vote, nous avons répertorié trois arguments "pour" et trois arguments "contre". Tous les arguments présents sont tirés des comptes rendus de séance de l'Assemblée nationale. Ce sont donc des arguments présentés et défendus par des députés lors de débats parlementaires.
                     </p>
-                    <p>Des questions supplémentaires ? Contactez-nous : <a href="mailto:info@datan.fr">info@datan.fr</a></p>
+                    <h2>5. Mentions légales et données personnelles</h2>
+                    <p>Le domaine <i>quiz.datan.fr</i> appartient à datan.fr. Les <a style={{ textDecoration: "underline" }} href="https://datan.fr/mentions-legales" target="_blank">mentions légales de Datan</a> s'appliquent donc à ce site.</p>
+                    <p>Les seules données récoltées par <i>quiz.datan.fr</i> sont celles relatives à la fréquentation du site. Nous récoltons aucune données à caractère politique (<b>les réponses aux questions ne sont pas enregistrées</b>).</p>
+                    <p>Des questions supplémentaires ? Contactez-nous : <a style={{ textDecoration: "underline" }} href="mailto:info@datan.fr">info@datan.fr</a></p>
                 </div>
             </div>
         </div>
