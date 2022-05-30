@@ -10,7 +10,7 @@
     --datan-grey-dark: #4D5755;
 
     --header-height: 50px;
-    --h-btn-ctn: calc(20vh - 100px);
+    --h-btn-ctn: calc(20vh - 40px);
     color: var(--datan-black);
     background-color: var(--datan-white);
     font-family: "Open Sans";
