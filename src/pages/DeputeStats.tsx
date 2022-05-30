@@ -164,29 +164,32 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
                     </div>
                 </div>
             </div>
-            <div className={cx("cards-container")}>
-                {questions.map(q => {
-                    const d = {
-                        q,
-                        user: userResponses[q.vote_id],
-                        depute: deputeResponses.votes[q.vote_id]
-                    }
-                    return <div className={cx("card")} style={{ display: "flex", flexDirection: "column", paddingTop: "15px", paddingBottom: "15px", paddingLeft: "10px", paddingRight: "10px", width: 300, margin: 10 }}>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 95 }}>
-                            <div className={cx("card-title")} style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
-                        </div>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }} title={`taux_accord=${compareToDepute(d.user, d.depute as Reponse | null)}`}>
-                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                                <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>{deputeResponses.nameAbbrev}</div>
-                                <div>{getButtons(d.depute)}</div>
+            <div className={cx("pattern_background")} style={{padding: "3rem 0", marginTop: "1.5rem"}}>
+                <div style={{ textAlign: "center", fontWeight: 800, color: "var(--datan-grey)", fontSize: "1.4rem"}}>Compare tes positions avec celles de {deputeResponses.name}</div>
+                <div className={cx("cards-container")}>
+                    {questions.map(q => {
+                        const d = {
+                            q,
+                            user: userResponses[q.vote_id],
+                            depute: deputeResponses.votes[q.vote_id]
+                        }
+                        return <div className={cx("card")} style={{ display: "flex", flexDirection: "column", paddingTop: "15px", paddingBottom: "15px", paddingLeft: "10px", paddingRight: "10px", width: 300, margin: 10 }}>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 95 }}>
+                                <div className={cx("card-title")} style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
                             </div>
-                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                                <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>Votre vote</div>
-                                <div>{getButtons(d.user)}</div>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }} title={`taux_accord=${compareToDepute(d.user, d.depute as Reponse | null)}`}>
+                                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                    <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>{deputeResponses.nameAbbrev}</div>
+                                    <div>{getButtons(d.depute)}</div>
+                                </div>
+                                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                    <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>Votre vote</div>
+                                    <div>{getButtons(d.user)}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                })}
+                    })}
+                </div>
             </div>
         </div>
     </div >
