@@ -137,7 +137,7 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData, avgScoreGroup
     const scoringAlgorithm = scoringAlgorithms[algorithmName]
     const scoring = scoringAlgorithm.groupe(groupeResponses, userResponses, questions)
     const HumanReadable = scoring.HumanReadable
-    const voteCount = Object.values(groupeResponses.votes).length
+    const voteCount = Object.values(groupeResponses.votes).filter(gv => gv.abstention + gv.contre + gv.pour > 0).length
     // const badgeBgColor = hwbLerp(props.data.similarity)
     return <div style={{ overflow: "auto" }}><div className={cx("center-body")} style={{ gridTemplateColumns: "auto minmax(0, 1920px) auto" }}>
         <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>

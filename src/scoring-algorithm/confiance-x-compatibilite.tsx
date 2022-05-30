@@ -10,13 +10,17 @@ type TauxAccord = number
 
 export function compareToDepute(ur: Reponse, dr: Reponse | null) {
     if (pc.includes(ur) && dr && pc.includes(dr)) {
-        if (ur === dr) {
-            return 1
-        } else if (ur === "abstention" || dr === "abstention") {
-            return 0.5
-        } else {
-            return 0
-        }
+        return compareToNonNullDepute(ur, dr)
+    } else {
+        return null
+    }
+}
+
+export function compareToNonNullDepute(ur: Reponse, dr: Reponse) {
+    if (ur === dr) {
+        return 1
+    } else if (ur === "abstention" || dr === "abstention") {
+        return 0.5
     } else {
         return 0
     }
@@ -24,20 +28,20 @@ export function compareToDepute(ur: Reponse, dr: Reponse | null) {
 
 export function compareToGroupe(ur: Reponse, gr: {pour: number, contre:number, abstention:number} | null | undefined) {
     if (gr == null || gr == undefined) return null
-    if (gr.pour + gr.contre + gr.abstention <= 0) return 0.5
-    const pourTauxAccord = compareToDepute(ur, "pour") * gr.pour
-    const contreTauxAccord = compareToDepute(ur, "contre") * gr.contre
-    const abstentionTauxAccord = compareToDepute(ur, "abstention") * gr.abstention
+    if (gr.pour + gr.contre + gr.abstention <= 0) return null
+    const pourTauxAccord = compareToNonNullDepute(ur, "pour") * gr.pour
+    const contreTauxAccord = compareToNonNullDepute(ur, "contre") * gr.contre
+    const abstentionTauxAccord = compareToNonNullDepute(ur, "abstention") * gr.abstention
     const tauxAccord = (pourTauxAccord + contreTauxAccord + abstentionTauxAccord) / (gr.pour + gr.contre + gr.abstention)
     return tauxAccord
 }
 
 function depute(deputeResponses: Record<string, Reponse | null>, userResponses: Record<string, Reponse>, questions: Questions) {
-    const tauxAccords = questions.map((q): TauxAccord => {
+    const tauxAccords = questions.map((q): TauxAccord | null => {
         const ur = userResponses[q.vote_id];
         const dr = deputeResponses[q.vote_id]
         return compareToDepute(ur, dr)
-    });
+    }).filter(u => u != null) as TauxAccord[];
     const calcData = {
         tauxAccords,
         "formula": "sum(tauxAccords) / nb_vote"
