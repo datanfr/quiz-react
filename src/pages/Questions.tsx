@@ -167,7 +167,7 @@ class Questions extends PureComponent<Props, State> {
             }}>
               <div className={cx("center-body")}>
                 <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
-                  <div className="flex align-justify-center tex" style={{
+                  <div className="flex align-justify-center" style={{
                     "height": "calc(100vh - var(--header-height))",
                     "color": "var(--datan-white)"
                   }}>
