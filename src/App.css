@@ -14,7 +14,7 @@
     color: var(--datan-black);
     background-color: var(--datan-white);
     font-family: "Open Sans";
-    --buttons-height: calc( clamp(75px, var(--h-btn-ctn), 500px)) ;
+    --buttons-height: calc( clamp(75px, var(--h-btn-ctn), 180px)) ;
 }
 
 a {
