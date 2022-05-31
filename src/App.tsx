@@ -32,10 +32,18 @@ import { DeputeStats, DeputeStatsPage } from './pages/DeputeStats';
 import { GroupeStatsPage } from './pages/GroupeStats';
 import { BasicPage } from './pages/BasicPage';
 import { AlgorithmPage } from './pages/AlgorithmPage';
+import { useTrackPage } from './useTrackPage';
 
-const App: React.FC = () => (
-  <div>
+const TrackPage : React.FC = () => {
+  useTrackPage();
+  return <></>
+}
+
+const App: React.FC = () => {
+
+  return <div>
     <IonReactRouter>
+      <TrackPage />
       <Route exact path="/">
         <OnBoarding/>
         <Questions />
@@ -66,6 +74,7 @@ const App: React.FC = () => (
       </Route>
     </IonReactRouter>
 
-  </div>)
+  </div>
+}
 
 export default App;
