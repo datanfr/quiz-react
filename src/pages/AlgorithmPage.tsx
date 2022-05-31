@@ -4,6 +4,9 @@ import { IonPage } from '@ionic/react';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
+import { useHistory } from "react-router"
+
+
 //App.css imported in App.tsx is globally available 🤢
 import classes from './AlgorithmPage.module.css'; //Page specific css
 
@@ -12,11 +15,13 @@ let cx = classNames.bind(classes);
 type AlgorithmPageProps = {
 }
 
-export const AlgorithmPage: React.FC<AlgorithmPageProps> = ({}) => {
+export const AlgorithmPage: React.FC<AlgorithmPageProps> = () => {
+    const history = useHistory();
+
     return <IonPage>
         <div className={cx("center-body")} style={{overflow: "auto"}}>
             <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
-                <div style={{margin: "50px 0"}}>
+                <div style={{margin: "50px 20px"}}>
                     <h1 className={cx("title")}>Méthodologie du quiz</h1>
                     <p>
                         Ce quiz politique <b>mesure votre proximité idéologique</b> avec votre député.
@@ -53,7 +58,7 @@ export const AlgorithmPage: React.FC<AlgorithmPageProps> = ({}) => {
                     <p>
                         De plus, afin d'avoir un quiz le plus neutre possible, nous nous sommes assurés de la diversité politique des votes (certains votes ont été portés par des groupes de gauche, d'autres par des groupes de droite, d'autres par la majorité présidentielle), ainsi que de la diversité des clivages (certains votes on fait l'objet d'un clivage gauche-droite tandis que d'autres ont fait l'objet d'un clivage majorité-opposition).
                     </p>
-                    <h2>Calcul du score de proximité</h2>
+                    <h2>3. Calcul du score de proximité</h2>
                     <h3>Score de proximité avec un député</h3>
                     <p>
                         Le score de proximité avec un <b>député</b> est le pourcentage de questions sur lesquelles vous avez la même position que celle défendue par ce député à l'Assemblée nationale.
@@ -66,16 +71,32 @@ export const AlgorithmPage: React.FC<AlgorithmPageProps> = ({}) => {
                     </p>
                     <h3>Score de proximité avec un groupe</h3>
                     <p>
-                        Le score de proximité avec un <b>groupe</b> est le pourcentage de questions pour lesquelles vous avez la même position que celle défendue par ce groupe à l'Assemblée nationale.
+                        Le score de proximité avec un <b>groupe</b> est le pourcentage de questions sur lesquelles vous avez la même position que celle défendue par ce groupe à l'Assemblée nationale.
                     </p>
                     <p>
-                        Afin de prendre en compte les divisions internes au sein des groupes politiques, ce score est calculé de la manière suivante : [A FAIRE !]
+                        Ce score prend en compte les divisions internes au sein des groupes politiques.
                     </p>
-                    <p>Des questions supplémentaires ? Contactez-nous : <a href="mailto:info@datan.fr">info@datan.fr</a></p>
+                    <p>
+                        Pour chaque question, votre position est comparée avec celle de tous les membres du groupe. Prenons un exemple concret. Vous avez voté "Pour". Au sein du groupe LaREM, 100 députés ont également voté "Pour" et 50 députés ont voté "Contre". Au total, 1 point est attribué à chaque député ayant votre position (100 points) et 0 point est attribué aux députés n'ayant pas votre position. On calcule ensuite un score général pour le groupe comme ceci : nombre de points divisés par le nombre de députés (dans notre exemple, 100 / 150 = 0,67). Ainsi, votre score de proximité avec le groupe LaREM, pour cette question, est de 67%. Pour avoir le score de proximité global pour un groupe, nous calculons la moyenne de toutes les questions.
+                    </p>
+                    <p>
+                        Comme pour les députés, nous prenons en compte les abstentions. La moitié des points (0,5) est accordée quand vous vous abstenez mais qu'un député a voté "pour" ou "contre".
+                    </p>
+                    <p style={{fontSize: "0.8em"}}>
+                        <i>Si vous avez l'âme d'un développeur vous pouvez trouver <a href="https://github.com/datanfr/quiz-react/blob/main/src/scoring-algorithm/confiance-x-compatibilite.tsx" target="_blanck" style={{textDecoration: "underline"}}>le code correspondant sur github</a></i>
+                    </p>
+                    <h2>4. Comment ont été rédigé les arguments ?</h2>
+                    <p>
+                        Pour chaque vote, nous avons répertorié trois arguments "pour" et trois arguments "contre". Tous les arguments présents sont tirés des comptes rendus de séance de l'Assemblée nationale. Ce sont donc des arguments présentés et défendus par des députés lors de débats parlementaires.
+                    </p>
+                    <h2>5. Mentions légales et données personnelles</h2>
+                    <p>Le domaine <i>quiz.datan.fr</i> appartient à datan.fr. Les <a style={{ textDecoration: "underline" }} href="https://datan.fr/mentions-legales" target="_blank">mentions légales de Datan</a> s'appliquent donc à ce site.</p>
+                    <p>Les seules données récoltées par <i>quiz.datan.fr</i> sont celles relatives à la fréquentation du site. Nous récoltons aucune données à caractère politique (<b>les réponses aux questions ne sont pas enregistrées</b>).</p>
+                    <p>Des questions supplémentaires ? Contactez-nous : <a style={{ textDecoration: "underline" }} href="mailto:info@datan.fr">info@datan.fr</a></p>
                 </div>
             </div>
         </div>
-        <Header />
+        <Header onBackClick={() => history.goBack()} />
     </IonPage>
 }
 

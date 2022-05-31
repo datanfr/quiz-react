@@ -13,6 +13,7 @@ import { algorithms as scoringAlgorithms, algorithmsNames, algoFromString } from
 import { fetchingVotesPerGroupe, GroupeWithVote } from "../models/Groupe"
 import { compareToGroupe } from "../scoring-algorithm/confiance-x-compatibilite"
 import { DeputeSocials } from "../components/DeputeSocial"
+import { Link } from 'react-router-dom';
 
 let cx = classNames.bind(classes);
 
@@ -41,19 +42,17 @@ const pour = < div
 
 function trust(s: number) {
   if (s <= 15) {
-    return <div><b>Attention</b>, ce score est basé que sur {s} votes car le groupe n'était pas tout le temps présent pour voter. <span style={{color: "var(--datan-red)", fontWeight: 800}}>Ce score est donc à prendre avec précaution</span>.</div>
-  } else {
-    return <div>Ce score est basé sur {s} questions. Nous considérons que c'est suffisant pour le calcul du score de proximité.</div>
+    return <div><b>Attention</b>, ce score est basé que sur {s} votes car le groupe n'a pas existé tout au long de la législature 2017-2022. <span style={{color: "var(--datan-red)", fontWeight: 800}}>Ce score est donc à prendre avec précaution</span>.</div>
   }
 }
 
 function comparison(score: number, average: number, groupe: string) {
   if (score == average) {
-    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont relativement proches</span> de celles du groupe {groupe}. En effet, ton taux de proximité moyen avec tous les groupes est de {average} %.</div>
+    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont relativement proches</span> de celles du groupe {groupe}. En effet, ton taux de proximité moyen avec tous les groupes est de {average}&nbsp;%.</div>
   } else if (score < average) {
-    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-red)"}}>ne sont pas proches</span> de celles du groupe {groupe}. En effet, ton taux de proximité moyen avec tous les groupes est de {average} %.</div>
+    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-red)"}}>ne sont pas proches</span> de celles du groupe {groupe}. En effet, ton taux de proximité moyen avec tous les groupes est de {average}&nbsp;%.</div>
   } else {
-    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont proches</span> de celles du groupe {groupe}. En effet, ton taux de proximité moyen avec tous les groupes est de {average} %.</div>
+    return <div>Comparé aux autres groupes, vos positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont proches</span> de celles du groupe {groupe}. En effet, ton taux de proximité moyen avec tous les groupes est de {average}&nbsp;%.</div>
   }
 }
 
@@ -123,7 +122,7 @@ export const GroupeStatsPage: React.FC = () => {
 
     return <IonPage>
         {groupeStats ? <GroupeStats groupeStats={groupeStats} avgScoreGroupe={avgScoreGroupe} /> : "Loading data"}
-        <Header onBackClick={() => history.goBack()} title={`Résultat`} />
+        <Header onBackClick={() => history.goBack()} />
     </IonPage>
 }
 
@@ -137,7 +136,7 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData, avgScoreGroup
     const scoringAlgorithm = scoringAlgorithms[algorithmName]
     const scoring = scoringAlgorithm.groupe(groupeResponses, userResponses, questions)
     const HumanReadable = scoring.HumanReadable
-    const voteCount = Object.values(groupeResponses.votes).length
+    const voteCount = Object.values(groupeResponses.votes).filter(gv => gv.abstention + gv.contre + gv.pour > 0).length
     // const badgeBgColor = hwbLerp(props.data.similarity)
     return <div style={{ overflow: "auto" }}><div className={cx("center-body")} style={{ gridTemplateColumns: "auto minmax(0, 1920px) auto" }}>
         <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
@@ -159,7 +158,12 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData, avgScoreGroup
                     </div>
                 </div>
                 <div className={cx("stats-container")}>
-                    <div className={cx("stats-pie-container")} title='=avg(taux_accord) * 100'>
+                    <div style={{ position: "relative" }} className={cx("stats-pie-container")}>
+                        <div style={{ position: "absolute", bottom: 5, right: 5, fontSize: "0.6em", opacity: 0.8, textDecoration: "underline" }}>
+                            <Link to={{ pathname: `/methodologie` }}>
+                                Comment ce score est-il calculé ?
+                            </Link>
+                        </div>
                         <div style={{color: "#4D5755", fontWeight: 800, fontSize: "1.75em", textAlign: "center"}}>Score de proximité</div>
                         <div className={cx("c100", "p" + Math.round(scoring.similarity * 100) )} style={{marginTop: "1.5rem"}}>
                             <span>{Math.round(scoring.similarity * 100)} %</span>
@@ -171,7 +175,7 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData, avgScoreGroup
                     </div>
                     <div className={cx("stats-explanation-container")}>
                         <div className={cx("explanation-card")}>
-                            <div>Ton <b>taux de proximité</b> avec le groupe {groupeResponses.name} ({groupeResponses.id}) est de {Math.round(scoring.similarity * 100)} %.</div>
+                            <div>Ton <b>taux de proximité</b> avec le groupe {groupeResponses.name} ({groupeResponses.id}) est de {Math.round(scoring.similarity * 100)}&nbsp;%.</div>
                             {avgScoreGroupe && comparison(scoring.similarity * 100, Math.round(avgScoreGroupe * 100), groupeResponses.id)}
                             {trust(voteCount)}
                             <a className={cx("link-container")} target="_blank">
@@ -191,29 +195,37 @@ export const GroupeStats: React.FC<{ groupeStats: GroupeStatsData, avgScoreGroup
                 Score:
                 {HumanReadable && <HumanReadable />}
             </div> */}
-            <div className={cx("cards-container")}>
-                {questions.map(q => {
-                    const d = {
-                        q,
-                        user: userResponses[q.vote_id],
-                        groupe: groupeResponses.votes[q.vote_id] || { pour: 0, contre: 0, abstention: 0 }
-                    }
-                    return <div className={(cx("card"))} style={{ display: "flex", flexDirection: "column", paddingTop: "15px", paddingBottom: "15px", paddingLeft: "10px", paddingRight: "10px", width: 300, margin: 10 }}>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 88 }}>
-                            <div className={cx("card-title")} style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
-                        </div>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }} title={`taux_accord=${compareToGroupe(d.user, d.groupe)}`}>
-                            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                                <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px",  textAlign: "center" }}>Le groupe</div>
-                                <div>{groupeButtons(d.groupe)}</div>
+            <div className={cx("pattern_background")} style={{padding: "3rem 0", marginTop: "1.5rem"}}>
+                <div style={{ textAlign: "center", fontWeight: 800, color: "var(--datan-grey)", fontSize: "1.4rem"}}>Compare tes positions avec celles du groupe {groupeResponses.id}</div>
+                <div className={cx("cards-container")}>
+                    {questions.map(q => {
+                        const d = {
+                            q,
+                            user: userResponses[q.vote_id],
+                            groupe: groupeResponses.votes[q.vote_id] || { pour: 0, contre: 0, abstention: 0 }
+                        }
+                        return <div className={(cx("card"))} style={{ display: "flex", flexDirection: "column", paddingTop: "15px", paddingBottom: "15px", paddingLeft: "10px", paddingRight: "10px", width: 300, margin: 10 }}>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 88 }}>
+                                <div className={cx("card-title")} style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
                             </div>
-                            <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                                <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>Votre vote</div>
-                                <div>{getButtons(d.user)}</div>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }} title={`taux_accord=${compareToGroupe(d.user, d.groupe)}`}>
+                                <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                                    <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px",  textAlign: "center" }}>Le groupe</div>
+                                    <div>{groupeButtons(d.groupe)}</div>
+                                </div>
+                                <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                                    <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>Votre vote</div>
+                                    <div>{getButtons(d.user)}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                })}
+                    })}
+                </div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "30px 0" }}>
+                <Link to={{ pathname: `/methodologie` }} className={cx("shadow")} style={{ padding: "8px 14px", backgroundColor: "var(--datan-green)", color: "#ffffff", textAlign: "center", borderRadius: "7px", fontWeight: 800 }} >
+                    Découvrir notre méthodologie
+                </Link>
             </div>
         </div>
     </div>

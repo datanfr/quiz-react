@@ -13,6 +13,7 @@ import { groupBy, hwb, hwbToCss } from "../utils"
 import { algorithms as scoringAlgorithms, algorithmsNames, algoFromString } from '../scoring-algorithm/ScoringAlgorithm';
 import { compareToDepute } from "../scoring-algorithm/confiance-x-compatibilite"
 import { DeputeSocials } from "../components/DeputeSocial"
+import { Link } from 'react-router-dom';
 
 let cx = classNames.bind(classes);
 
@@ -55,13 +56,13 @@ function trust(s: number, depute: DeputeWithVote) {
 }
 
 function comparison(score: number, average: number, depute: string) {
-  if (score == average) {
-    return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont relativement proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
-  } else if (score < average) {
-    return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{fontWeight: 800, color: "var(--datan-red)"}}>ne sont pas proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
-  } else {
-    return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{fontWeight: 800, color: "var(--datan-green)"}}>sont proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average} %.</div>
-  }
+    if (score == average) {
+        return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{ fontWeight: 800, color: "var(--datan-green)" }}>sont relativement proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average}&nbsp;%.</div>
+    } else if (score < average) {
+        return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{ fontWeight: 800, color: "var(--datan-red)" }}>ne sont pas proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average}&nbsp;%.</div>
+    } else {
+        return <div>Comparé aux autres parlementaires, tes positions politiques <span style={{ fontWeight: 800, color: "var(--datan-green)" }}>sont proches</span> de celles de {depute}. En effet, ton taux de proximité moyen avec tous des députés est de {average}&nbsp;%.</div>
+    }
 }
 
 function getButtons(s: string) {
@@ -99,7 +100,7 @@ export const DeputeStatsPage: React.FC = () => {
 
     return <IonPage>
         {deputeStats ? <DeputeStats deputeStats={deputeStats} avgScore={avgScore} /> : "Loading data"}
-        <Header onBackClick={() => history.goBack()} title={`Résultat`} />
+        <Header onBackClick={() => history.goBack()} />
     </IonPage>
 }
 
@@ -136,7 +137,12 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
                 </div>
                 {/* {HumanReadable && <HumanReadable />} */}
                 <div className={cx("stats-container")}>
-                    <div className={cx("stats-pie-container")} title='=avg(taux_accord) * 100'>
+                    <div style={{ position: "relative" }} className={cx("stats-pie-container")}>
+                        <div style={{ position: "absolute", bottom: 5, right: 5, fontSize: "0.6em", opacity: 0.8, textDecoration: "underline" }}>
+                            <Link to={{ pathname: `/methodologie` }}>
+                                Comment ce score est-il calculé ?
+                            </Link>
+                        </div>
                         <div style={{ color: "#4D5755", fontWeight: 800, fontSize: "1.75em", textAlign: "center" }}>Score de proximité</div>
                         <div className={cx("c100", "p" + Math.round(scoring.similarity * 100))} style={{ marginTop: "1.5rem" }}>
                             <span>{Math.round(scoring.similarity * 100)} %</span>
@@ -148,7 +154,7 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
                     </div>
                     <div className={cx("stats-explanation-container")}>
                         <div className={cx("explanation-card")}>
-                            <div>Ton <b>taux de proximité</b> avec {deputeResponses.name} est de <u>{Math.round(scoring.similarity * 100)} %</u>.</div>
+                            <div>Ton <b>taux de proximité</b> avec {deputeResponses.name} est de <u>{Math.round(scoring.similarity * 100)}&nbsp;%</u>.</div>
                             {avgScore && comparison(scoring.similarity * 100, Math.round(avgScore * 100), deputeResponses.name)}
                             {trust(voteCount, deputeResponses)}
                             <div className={cx("link-container")}>
@@ -164,29 +170,37 @@ export const DeputeStats: React.FC<{ deputeStats: DeputeStatsData, avgScore: num
                     </div>
                 </div>
             </div>
-            <div className={cx("cards-container")}>
-                {questions.map(q => {
-                    const d = {
-                        q,
-                        user: userResponses[q.vote_id],
-                        depute: deputeResponses.votes[q.vote_id]
-                    }
-                    return <div className={cx("card")} style={{ display: "flex", flexDirection: "column", paddingTop: "15px", paddingBottom: "15px", paddingLeft: "10px", paddingRight: "10px", width: 300, margin: 10 }}>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 95 }}>
-                            <div className={cx("card-title")} style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
-                        </div>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }} title={`taux_accord=${compareToDepute(d.user, d.depute as Reponse | null)}`}>
-                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                                <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>{deputeResponses.nameAbbrev}</div>
-                                <div>{getButtons(d.depute)}</div>
+            <div className={cx("pattern_background")} style={{ padding: "3rem 0", marginTop: "1.5rem" }}>
+                <div style={{ textAlign: "center", fontWeight: 800, color: "var(--datan-grey)", fontSize: "1.4rem" }}>Compare tes positions avec celles de {deputeResponses.name}</div>
+                <div className={cx("cards-container")}>
+                    {questions.map(q => {
+                        const d = {
+                            q,
+                            user: userResponses[q.vote_id],
+                            depute: deputeResponses.votes[q.vote_id]
+                        }
+                        return <div className={cx("card")} style={{ display: "flex", flexDirection: "column", paddingTop: "15px", paddingBottom: "15px", paddingLeft: "10px", paddingRight: "10px", width: 300, margin: 10 }}>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 95 }}>
+                                <div className={cx("card-title")} style={{ textAlign: "center", padding: 10 }}>{q.voteTitre}</div>
                             </div>
-                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                                <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>Votre vote</div>
-                                <div>{getButtons(d.user)}</div>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }} title={`taux_accord=${compareToDepute(d.user, d.depute as Reponse | null)}`}>
+                                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                    <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>{deputeResponses.nameAbbrev}</div>
+                                    <div>{getButtons(d.depute)}</div>
+                                </div>
+                                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                    <div style={{ fontWeight: "lighter", fontSize: 12, paddingTop: "5px", paddingBottom: "5px", textAlign: "center" }}>Votre vote</div>
+                                    <div>{getButtons(d.user)}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                })}
+                    })}
+                </div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "30px 0" }}>
+                <Link to={{ pathname: `/methodologie` }} className={cx("shadow")} style={{ padding: "8px 14px", backgroundColor: "var(--datan-green)", color: "#ffffff", textAlign: "center", borderRadius: "7px", fontWeight: 800 }} >
+                    Découvrir notre méthodologie
+                </Link>
             </div>
         </div>
     </div >

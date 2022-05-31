@@ -7,13 +7,14 @@
     --datan-black: #212529;
     --datan-yellow: #fb9b00;
     --datan-red: #C5283D;
+    --datan-grey-dark: #4D5755;
 
     --header-height: 50px;
-    --h-btn-ctn: calc(20vh - 100px);
+    --h-btn-ctn: calc(20vw - 40px);
     color: var(--datan-black);
     background-color: var(--datan-white);
     font-family: "Open Sans";
-    --buttons-height: calc( clamp(85px, var(--h-btn-ctn), 500px)) ;
+    --buttons-height: calc( clamp(75px, var(--h-btn-ctn), 500px)) ;
 }
 
 a {
