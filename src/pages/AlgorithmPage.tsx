@@ -19,7 +19,7 @@ export const AlgorithmPage: React.FC<AlgorithmPageProps> = () => {
     const history = useHistory();
 
     return <IonPage>
-        <div className={cx("center-body")} style={{overflow: "auto"}}>
+        <div className={cx("algorithm center-body")} style={{overflow: "auto"}}>
             <div className={cx("body")} style={{ marginTop: "var(--header-height)" }}>
                 <div style={{margin: "50px 20px"}}>
                     <h1 className={cx("title")}>Méthodologie du quiz</h1>
