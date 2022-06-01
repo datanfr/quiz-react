@@ -168,7 +168,7 @@ class Resultat extends PureComponent<Props, State> {
             <input
               name={cx("search")}
               className={cx("search-input")} type="text"
-              placeholder="Cherchez un député, une ville, un département, un code postal"
+              placeholder="Cherchez un député, une ville, un code postal"
               defaultValue={this.state.searchTxt} onInput={e => this.onSearchTxtChange(e)}
               style={{ fontFamily: "Arial, FontAwesome" }}
             />
