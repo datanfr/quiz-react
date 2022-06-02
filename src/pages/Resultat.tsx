@@ -164,11 +164,12 @@ class Resultat extends PureComponent<Props, State> {
       <div id="inifinte-scroll" style={{ overflow: "auto", justifyContent: "flex-start" }} onScroll={this.state.filteredDeputes ? e => this.loadMore(e) : undefined} ref={this.myRef}>
         <div className={cx("search-container")} style={{ padding: "20px 0" }}>
           <div style={{ margin: "0 35px", marginBottom: "10px", color: "#ffffff", fontWeight: 800, fontSize: "1.4rem", textAlign: "center" }}>Recherche ton député</div>
+          <div style={{ margin: "0 35px", marginBottom: "10px", color: "#ffffff", fontWeight: 400, fontSize: "0.8rem", textAlign: "center" }}>Cherche ton député avec son nom, ta ville, ou ton code postal</div>
           <div style={{ display: "flex" }}>
             <input
               name={cx("search")}
               className={cx("search-input")} type="text"
-              placeholder="Cherchez un député, une ville, un département, un code postal"
+              placeholder="Recherche ton député avec son nom, ta ville, ou ton code postal"
               defaultValue={this.state.searchTxt} onInput={e => this.onSearchTxtChange(e)}
               style={{ fontFamily: "Arial, FontAwesome" }}
             />
