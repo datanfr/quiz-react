@@ -60,12 +60,12 @@ function Question(props: { question: QuestionModel, cqi: number, questionsDataLe
         </div>
       </div>
     </div>
-    <div id="for" className="flex" style={{ justifyContent: "center", scrollMarginTop: "var(--header-height)", marginBottom: "calc(var(--buttons-height) + 15px)", marginTop: "calc(var(--buttons-height)/2 - 25px  + 15px - 1em)" }}>
+    <div id="for" className="flex" style={{ justifyContent: "center", scrollMarginTop: "var(--header-height)", marginBottom: "calc(var(--buttons-height) + 15px)", marginTop: "calc(var(--buttons-height)/2 - 25px  + 15px - 1em)", flexDirection: "row-reverse" }}>
       <div>
         <p style={{ fontSize: "17px", fontWeight: 800, color: "var(--datan-green)", marginLeft: "1em" }}>LES ARGUMENTS POUR</p>
         {question.arguments.filter((argument: any) => argument.opinion === "POUR").map((argument: any) => <div style={{ borderLeft: "2px solid var(--datan-green)", padding: "10px", margin: "10px", maxWidth: "600px" }}>{argument.texte}</div>)}
       </div>
-      <div style={{}}>
+      <div>
         <p style={{ fontSize: "17px", fontWeight: 800, color: "var(--datan-red)", marginLeft: "1em" }}>LES ARGUMENTS CONTRE</p>
         {question.arguments.filter((argument: any) => argument.opinion === "CONTRE").map((argument: any) => <div style={{ borderLeft: "2px solid var(--datan-red)", padding: "10px", margin: "10px", maxWidth: "600px" }}>{argument.texte}</div>)}
       </div>
