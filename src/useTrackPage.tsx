@@ -6,8 +6,6 @@ declare global {
     interface Window { _paq: any; }
 }
 
-var _paq = window._paq = window._paq || [];
-
 export const useLocationChange = (action: (location: Location) => void) => {
     const location = useLocation();
     console.log({location})
@@ -16,7 +14,8 @@ export const useLocationChange = (action: (location: Location) => void) => {
 
 export const useTrackPage = () => {
     useLocationChange((location) => {
-        console.log("Matomo tracking page called", {referrer: document.referrer, href: window.location.href})
+        let _paq = window._paq = window._paq || [];
+        console.log("Matomo tracking page called", {_paq, referrer: document.referrer, href: window.location.href})
         _paq.push(['setReferrerUrl', document.referrer]);
         _paq.push(['setCustomUrl', window.location.href]);
         //_paq.push(['setDocumentTitle', 'My New Title']);
