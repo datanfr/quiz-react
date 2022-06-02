@@ -7,7 +7,7 @@ let cx = classNames.bind(classes);
 
 export const DeputeSocials = () => {
 
-    const urlQuizz = "https://datan.fr" // A CHANGER
+    const urlQuizz = "https://quiz.datan.fr" // A CHANGER
     const message = "Je viens de faire le nouveau quiz politique sur Datan. Son objectif ? Savoir si j'ai les mêmes idées politiques que mon député ! Découvre aussi ce quiz :";
 
     function socialWindow(url: string) {
